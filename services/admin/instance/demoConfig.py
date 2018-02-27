@@ -4,11 +4,11 @@
 class BaseConfig:
     """Base configuration"""
     TESTING = False
+    USING_DEMO_CONFIG = True
 
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
-    pass
 
 
 class TestingConfig(BaseConfig):
