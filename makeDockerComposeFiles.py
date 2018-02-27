@@ -19,7 +19,7 @@ else:
 subs={ 'postgres_password': postgres_password }
 
 # open the docker-compose-dev template file
-dev_template_file = open( 'docker-compose-dev-template.txt' )
+dev_template_file = open( 'template-docker-compose-dev.txt' )
 
 # read the dev template file with Template
 dev_template_text = Template( dev_template_file.read() )
