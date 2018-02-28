@@ -29,6 +29,8 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${postgres_password}
+    volumes:
+      - flask-db_data:/var/lib/postgresql/data
 
   nginx:
     container_name: nginx
@@ -38,3 +40,8 @@ services:
       - 80:80
     depends_on:
       - flask
+
+volumes:
+  flask-db_data:
+    external:
+      name: gtaWebApp_data
