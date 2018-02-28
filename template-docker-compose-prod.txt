@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+
+  admin:
+    container_name: admin
+    build:
+      context: ./services/admin
+      dockerfile: Dockerfile-dev
+    ports:
+      - 5001:5000
+    environment:
+      - FLASK_DEBUG=0
+      - ENVIRONMENT_TYPE=production
+      - DATABASE_URL=postgres://postgres:${postgres_password}@admin-db:5432/admin_dev
+      - DATABASE_TEST_URL=postgres://postgres:${postgres_password}@admin-db:5432/admin_test
+    depends_on:
+      - admin-db
+    links:
+      - admin-db
+
+  admin-db:
+    container_name: admin-db
+    build:
+      context: ./services/admin/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${postgres_password}

@@ -18,15 +18,22 @@ else:
 # Define the substitutions that will be made in each file
 subs={ 'postgres_password': postgres_password }
 
-# open the docker-compose-dev template file
+# open the template files
 dev_template_file = open( 'template-docker-compose-dev.txt' )
+prod_template_file = open( 'template-docker-compose-prod.txt' )
 
-# read the dev template file with Template
+# read the template files with Template
 dev_template_text = Template( dev_template_file.read() )
+prod_template_text = Template( prod_template_file.read() )
 
-# create the text for the docker-compose-dev.yml file
+# create the text for the docker-compose yml files
 dev_text = dev_template_text.substitute(subs)
+prod_text = prod_template_text.substitute(subs)
 
 # create the docker-compose-dev.yml file
 with open('docker-compose-dev.yml', 'w') as dev_file:
     dev_file.write(dev_text)
+
+# create the docker-compose-prod.yml file
+with open('docker-compose-prod.yml', 'w') as prod_file:
+    prod_file.write(prod_text)
