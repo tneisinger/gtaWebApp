@@ -8,27 +8,40 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 
+# Helper predicate that determines if there is a config.py file
+# in the instance folder.
+def custom_config_file_exists(app):
+    return 'config.py' in os.listdir(app.instance_path)
+
+
+# Helper function to set app configuration.  If there is no
+# admin/instance/config.py file, use admin/instance/defaultConfig.py instead
+def set_app_configuration(config_class, app):
+    if custom_config_file_exists(app):
+        app.config.from_object('instance.config.' + config_class)
+    else:
+        print('No config.py file in instance folder.', file=sys.stderr)
+        print('Using defaultConfig.py instead', file=sys.stderr)
+        app.config.from_object('instance.defaultConfig.' + config_class)
+
+
 # instantiate the app
 app = Flask(__name__)
+
 
 # mapping from ENVIRONMENT_TYPE to config class name
 # ENVIRONMENT_TYPE gets defined in docker-compose-*.yml files
 # config class names defined in instance/config.py or instance/defaultConfig.py
-configTypes = {
+config_classes = {
         'development': 'DevelopmentConfig',
         'production': 'ProductionConfig',
         'testing': 'TestingConfig',
         }
 
-# Setup configuration.  If there is no admin/instance/config.py file,
-# use admin/instance/defaultConfig.py instead
-configClass = configTypes[os.getenv('ENVIRONMENT_TYPE')]
-if 'config.py' in os.listdir(app.instance_path):
-    app.config.from_object('instance.config.' + configClass)
-else:
-    print('No config.py file in instance folder.', file=sys.stderr)
-    print('Using defaultConfig.py instead', file=sys.stderr)
-    app.config.from_object('instance.defaultConfig.' + configClass)
+
+# setup config
+config_class = config_classes[os.getenv('ENVIRONMENT_TYPE')]
+set_app_configuration(config_class, app)
 
 # instantiate the db
 db = SQLAlchemy(app)
@@ -53,3 +66,4 @@ def ping_pong():
         'status': 'success',
         'message': 'pong!'
     })
+
