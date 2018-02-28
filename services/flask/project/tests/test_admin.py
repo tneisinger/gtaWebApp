@@ -1,11 +1,9 @@
 # services/flask/project/tests/test_admin.py
 
-
 import json
 import unittest
 
 from project.tests.base import BaseTestCase, add_user
-from project import db
 
 
 class TestAdminService(BaseTestCase):

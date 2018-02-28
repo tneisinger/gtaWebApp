@@ -1,9 +1,9 @@
 # services/flask/project/tests/test_admin.py
 
-
 import unittest
 
 from project.tests.base import BaseTestCase, add_user
+
 
 class TestGeneralBlueprint(BaseTestCase):
     """Tests for the general blueprint"""

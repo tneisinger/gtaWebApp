@@ -1,7 +1,5 @@
 # services/flask/project/tests/base.py
 
-
-import os
 from flask_testing import TestCase
 
 from project import create_app, db, set_app_configuration

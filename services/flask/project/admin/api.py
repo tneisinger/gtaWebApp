@@ -37,6 +37,7 @@ def add_user():
         db.session.rollback()
         return jsonify(response_object), 400
 
+
 @admin_blueprint.route('/users/<user_id>', methods=['GET'])
 def get_single_user(user_id):
     """Get single user details"""
@@ -61,6 +62,7 @@ def get_single_user(user_id):
             return jsonify(response_object), 200
     except ValueError:
         return jsonify(response_object), 404
+
 
 @admin_blueprint.route('/users', methods=['GET'])
 def get_all_users():
