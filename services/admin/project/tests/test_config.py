@@ -19,9 +19,9 @@ class TestDevelopmentConfig(TestCase):
 
     def test_app_is_development(self):
         if custom_config_file_exists(app):
-            self.assertFalse(app.config['SECRET_KEY'] == 'my_precious')
+            self.assertFalse(app.config['SECRET_KEY'] == 'default_secret_key')
         else:
-            self.assertTrue(app.config['SECRET_KEY'] == 'my_precious')
+            self.assertTrue(app.config['SECRET_KEY'] == 'default_secret_key')
         self.assertFalse(current_app is None)
         self.assertTrue(
             app.config['SQLALCHEMY_DATABASE_URI'] ==
@@ -36,9 +36,9 @@ class TestTestingConfig(TestCase):
 
     def test_app_is_testing(self):
         if custom_config_file_exists(app):
-            self.assertFalse(app.config['SECRET_KEY'] == 'my_precious')
+            self.assertFalse(app.config['SECRET_KEY'] == 'default_secret_key')
         else:
-            self.assertTrue(app.config['SECRET_KEY'] == 'my_precious')
+            self.assertTrue(app.config['SECRET_KEY'] == 'default_secret_key')
         self.assertTrue(app.config['TESTING'])
         self.assertFalse(app.config['PRESERVE_CONTEXT_ON_EXCEPTION'])
         self.assertTrue(
@@ -54,9 +54,9 @@ class TestProductionConfig(TestCase):
 
     def test_app_is_production(self):
         if custom_config_file_exists(app):
-            self.assertFalse(app.config['SECRET_KEY'] == 'my_precious')
+            self.assertFalse(app.config['SECRET_KEY'] == 'default_secret_key')
         else:
-            self.assertTrue(app.config['SECRET_KEY'] == 'my_precious')
+            self.assertTrue(app.config['SECRET_KEY'] == 'default_secret_key')
         self.assertFalse(app.config['TESTING'])
 
 
