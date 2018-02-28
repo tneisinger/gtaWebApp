@@ -1,4 +1,4 @@
-# services/admin/manage.py
+# services/flask/manage.py
 
 
 
@@ -9,7 +9,7 @@ from flask.cli import FlaskGroup
 
 
 from project import create_app, db
-from project.api.models import User
+from project.admin.models import User
 
 
 app = create_app()

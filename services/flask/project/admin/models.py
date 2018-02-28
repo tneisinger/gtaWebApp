@@ -1,4 +1,4 @@
-# services/admin/project/api/models.py
+# services/flask/project/admin/models.py
 
 
 from project import db

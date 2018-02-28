@@ -2,29 +2,29 @@ version: '3.4'
 
 services:
 
-  admin:
-    container_name: admin
+  flask:
+    container_name: flask
     build:
-      context: ./services/admin
+      context: ./services/flask
       dockerfile: Dockerfile-dev
     volumes:
-      - ./services/admin:/usr/src/app
+      - ./services/flask:/usr/src/app
     ports:
       - 5001:5000
     environment:
       - FLASK_DEBUG=1
       - ENVIRONMENT_TYPE=development
-      - DATABASE_URL=postgres://postgres:${postgres_password}@admin-db:5432/admin_dev
-      - DATABASE_TEST_URL=postgres://postgres:${postgres_password}@admin-db:5432/admin_test
+      - DATABASE_URL=postgres://postgres:${postgres_password}@flask-db:5432/dev_db
+      - DATABASE_TEST_URL=postgres://postgres:${postgres_password}@flask-db:5432/test_db
     depends_on:
-      - admin-db
+      - flask-db
     links:
-      - admin-db
+      - flask-db
 
-  admin-db:
-    container_name: admin-db
+  flask-db:
+    container_name: flask-db
     build:
-      context: ./services/admin/project/db
+      context: ./services/flask/project/db
       dockerfile: Dockerfile
     ports:
       - 5435:5432
@@ -39,4 +39,4 @@ services:
     ports:
       - 80:80
     depends_on:
-      - admin
+      - flask

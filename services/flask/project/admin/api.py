@@ -1,22 +1,15 @@
-# services/admin/project/api/admin.py
+# services/flask/project/admin/api.py
 
 
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
-from project.api.models import User
+from project.admin.models import User
 from project import db
 
 
 admin_blueprint = Blueprint('admin', __name__)
 
-
-@admin_blueprint.route('/admin/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({
-        'status': 'success',
-        'message': 'pong!'
-    })
 
 @admin_blueprint.route('/users', methods=['POST'])
 def add_user():

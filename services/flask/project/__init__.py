@@ -1,4 +1,4 @@
-# services/admin/project/__init__.py
+# services/flask/project/__init__.py
 
 
 import os
@@ -15,7 +15,7 @@ def custom_config_file_exists(app):
 
 
 # Helper function to set app configuration.  If there is no
-# admin/instance/config.py file, use admin/instance/defaultConfig.py instead
+# instance/config.py file, use instance/defaultConfig.py instead
 def set_app_configuration(config_class, app):
     if custom_config_file_exists(app):
         app.config.from_object('instance.config.' + config_class)
@@ -51,8 +51,10 @@ def create_app(script_info=None):
     db.init_app(app)
 
     # register blueprints
-    from project.api.admin import admin_blueprint
-    app.register_blueprint(admin_blueprint)
+    from project.general import general_blueprint
+    app.register_blueprint(general_blueprint)
+    from project.admin.api import admin_blueprint
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
     # shell context for flask cli
     app.shell_context_processor({'app': app, 'db': db})

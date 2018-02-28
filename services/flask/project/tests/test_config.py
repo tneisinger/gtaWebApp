@@ -1,4 +1,4 @@
-# services/admin/project/tests/test_config.py
+# services/flask/project/tests/test_config.py
 
 
 import os

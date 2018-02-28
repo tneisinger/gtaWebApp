@@ -1,4 +1,4 @@
-# services/admin/project/config.py
+# services/flask/project/config.py
 
 import os
 

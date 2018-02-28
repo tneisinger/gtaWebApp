@@ -1,4 +1,4 @@
-# services/admin/project/tests/test_admin.py
+# services/flask/project/tests/test_admin.py
 
 
 import json
@@ -6,7 +6,7 @@ import unittest
 
 from project.tests.base import BaseTestCase
 from project import db
-from project.api.models import User
+from project.admin.models import User
 
 
 def add_user(username, email):
@@ -21,7 +21,7 @@ class TestAdminService(BaseTestCase):
 
     def test_users(self):
         """Ensure the /ping route behaves correctly."""
-        response = self.client.get('/admin/ping')
+        response = self.client.get('/ping')
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn('pong!', data['message'])
@@ -31,7 +31,7 @@ class TestAdminService(BaseTestCase):
         """Ensure a new user can be added to the database."""
         with self.client:
             response = self.client.post(
-                '/users',
+                '/admin/users',
                 data=json.dumps({
                     'username': 'michael',
                     'email': 'michael@mherman.org'
@@ -47,7 +47,7 @@ class TestAdminService(BaseTestCase):
         """Ensure error is thrown if the JSON object is empty."""
         with self.client:
             response = self.client.post(
-                '/users',
+                '/admin/users',
                 data=json.dumps({}),
                 content_type='application/json',
             )
@@ -62,7 +62,7 @@ class TestAdminService(BaseTestCase):
         """
         with self.client:
             response = self.client.post(
-                '/users',
+                '/admin/users',
                 data=json.dumps({'email': 'michael@mherman.org'}),
                 content_type='application/json',
             )
@@ -75,7 +75,7 @@ class TestAdminService(BaseTestCase):
         """Ensure error is thrown if the email already exists."""
         with self.client:
             self.client.post(
-                '/users',
+                '/admin/users',
                 data=json.dumps({
                     'username': 'michael',
                     'email': 'michael@mherman.org'
@@ -83,7 +83,7 @@ class TestAdminService(BaseTestCase):
                 content_type='application/json',
             )
             response = self.client.post(
-                '/users',
+                '/admin/users',
                 data=json.dumps({
                     'username': 'michael',
                     'email': 'michael@mherman.org'
@@ -100,7 +100,7 @@ class TestAdminService(BaseTestCase):
         """Ensure get single user behaves correctly."""
         user = add_user('michael', 'michael@mherman.org')
         with self.client:
-            response = self.client.get(f'/users/{user.id}')
+            response = self.client.get(f'/admin/users/{user.id}')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('michael', data['data']['username'])
@@ -110,7 +110,7 @@ class TestAdminService(BaseTestCase):
     def test_single_user_no_id(self):
         """Ensure error is thrown if an id is not provided."""
         with self.client:
-            response = self.client.get('/users/blah')
+            response = self.client.get('/admin/users/blah')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('User does not exist', data['message'])
@@ -119,7 +119,7 @@ class TestAdminService(BaseTestCase):
     def test_single_user_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
         with self.client:
-            response = self.client.get('/users/999')
+            response = self.client.get('/admin/users/999')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('User does not exist', data['message'])
@@ -130,7 +130,7 @@ class TestAdminService(BaseTestCase):
         add_user('michael', 'michael@mherman.org')
         add_user('fletcher', 'fletcher@notreal.com')
         with self.client:
-            response = self.client.get('/users')
+            response = self.client.get('/admin/users')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(data['data']['users']), 2)
