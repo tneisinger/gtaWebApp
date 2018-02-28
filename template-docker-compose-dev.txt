@@ -12,7 +12,6 @@ services:
     ports:
       - 5001:5000
     environment:
-      - FLASK_APP=project/__init__.py
       - FLASK_DEBUG=1
       - ENVIRONMENT_TYPE=development
       - DATABASE_URL=postgres://postgres:${postgres_password}@admin-db:5432/admin_dev

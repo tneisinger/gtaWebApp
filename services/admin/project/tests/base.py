@@ -4,7 +4,10 @@
 import os
 from flask_testing import TestCase
 
-from project import app, db, set_app_configuration
+from project import create_app, db, set_app_configuration
+
+
+app = create_app()
 
 
 class BaseTestCase(TestCase):

@@ -25,45 +25,35 @@ def set_app_configuration(config_class, app):
         app.config.from_object('instance.defaultConfig.' + config_class)
 
 
-# instantiate the app
-app = Flask(__name__)
-
-
-# mapping from ENVIRONMENT_TYPE to config class name
-# ENVIRONMENT_TYPE gets defined in docker-compose-*.yml files
-# config class names defined in instance/config.py or instance/defaultConfig.py
-config_classes = {
-        'development': 'DevelopmentConfig',
-        'production': 'ProductionConfig',
-        'testing': 'TestingConfig',
-        }
-
-
-# setup config
-config_class = config_classes[os.getenv('ENVIRONMENT_TYPE')]
-set_app_configuration(config_class, app)
-
 # instantiate the db
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 
-# model
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(128), nullable=False)
-    email = db.Column(db.String(128), nullable=False)
-    active = db.Column(db.Boolean(), default=True, nullable=False)
+def create_app(script_info=None):
 
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+    # instantiate the app
+    app = Flask(__name__)
 
+    # mapping from ENVIRONMENT_TYPE to config class name. ENVIRONMENT_TYPE gets
+    # defined in docker-compose-*.yml files config class names defined in
+    # instance/config.py or instance/defaultConfig.py
+    config_classes = {
+            'development': 'DevelopmentConfig',
+            'production': 'ProductionConfig',
+            'testing': 'TestingConfig',
+            }
 
-@app.route('/admin/ping', methods=['GET'])
-def ping_pong():
-    return jsonify({
-        'status': 'success',
-        'message': 'pong!'
-    })
+    # set config
+    config_class = config_classes[os.getenv('ENVIRONMENT_TYPE')]
+    set_app_configuration(config_class, app)
 
+    # set up extensions
+    db.init_app(app)
+
+    # register blueprints
+    from project.api.admin import admin_blueprint
+    app.register_blueprint(admin_blueprint)
+
+    # shell context for flask cli
+    app.shell_context_processor({'app': app, 'db': db})
+    return app
