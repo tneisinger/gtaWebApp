@@ -5,9 +5,18 @@ import os
 from flask_testing import TestCase
 
 from project import create_app, db, set_app_configuration
+from project.admin.models import User
 
 
 app = create_app()
+
+
+# helper function for adding a user to the db
+def add_user(username, email):
+    user = User(username=username, email=email)
+    db.session.add(user)
+    db.session.commit()
+    return user
 
 
 class BaseTestCase(TestCase):

@@ -4,16 +4,8 @@
 import json
 import unittest
 
-from project.tests.base import BaseTestCase
+from project.tests.base import BaseTestCase, add_user
 from project import db
-from project.admin.models import User
-
-
-def add_user(username, email):
-    user = User(username=username, email=email)
-    db.session.add(user)
-    db.session.commit()
-    return user
 
 
 class TestAdminService(BaseTestCase):
@@ -142,7 +134,6 @@ class TestAdminService(BaseTestCase):
                 'fletcher@notreal.com', data['data']['users'][1]['email'])
             self.assertIn('success', data['status'])
 
+
 if __name__ == '__main__':
     unittest.main()
-
-
