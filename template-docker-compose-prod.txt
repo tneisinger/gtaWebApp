@@ -6,9 +6,9 @@ services:
     container_name: admin
     build:
       context: ./services/admin
-      dockerfile: Dockerfile-dev
-    ports:
-      - 5001:5000
+      dockerfile: Dockerfile-prod
+    expose:
+      - '5000'
     environment:
       - FLASK_DEBUG=0
       - ENVIRONMENT_TYPE=production
@@ -29,3 +29,12 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${postgres_password}
+
+  nginx:
+    container_name: nginx
+    build: ./services/nginx
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - admin
