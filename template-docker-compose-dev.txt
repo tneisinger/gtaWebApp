@@ -36,11 +36,32 @@ services:
 
   nginx:
     container_name: nginx
-    build: ./services/nginx
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-dev
     restart: always
     ports:
       - 80:80
     depends_on:
+      - flask
+      - client
+
+  client:
+    container_name: client
+    build:
+      context: ./services/client
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/client:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - '3007:3000'
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
+    depends_on:
+      - flask
+    links:
       - flask
 
 volumes:
