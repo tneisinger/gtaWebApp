@@ -6,6 +6,7 @@ import sys
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_cors import CORS
 
 
 # Helper predicate that determines if there is a config.py file
@@ -34,6 +35,8 @@ def create_app(script_info=None):
 
     # instantiate the app
     app = Flask(__name__)
+
+    CORS(app)
 
     # mapping from ENVIRONMENT_TYPE to config class name. ENVIRONMENT_TYPE gets
     # defined in docker-compose-*.yml files config class names defined in
