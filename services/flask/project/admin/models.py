@@ -63,5 +63,3 @@ class RecurringExpense(db.Model):
     paid_by = db.Column(db.String(64), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date)
-
-
