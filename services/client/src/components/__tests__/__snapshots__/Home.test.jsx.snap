@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home renders a snapshot properly 1`] = `
+<div>
+  <h1>
+    Home
+  </h1>
+  <hr />
+  <br />
+  <p>
+    Home goes here.
+  </p>
+</div>
+`;
