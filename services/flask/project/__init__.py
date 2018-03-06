@@ -7,6 +7,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 
 # Helper predicate that determines if there is a config.py file
@@ -29,6 +30,7 @@ def set_app_configuration(config_class, app):
 # instantiate the db
 db = SQLAlchemy()
 toolbar = DebugToolbarExtension()
+migrate = Migrate()
 
 
 def create_app(script_info=None):
@@ -54,6 +56,7 @@ def create_app(script_info=None):
     # set up extensions
     db.init_app(app)
     toolbar.init_app(app)
+    migrate.init_app(app, db)
 
     # register blueprints
     from project.general import general_blueprint

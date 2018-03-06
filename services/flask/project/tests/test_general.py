@@ -2,7 +2,8 @@
 
 import unittest
 
-from project.tests.base import BaseTestCase, add_user
+from project.tests.base import BaseTestCase
+from project.tests.utils import add_user
 
 
 class TestGeneralBlueprint(BaseTestCase):
