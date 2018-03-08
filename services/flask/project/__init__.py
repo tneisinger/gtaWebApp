@@ -59,8 +59,6 @@ def create_app(script_info=None):
     migrate.init_app(app, db)
 
     # register blueprints
-    from project.general import general_blueprint
-    app.register_blueprint(general_blueprint)
     from project.admin.api import admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
