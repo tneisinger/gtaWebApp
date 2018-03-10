@@ -1,17 +1,24 @@
 # services/flask/project/tests/test_admin_api_expenses.py
 
 import json
-from datetime import date
+from datetime import date, timedelta
 
 from project.tests.base import BaseTestCase
 from project.admin.models import (OneTimeExpenseCategoryOption,
                                   OneTimeExpensePaidByOption)
+from project.tests.utils import add_one_time_expense
 
 
 class TestAdminApiJobs(BaseTestCase):
     """Tests for the /admin/expenses routes of the Admin Api Service."""
 
+    # Get the dates for yesterday and today
+    yesterday = (date.today() - timedelta(1)).isoformat()
     today = date.today().isoformat()
+
+    # Get the first valid option from each enumeration
+    VALID_PAID_BY = next(e.value for e in OneTimeExpensePaidByOption)
+    VALID_CATEGORY = next(e.value for e in OneTimeExpenseCategoryOption)
 
     def test_add_one_time_expense(self):
         """Ensure a new one time expense can be added to the database."""
@@ -23,9 +30,9 @@ class TestAdminApiJobs(BaseTestCase):
                         'description': 'Test Description',
                         'amount_spent': 666.01,
                         'date': self.today,
-                        'paid_by': 'Tyler',
+                        'paid_by': self.VALID_PAID_BY,
                         'tax_deductible': True,
-                        'category': 'Business Equipment'
+                        'category': self.VALID_CATEGORY
                     }),
                     content_type='application/json',
             )
@@ -56,9 +63,9 @@ class TestAdminApiJobs(BaseTestCase):
                         'description': 'Test Description',
                         'amount_spent': 666.01,
                         'date': self.today,
-                        'paid_by': 'Tyler',
+                        'paid_by': self.VALID_PAID_BY,
                         'tax_deductible': True,
-                        'category': 'Business Equipment'
+                        'category': self.VALID_CATEGORY
                 }),
                 content_type='application/json',
             )
@@ -77,9 +84,9 @@ class TestAdminApiJobs(BaseTestCase):
                         'description': 'Test Description',
                         'amount_spent': 'INVALID NON-NUMERIC VALUE!',
                         'date': self.today,
-                        'paid_by': 'Tyler',
+                        'paid_by': self.VALID_PAID_BY,
                         'tax_deductible': True,
-                        'category': 'Business Equipment'
+                        'category': self.VALID_CATEGORY
                 }),
                 content_type='application/json',
             )
@@ -103,7 +110,7 @@ class TestAdminApiJobs(BaseTestCase):
                         'description': 'Test Description',
                         'amount_spent': 666.01,
                         'date': self.today,
-                        'paid_by': 'Tyler',
+                        'paid_by': self.VALID_PAID_BY,
                         'tax_deductible': True,
                         'category': valid_category_val
                     }),
@@ -128,7 +135,7 @@ class TestAdminApiJobs(BaseTestCase):
                     'description': 'Test Description',
                     'amount_spent': 666.01,
                     'date': self.today,
-                    'paid_by': 'Tyler',
+                    'paid_by': self.VALID_PAID_BY,
                     'tax_deductible': True,
                     'category': 'INVALID!!!'
                 }),
@@ -160,7 +167,7 @@ class TestAdminApiJobs(BaseTestCase):
                         'date': self.today,
                         'paid_by': valid_paid_by_val,
                         'tax_deductible': True,
-                        'category': 'Business Equipment'
+                        'category': self.VALID_CATEGORY
                     }),
                     content_type='application/json',
                 )
@@ -185,7 +192,7 @@ class TestAdminApiJobs(BaseTestCase):
                     'date': self.today,
                     'paid_by': 'INVALID!!!',
                     'tax_deductible': True,
-                    'category': 'Business Equipment'
+                    'category': self.VALID_CATEGORY
                 }),
                 content_type='application/json',
             )
@@ -196,4 +203,47 @@ class TestAdminApiJobs(BaseTestCase):
                        ', '.join([f"'{t.value}'"
                                   for t in OneTimeExpensePaidByOption]))
             self.assertEqual(err_msg, data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_get_single_one_time_expense(self):
+        """Ensure get single OneTimeExpense behaves correctly."""
+        expense = add_one_time_expense(
+                                        merchant='Test Merchant',
+                                        description='Test Description',
+                                        amount_spent=666.01,
+                                        date=self.today,
+                                        paid_by=self.VALID_PAID_BY,
+                                        tax_deductible=True,
+                                        category=self.VALID_CATEGORY
+        )
+        with self.client:
+            url = f'/admin/one-time-expenses/{expense.id}'
+            response = self.client.get(url)
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('Test Merchant', data['data']['merchant'])
+            self.assertIn('Test Description', data['data']['description'])
+            self.assertEqual(666.01, data['data']['amount_spent'])
+            self.assertIn(self.today, data['data']['date'])
+            self.assertEqual(self.VALID_PAID_BY, data['data']['paid_by'])
+            self.assertTrue(data['data']['tax_deductible'])
+            self.assertEqual(self.VALID_CATEGORY, data['data']['category'])
+            self.assertIn('success', data['status'])
+
+    def test_get_single_one_time_expense_no_id(self):
+        """Ensure error is thrown if an id is not provided."""
+        with self.client:
+            response = self.client.get('/admin/one-time-expenses/blurp')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('Expense does not exist', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_get_single_one_time_expense_incorrect_id(self):
+        """Ensure error is thrown if the id does not exist."""
+        with self.client:
+            response = self.client.get('/admin/one-time-expenses/9999')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('Expense does not exist', data['message'])
             self.assertIn('fail', data['status'])

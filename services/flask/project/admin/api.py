@@ -120,9 +120,9 @@ def get_all_jobs():
     return jsonify(response_object), 200
 
 
-# ==============
-# EXPENSE ROUTES
-# ==============
+# =======================
+# ONE TIME EXPENSE ROUTES
+# =======================
 
 
 @admin_blueprint.route('/one-time-expenses', methods=['POST'])
@@ -176,6 +176,26 @@ def add_one_time_expense():
                                   for t in OneTimeExpensePaidByOption]))
         response_object['message'] = err_msg
         return jsonify(response_object), 400
+
+
+@admin_blueprint.route('/one-time-expenses/<expense_id>', methods=['GET'])
+def get_single_one_time_expense(expense_id):
+    """Get single one time expense"""
+    response_object = {
+        'status': 'fail',
+        'message': 'Expense does not exist'
+    }
+    try:
+        expense = OneTimeExpense.query.filter_by(id=int(expense_id)).first()
+        if not expense:
+            return jsonify(response_object), 404
+        response_object = {
+                            'status': 'success',
+                            'data': expense.to_json()
+        }
+        return jsonify(response_object), 200
+    except (ValueError, exc.DataError):
+        return jsonify(response_object), 404
 
 
 # ===========
