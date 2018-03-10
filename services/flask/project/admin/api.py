@@ -198,6 +198,20 @@ def get_single_one_time_expense(expense_id):
         return jsonify(response_object), 404
 
 
+@admin_blueprint.route('/one-time-expenses', methods=['GET'])
+def get_all_one_time_expenses():
+    """Get all one time expenses"""
+    expenses = OneTimeExpense.query.all()
+    response_object = {
+            'status': 'success',
+            'data': {
+                      'one-time-expenses': [expense.to_json()
+                                            for expense in expenses]
+                    }
+    }
+    return jsonify(response_object), 200
+
+
 # ===========
 # USER ROUTES
 # ===========

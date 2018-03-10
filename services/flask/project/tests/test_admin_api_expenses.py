@@ -247,3 +247,47 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertEqual(response.status_code, 404)
             self.assertIn('Expense does not exist', data['message'])
             self.assertIn('fail', data['status'])
+
+    def test_get_all_one_time_expenses(self):
+        """Ensure get all one time expenses behaves correctly."""
+        add_one_time_expense(
+                merchant='Merchant 1',
+                description='Description 1',
+                amount_spent=111.11,
+                date=self.yesterday,
+                paid_by=self.VALID_PAID_BY,
+                tax_deductible=False,
+                category=self.VALID_CATEGORY
+        )
+        add_one_time_expense(
+                merchant='Merchant 2',
+                description='Description 2',
+                amount_spent=222.22,
+                date=self.today,
+                paid_by=self.VALID_PAID_BY,
+                tax_deductible=True,
+                category=self.VALID_CATEGORY
+        )
+        with self.client:
+            response = self.client.get('/admin/one-time-expenses')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertEqual(len(data['data']['one-time-expenses']), 2)
+            expenses = data['data']['one-time-expenses']
+            # Assertions for expense 1
+            self.assertIn('Merchant 1', expenses[0]['merchant'])
+            self.assertIn('Description 1', expenses[0]['description'])
+            self.assertEqual(111.11, expenses[0]['amount_spent'])
+            self.assertEqual(self.yesterday, expenses[0]['date'])
+            self.assertEqual(self.VALID_PAID_BY, expenses[0]['paid_by'])
+            self.assertFalse(expenses[0]['tax_deductible'])
+            self.assertEqual(self.VALID_CATEGORY, expenses[0]['category'])
+            # Assertions for expense 2
+            self.assertIn('Merchant 2', expenses[1]['merchant'])
+            self.assertIn('Description 2', expenses[1]['description'])
+            self.assertEqual(222.22, expenses[1]['amount_spent'])
+            self.assertEqual(self.today, expenses[1]['date'])
+            self.assertEqual(self.VALID_PAID_BY, expenses[1]['paid_by'])
+            self.assertTrue(expenses[1]['tax_deductible'])
+            self.assertEqual(self.VALID_CATEGORY, expenses[1]['category'])
