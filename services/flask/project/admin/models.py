@@ -93,15 +93,54 @@ class Job(db.Model):
         }
 
 
+class OneTimeExpensePaidByOption(enum.Enum):
+    TYLER_AND_MEGHAN = 'Tyler and Meghan'
+    TYLER = 'Tyler'
+    MEGHAN = 'Meghan'
+
+
+class OneTimeExpenseCategoryOption(enum.Enum):
+    BUSINESS_EQUIPMENT = 'Business Equipment'
+    BUSINESS_SUPPLIES = 'Business Supplies'
+    GASOLINE = 'Gasoline'
+    VEHICLE_MAINTENANCE = 'Vehicle Maintenance'
+    TRAVEL_EXPENSE = 'Travel Expense'
+    ENTERTAINMENT = 'Entertainment'
+    FOOD = 'Food'
+
+
 class OneTimeExpense(db.Model):
     __tablename__ = 'one_time_expenses'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     merchant = db.Column(db.String(64), nullable=False)
     description = db.Column(db.String(128), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
+    amount_spent = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, nullable=False)
-    paid_by = db.Column(db.String(64), nullable=False)
-    tax_category = db.Column(db.String(64), nullable=False)
+    paid_by = db.Column(db.Enum(OneTimeExpensePaidByOption), nullable=False)
+    tax_deductible = db.Column(db.Boolean, nullable=False)
+    category = db.Column(db.Enum(OneTimeExpenseCategoryOption), nullable=False)
+
+    def __init__(self, merchant, description, amount_spent, date, paid_by,
+                 tax_deductible, category):
+        self.merchant = merchant
+        self.description = description
+        self.amount_spent = amount_spent
+        self.date = date
+        self.paid_by = OneTimeExpensePaidByOption(paid_by)
+        self.tax_deductible = tax_deductible
+        self.category = OneTimeExpenseCategoryOption(category)
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'merchant': self.merchant,
+            'description': self.description,
+            'amount_spent': self.amount_spent,
+            'date': self.date.isoformat(),
+            'paid_by': self.paid_by.value,
+            'tax_deductible': self.tax_deductible,
+            'category': self.category.value,
+        }
 
 
 class RecurringExpense(db.Model):
