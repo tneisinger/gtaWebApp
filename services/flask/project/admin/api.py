@@ -1,6 +1,5 @@
 # services/flask/project/admin/api.py
 
-
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
@@ -57,22 +56,23 @@ def add_job():
             response_object['message'] = msg
         return jsonify(response_object), 400
     except exc.DataError as e:
-        try:
-            float(job.amount_paid)
-        except ValueError:
+        db.session.rollback()
+        err_msg = str(e)
+        if 'invalid input syntax for type double precision' in err_msg:
             response_object['message'] = "'amount_paid' must be a number."
         return jsonify(response_object), 400
     except ValueError as e:
+        db.session.rollback()
         err_msg = str(e)
-        if 'JobPaidToOption' in err_msg:
+        if 'is not a valid JobPaidToOption' in err_msg:
             err_msg = ("Invalid 'paid_to' value. " +
                        "The valid values for 'paid_to' are: " +
                        ', '.join([f"'{t.value}'" for t in JobPaidToOption]))
-        elif 'JobWorkedByOption' in err_msg:
+        elif 'is not a valid JobWorkedByOption' in err_msg:
             err_msg = ("Invalid 'worked_by' value. " +
                        "The valid values for 'worked_by' are: " +
                        ', '.join([f"'{t.value}'" for t in JobWorkedByOption]))
-        elif 'JobConfirmationOption' in err_msg:
+        elif 'is not a valid JobConfirmationOption' in err_msg:
             err_msg = ("Invalid 'confirmation' value. " +
                        "The valid values for 'confirmation' are: " +
                        ', '.join([f"'{t.value}'"
