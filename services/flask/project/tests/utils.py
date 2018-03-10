@@ -2,7 +2,7 @@
 
 
 from project import db
-from project.admin.models import User, Job
+from project.admin.models import User, Job, OneTimeExpense
 
 
 def add_user(username, email):
@@ -19,3 +19,12 @@ def add_job(client, description, amount_paid, paid_to, worked_by,
     db.session.add(job)
     db.session.commit()
     return job
+
+
+def add_one_time_expense(merchant, description, amount_spent, date, paid_by,
+                         tax_deductible, category):
+    expense = OneTimeExpense(merchant, description, amount_spent, date,
+                             paid_by, tax_deductible, category)
+    db.session.add(expense)
+    db.session.commit()
+    return expense
