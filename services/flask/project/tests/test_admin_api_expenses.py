@@ -1,6 +1,7 @@
 # services/flask/project/tests/test_admin_api_expenses.py
 
 import json
+import unittest
 from datetime import date, timedelta
 
 from project.tests.base import BaseTestCase
@@ -511,3 +512,7 @@ class TestAdminApiExpenses(BaseTestCase):
             # Assertions for expense 2
             self.assertEqual(2, expenses[1].pop('id'))
             self.assertEqual(valid_expense_dict2, expenses[1])
+
+
+if __name__ == '__main__':
+    unittest.main()

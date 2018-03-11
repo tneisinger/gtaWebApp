@@ -1,6 +1,7 @@
 # services/flask/project/tests/test_admin_api_jobs.py
 
 import json
+import unittest
 from datetime import date, timedelta
 
 from project.tests.base import BaseTestCase
@@ -374,3 +375,7 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertTrue(jobs[1]['has_paid'])
             self.assertEqual(self.yesterday, jobs[1]['start_date'])
             self.assertEqual(self.today, jobs[1]['end_date'])
+
+
+if __name__ == '__main__':
+    unittest.main()

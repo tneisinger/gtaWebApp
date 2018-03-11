@@ -30,6 +30,7 @@ class TestDevelopmentConfig(TestCase):
         self.assertTrue(app.config['DEBUG_TB_ENABLED'])
         self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
 
+
 class TestTestingConfig(TestCase):
     def create_app(self):
         set_app_configuration('TestingConfig', app)

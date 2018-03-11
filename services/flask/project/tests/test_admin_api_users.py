@@ -1,9 +1,9 @@
 # services/flask/project/tests/test_admin_api_users.py
 
 import json
+import unittest
 
 from project.tests.base import BaseTestCase
-from project.admin.models import User
 from project.tests.utils import add_user
 
 

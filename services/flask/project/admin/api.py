@@ -324,8 +324,7 @@ def add_user():
         if not user:
             user = User(username=post_data.get('username'),
                         email=email,
-                        password=post_data.get('password')
-            )
+                        password=post_data.get('password'))
             db.session.add(user)
             db.session.commit()
             response_object['status'] = 'success'
