@@ -10,7 +10,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(128), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    active = db.Column(db.Boolean(), default=True, nullable=False)
     administrator = db.Column(db.Boolean(), default=False, nullable=False)
 
     def __init__(self, username, email, administrator=False):
@@ -23,7 +22,6 @@ class User(db.Model):
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'active': self.active,
             'administrator': self.administrator
         }
 
