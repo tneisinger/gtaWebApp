@@ -229,7 +229,7 @@ def add_recurring_expense():
                                 merchant=post_data.get('merchant'),
                                 description=post_data.get('description'),
                                 amount=post_data.get('amount'),
-                                is_deductible=post_data.get('is_deductible'),
+                                tax_deductible=post_data.get('tax_deductible'),
                                 category=post_data.get('category'),
                                 recurrence=post_data.get('recurrence'),
                                 paid_by=post_data.get('paid_by'),

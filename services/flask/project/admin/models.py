@@ -165,7 +165,7 @@ class RecurringExpense(db.Model):
     merchant = db.Column(db.String(64), nullable=False)
     description = db.Column(db.String(128), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    is_deductible = db.Column(db.Boolean, nullable=False)
+    tax_deductible = db.Column(db.Boolean, nullable=False)
     category = db.Column(db.Enum(Category, name='category_recurring_expense'),
                          nullable=False)
     recurrence = db.Column(db.Enum(Recurrence), nullable=False)
@@ -178,12 +178,12 @@ class RecurringExpense(db.Model):
                                name='check_dates_recurring_expense'),
             {})
 
-    def __init__(self, merchant, description, amount, is_deductible,
+    def __init__(self, merchant, description, amount, tax_deductible,
                  category, recurrence, paid_by, start_date, end_date=None):
         self.merchant = merchant
         self.description = description
         self.amount = amount
-        self.is_deductible = is_deductible
+        self.tax_deductible = tax_deductible
         self.category = self.Category(category)
         self.recurrence = self.Recurrence(recurrence)
         self.paid_by = self.PaidBy(paid_by)
@@ -196,7 +196,7 @@ class RecurringExpense(db.Model):
             'merchant': self.merchant,
             'description': self.description,
             'amount': self.amount,
-            'is_deductible': self.is_deductible,
+            'tax_deductible': self.tax_deductible,
             'category': self.category.value,
             'recurrence': self.recurrence.value,
             'paid_by': self.paid_by.value,

@@ -30,10 +30,10 @@ def add_one_time_expense(merchant, description, amount_spent, date, paid_by,
     return expense
 
 
-def add_recurring_expense(merchant, description, amount, is_deductible,
+def add_recurring_expense(merchant, description, amount, tax_deductible,
                           category, recurrence, paid_by, start_date,
                           end_date=None):
-    expense = RecurringExpense(merchant, description, amount, is_deductible,
+    expense = RecurringExpense(merchant, description, amount, tax_deductible,
                                category, recurrence, paid_by, start_date,
                                end_date)
     db.session.add(expense)

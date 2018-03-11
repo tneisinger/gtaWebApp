@@ -29,7 +29,7 @@ class TestAdminApiExpenses(BaseTestCase):
         'merchant': 'Test Merchant',
         'description': 'Test Description',
         'amount': 666.01,
-        'is_deductible': True,
+        'tax_deductible': True,
         'category': next(e.value for e in RecurringExpense.Category),
         'recurrence': next(e.value for e in RecurringExpense.Recurrence),
         'paid_by': next(e.value for e in RecurringExpense.PaidBy),
@@ -484,7 +484,7 @@ class TestAdminApiExpenses(BaseTestCase):
         valid_expense_dict1['merchant'] = 'Merchant 1'
         valid_expense_dict1['description'] = 'Description 1'
         valid_expense_dict1['amount'] = 111.11
-        valid_expense_dict1['is_deductible'] = False
+        valid_expense_dict1['tax_deductible'] = False
         valid_expense_dict1['start_date'] = self.yesterday
         valid_expense_dict1['end_date'] = self.today
 
