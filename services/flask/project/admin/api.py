@@ -6,7 +6,7 @@ from sqlalchemy import exc
 from project.admin.models import (User, Job, JobPaidToOption,
                                   JobWorkedByOption, JobConfirmationOption,
                                   OneTimeExpense, OneTimeExpenseCategoryOption,
-                                  OneTimeExpensePaidByOption)
+                                  OneTimeExpensePaidByOption, RecurringExpense)
 from project import db
 
 
@@ -210,6 +210,65 @@ def get_all_one_time_expenses():
                     }
     }
     return jsonify(response_object), 200
+
+
+# ========================
+# RECURRING EXPENSE ROUTES
+# ========================
+
+
+@admin_blueprint.route('/recurring-expenses', methods=['POST'])
+def add_recurring_expense():
+    """Add a recurring expense to the database"""
+    response_object = {
+                        'status': 'fail',
+                        'message': 'Invalid payload.'
+    }
+    post_data = request.get_json()
+    if not post_data:
+        return jsonify(response_object), 400
+    try:
+        expense = RecurringExpense(
+                                merchant=post_data.get('merchant'),
+                                description=post_data.get('description'),
+                                amount=post_data.get('amount'),
+                                is_deductible=post_data.get('is_deductible'),
+                                category=post_data.get('category'),
+                                recurrence=post_data.get('recurrence'),
+                                paid_by=post_data.get('paid_by'),
+                                start_date=post_data.get('start_date'),
+                                end_date=post_data.get('end_date')
+        )
+        db.session.add(expense)
+        db.session.commit()
+        response_object = {
+            'status': 'success',
+            'message': f'{expense.merchant} recurring expense was added!'
+        }
+        return jsonify(response_object), 201
+    except exc.IntegrityError as e:
+        db.session.rollback()
+        return jsonify(response_object), 400
+    except ValueError as e:
+        db.session.rollback()
+        err_msg = str(e)
+        if 'is not a valid RecurrenceOption' in err_msg:
+            err_msg = ("Invalid 'recurrence' value. " +
+                       "The valid values for 'recurrence' are: " +
+                       ', '.join([f"'{t.value}'"
+                                  for t in RecurringExpense.RecurrenceOption]))
+        if 'is not a valid PaidByOption' in err_msg:
+            err_msg = ("Invalid 'paid_by' value. " +
+                       "The valid values for 'paid_by' are: " +
+                       ', '.join([f"'{t.value}'"
+                                  for t in RecurringExpense.PaidByOption]))
+        if 'is not a valid CategoryOption' in err_msg:
+            err_msg = ("Invalid 'category' value. " +
+                       "The valid values for 'category' are: " +
+                       ', '.join([f"'{t.value}'"
+                                  for t in RecurringExpense.CategoryOption]))
+        response_object['message'] = err_msg
+        return jsonify(response_object), 400
 
 
 # ===========

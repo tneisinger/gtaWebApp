@@ -144,13 +144,44 @@ class OneTimeExpense(db.Model):
 
 
 class RecurringExpense(db.Model):
+
+    class CategoryOption(enum.Enum):
+        HOUSING = 'Housing'
+        ENTERTAINMENT = 'Entertainment'
+        UTILITIES = 'Utilities'
+        OTHER = 'Other'
+
+    class RecurrenceOption(enum.Enum):
+        MONTHLY = 'Monthly'
+        EVERY_OTHER_MONTH = 'Every Other Month'
+        EVERY_SIX_MONTHS = 'Every Six Months'
+        ONCE_PER_YEAR = 'Once Per Year'
+
+    class PaidByOption(enum.Enum):
+        TYLER_AND_MEGHAN = 'Tyler and Meghan'
+        TYLER = 'Tyler'
+        MEGHAN = 'Meghan'
+
     __tablename__ = 'recurring_expenses'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     merchant = db.Column(db.String(64), nullable=False)
     description = db.Column(db.String(128), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    tax_category = db.Column(db.String(64), nullable=False)
-    recurrence = db.Column(db.String(64), nullable=False)
-    paid_by = db.Column(db.String(64), nullable=False)
+    is_deductible = db.Column(db.Boolean, nullable=False)
+    category = db.Column(db.Enum(CategoryOption), nullable=False)
+    recurrence = db.Column(db.Enum(RecurrenceOption), nullable=False)
+    paid_by = db.Column(db.Enum(PaidByOption), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date)
+
+    def __init__(self, merchant, description, amount, is_deductible,
+                 category, recurrence, paid_by, start_date, end_date=None):
+        self.merchant = merchant
+        self.description = description
+        self.amount = amount
+        self.is_deductible = is_deductible
+        self.category = self.CategoryOption(category)
+        self.recurrence = self.RecurrenceOption(recurrence)
+        self.paid_by = self.PaidByOption(paid_by)
+        self.start_date = start_date
+        self.end_date = end_date
