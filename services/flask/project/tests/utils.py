@@ -29,6 +29,7 @@ def add_one_time_expense(merchant, description, amount_spent, date, paid_by,
     db.session.commit()
     return expense
 
+
 def add_recurring_expense(merchant, description, amount, is_deductible,
                           category, recurrence, paid_by, start_date,
                           end_date=None):

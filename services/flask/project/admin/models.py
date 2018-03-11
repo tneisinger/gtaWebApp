@@ -175,7 +175,7 @@ class RecurringExpense(db.Model):
     end_date = db.Column(db.Date)
     __table_args__ = (
             db.CheckConstraint('end_date >= start_date OR end_date IS NULL',
-                                name='check_dates_recurring_expense'),
+                               name='check_dates_recurring_expense'),
             {})
 
     def __init__(self, merchant, description, amount, is_deductible,

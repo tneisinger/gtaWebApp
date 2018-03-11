@@ -1,7 +1,5 @@
 # services/flask/project/admin/api.py
 
-import sys
-
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
@@ -290,6 +288,7 @@ def get_single_recurring_expense(expense_id):
         return jsonify(response_object), 200
     except (ValueError, exc.DataError):
         return jsonify(response_object), 404
+
 
 @admin_blueprint.route('/recurring-expenses', methods=['GET'])
 def get_all_recurring_expenses():

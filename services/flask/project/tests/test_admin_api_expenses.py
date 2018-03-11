@@ -356,8 +356,7 @@ class TestAdminApiExpenses(BaseTestCase):
         Ensure recurring_expenses with valid paid_by values can be added
         """
         valid_expense_dict = self.VALID_RECURRING_EXPENSE_DICT.copy()
-        for valid_paid_by_val in [t.value
-                                     for t in RecurringExpense.PaidBy]:
+        for valid_paid_by_val in [t.value for t in RecurringExpense.PaidBy]:
             valid_expense_dict['paid_by'] = valid_paid_by_val
             with self.client:
                 response = self.client.post(
@@ -395,8 +394,7 @@ class TestAdminApiExpenses(BaseTestCase):
         Ensure recurring_expenses with valid category values can be added
         """
         valid_expense_dict = self.VALID_RECURRING_EXPENSE_DICT.copy()
-        for valid_category_val in [t.value
-                                     for t in RecurringExpense.Category]:
+        for valid_category_val in [t.value for t in RecurringExpense.Category]:
             valid_expense_dict['category'] = valid_category_val
             with self.client:
                 response = self.client.post(
@@ -459,7 +457,7 @@ class TestAdminApiExpenses(BaseTestCase):
 
     def test_get_single_recurring_expense_no_id(self):
         """Ensure error thrown if no id provided"""
-        expense = add_recurring_expense(**self.VALID_RECURRING_EXPENSE_DICT)
+        add_recurring_expense(**self.VALID_RECURRING_EXPENSE_DICT)
         with self.client:
             url = f'/admin/recurring-expenses/blah'
             response = self.client.get(url)
@@ -470,7 +468,7 @@ class TestAdminApiExpenses(BaseTestCase):
 
     def test_get_single_recurring_expense_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
-        expense = add_recurring_expense(**self.VALID_RECURRING_EXPENSE_DICT)
+        add_recurring_expense(**self.VALID_RECURRING_EXPENSE_DICT)
         with self.client:
             response = self.client.get('/admin/recurring-expenses/9999')
             data = json.loads(response.data.decode())
