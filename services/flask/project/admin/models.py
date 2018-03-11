@@ -173,6 +173,10 @@ class RecurringExpense(db.Model):
                         nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date)
+    __table_args__ = (
+            db.CheckConstraint('end_date >= start_date OR end_date IS NULL',
+                                name='check_dates_recurring_expense'),
+            {})
 
     def __init__(self, merchant, description, amount, is_deductible,
                  category, recurrence, paid_by, start_date, end_date=None):
@@ -185,3 +189,19 @@ class RecurringExpense(db.Model):
         self.paid_by = self.PaidBy(paid_by)
         self.start_date = start_date
         self.end_date = end_date
+
+    def to_json(self):
+        json_object = {
+            'id': self.id,
+            'merchant': self.merchant,
+            'description': self.description,
+            'amount': self.amount,
+            'is_deductible': self.is_deductible,
+            'category': self.category.value,
+            'recurrence': self.recurrence.value,
+            'paid_by': self.paid_by.value,
+            'start_date': self.start_date.isoformat(),
+        }
+        if self.end_date:
+            json_object['end_date'] = self.end_date.isoformat()
+        return json_object

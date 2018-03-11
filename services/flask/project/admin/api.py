@@ -1,5 +1,7 @@
 # services/flask/project/admin/api.py
 
+import sys
+
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
@@ -245,6 +247,9 @@ def add_recurring_expense():
         return jsonify(response_object), 201
     except exc.IntegrityError as e:
         db.session.rollback()
+        if 'violates check constraint' in str(e):
+            msg = 'start_date must be earlier than end_date'
+            response_object['message'] = msg
         return jsonify(response_object), 400
     except ValueError as e:
         db.session.rollback()
@@ -266,6 +271,38 @@ def add_recurring_expense():
                                   for t in RecurringExpense.Category]))
         response_object['message'] = err_msg
         return jsonify(response_object), 400
+
+
+@admin_blueprint.route('/recurring-expenses/<expense_id>', methods=['GET'])
+def get_single_recurring_expense(expense_id):
+    response_object = {
+        'status': 'fail',
+        'message': 'Expense does not exist'
+    }
+    try:
+        expense = RecurringExpense.query.filter_by(id=int(expense_id)).first()
+        if not expense:
+            return jsonify(response_object), 404
+        response_object = {
+                            'status': 'success',
+                            'data': expense.to_json()
+        }
+        return jsonify(response_object), 200
+    except (ValueError, exc.DataError):
+        return jsonify(response_object), 404
+
+@admin_blueprint.route('/recurring-expenses', methods=['GET'])
+def get_all_recurring_expenses():
+    """Get all recurring expenses"""
+    expenses = RecurringExpense.query.all()
+    response_object = {
+            'status': 'success',
+            'data': {
+                      'recurring-expenses': [expense.to_json()
+                                             for expense in expenses]
+                    }
+    }
+    return jsonify(response_object), 200
 
 
 # ===========

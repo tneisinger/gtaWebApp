@@ -2,7 +2,7 @@
 
 
 from project import db
-from project.admin.models import User, Job, OneTimeExpense
+from project.admin.models import User, Job, OneTimeExpense, RecurringExpense
 
 
 def add_user(username, email):
@@ -25,6 +25,16 @@ def add_one_time_expense(merchant, description, amount_spent, date, paid_by,
                          tax_deductible, category):
     expense = OneTimeExpense(merchant, description, amount_spent, date,
                              paid_by, tax_deductible, category)
+    db.session.add(expense)
+    db.session.commit()
+    return expense
+
+def add_recurring_expense(merchant, description, amount, is_deductible,
+                          category, recurrence, paid_by, start_date,
+                          end_date=None):
+    expense = RecurringExpense(merchant, description, amount, is_deductible,
+                               category, recurrence, paid_by, start_date,
+                               end_date)
     db.session.add(expense)
     db.session.commit()
     return expense
