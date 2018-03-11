@@ -5,8 +5,7 @@ from sqlalchemy import exc
 
 from project.admin.models import (User, Job, JobPaidToOption,
                                   JobWorkedByOption, JobConfirmationOption,
-                                  OneTimeExpense, OneTimeExpenseCategoryOption,
-                                  OneTimeExpensePaidByOption, RecurringExpense)
+                                  OneTimeExpense, RecurringExpense)
 from project import db
 
 
@@ -164,16 +163,16 @@ def add_one_time_expense():
     except ValueError as e:
         db.session.rollback()
         err_msg = str(e)
-        if 'is not a valid OneTimeExpenseCategoryOption' in err_msg:
+        if 'is not a valid Category' in err_msg:
             err_msg = ("Invalid 'category' value. " +
                        "The valid values for 'category' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in OneTimeExpenseCategoryOption]))
-        if 'is not a valid OneTimeExpensePaidByOption' in err_msg:
+                                  for t in OneTimeExpense.Category]))
+        if 'is not a valid PaidBy' in err_msg:
             err_msg = ("Invalid 'paid_by' value. " +
                        "The valid values for 'paid_by' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in OneTimeExpensePaidByOption]))
+                                  for t in OneTimeExpense.PaidBy]))
         response_object['message'] = err_msg
         return jsonify(response_object), 400
 
@@ -252,21 +251,21 @@ def add_recurring_expense():
     except ValueError as e:
         db.session.rollback()
         err_msg = str(e)
-        if 'is not a valid RecurrenceOption' in err_msg:
+        if 'is not a valid Recurrence' in err_msg:
             err_msg = ("Invalid 'recurrence' value. " +
                        "The valid values for 'recurrence' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in RecurringExpense.RecurrenceOption]))
-        if 'is not a valid PaidByOption' in err_msg:
+                                  for t in RecurringExpense.Recurrence]))
+        if 'is not a valid PaidBy' in err_msg:
             err_msg = ("Invalid 'paid_by' value. " +
                        "The valid values for 'paid_by' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in RecurringExpense.PaidByOption]))
-        if 'is not a valid CategoryOption' in err_msg:
+                                  for t in RecurringExpense.PaidBy]))
+        if 'is not a valid Category' in err_msg:
             err_msg = ("Invalid 'category' value. " +
                        "The valid values for 'category' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in RecurringExpense.CategoryOption]))
+                                  for t in RecurringExpense.Category]))
         response_object['message'] = err_msg
         return jsonify(response_object), 400
 

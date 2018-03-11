@@ -4,13 +4,11 @@ import json
 from datetime import date, timedelta
 
 from project.tests.base import BaseTestCase
-from project.admin.models import (OneTimeExpenseCategoryOption,
-                                  OneTimeExpensePaidByOption,
-                                  RecurringExpense)
+from project.admin.models import OneTimeExpense, RecurringExpense
 from project.tests.utils import add_one_time_expense
 
 
-class TestAdminApiJobs(BaseTestCase):
+class TestAdminApiExpenses(BaseTestCase):
     """Tests for the /admin/expenses routes of the Admin Api Service."""
 
     # Get the dates for yesterday and today
@@ -22,9 +20,9 @@ class TestAdminApiJobs(BaseTestCase):
         'description': 'Test Description',
         'amount_spent': 666.01,
         'date': today,
-        'paid_by': next(e.value for e in OneTimeExpensePaidByOption),
+        'paid_by': next(e.value for e in OneTimeExpense.PaidBy),
         'tax_deductible': True,
-        'category': next(e.value for e in OneTimeExpenseCategoryOption),
+        'category': next(e.value for e in OneTimeExpense.Category),
     }
 
     VALID_RECURRING_EXPENSE_DICT = {
@@ -32,9 +30,9 @@ class TestAdminApiJobs(BaseTestCase):
         'description': 'Test Description',
         'amount': 666.01,
         'is_deductible': True,
-        'category': next(e.value for e in RecurringExpense.CategoryOption),
-        'recurrence': next(e.value for e in RecurringExpense.RecurrenceOption),
-        'paid_by': next(e.value for e in RecurringExpense.PaidByOption),
+        'category': next(e.value for e in RecurringExpense.Category),
+        'recurrence': next(e.value for e in RecurringExpense.Recurrence),
+        'paid_by': next(e.value for e in RecurringExpense.PaidBy),
         'start_date': today
     }
 
@@ -105,7 +103,7 @@ class TestAdminApiJobs(BaseTestCase):
         """
         valid_expense_dict = self.VALID_ONE_TIME_EXPENSE_DICT.copy()
         for valid_category_val in [t.value
-                                   for t in OneTimeExpenseCategoryOption]:
+                                   for t in OneTimeExpense.Category]:
             valid_expense_dict['category'] = valid_category_val
             with self.client:
                 response = self.client.post(
@@ -137,7 +135,7 @@ class TestAdminApiJobs(BaseTestCase):
             err_msg = ("Invalid 'category' value. " +
                        "The valid values for 'category' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in OneTimeExpenseCategoryOption]))
+                                  for t in OneTimeExpense.Category]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
@@ -148,7 +146,7 @@ class TestAdminApiJobs(BaseTestCase):
         """
         valid_expense_dict = self.VALID_ONE_TIME_EXPENSE_DICT.copy()
         for valid_paid_by_val in [t.value
-                                  for t in OneTimeExpensePaidByOption]:
+                                  for t in OneTimeExpense.PaidBy]:
             valid_expense_dict['paid_by'] = valid_paid_by_val
             with self.client:
                 response = self.client.post(
@@ -180,7 +178,7 @@ class TestAdminApiJobs(BaseTestCase):
             err_msg = ("Invalid 'paid_by' value. " +
                        "The valid values for 'paid_by' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in OneTimeExpensePaidByOption]))
+                                  for t in OneTimeExpense.PaidBy]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
@@ -310,7 +308,7 @@ class TestAdminApiJobs(BaseTestCase):
             err_msg = ("Invalid 'recurrence' value. " +
                        "The valid values for 'recurrence' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in RecurringExpense.RecurrenceOption]))
+                                  for t in RecurringExpense.Recurrence]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
@@ -329,7 +327,7 @@ class TestAdminApiJobs(BaseTestCase):
             err_msg = ("Invalid 'paid_by' value. " +
                        "The valid values for 'paid_by' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in RecurringExpense.PaidByOption]))
+                                  for t in RecurringExpense.PaidBy]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
@@ -348,6 +346,6 @@ class TestAdminApiJobs(BaseTestCase):
             err_msg = ("Invalid 'category' value. " +
                        "The valid values for 'category' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in RecurringExpense.CategoryOption]))
+                                  for t in RecurringExpense.Category]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])

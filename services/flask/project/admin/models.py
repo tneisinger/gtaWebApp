@@ -1,6 +1,5 @@
 # services/flask/project/admin/models.py
 
-
 import enum
 
 from project import db
@@ -93,32 +92,33 @@ class Job(db.Model):
         }
 
 
-class OneTimeExpensePaidByOption(enum.Enum):
-    TYLER_AND_MEGHAN = 'Tyler and Meghan'
-    TYLER = 'Tyler'
-    MEGHAN = 'Meghan'
-
-
-class OneTimeExpenseCategoryOption(enum.Enum):
-    BUSINESS_EQUIPMENT = 'Business Equipment'
-    BUSINESS_SUPPLIES = 'Business Supplies'
-    GASOLINE = 'Gasoline'
-    VEHICLE_MAINTENANCE = 'Vehicle Maintenance'
-    TRAVEL_EXPENSE = 'Travel Expense'
-    ENTERTAINMENT = 'Entertainment'
-    FOOD = 'Food'
-
-
 class OneTimeExpense(db.Model):
+
+    class PaidBy(enum.Enum):
+        TYLER_AND_MEGHAN = 'Tyler and Meghan'
+        TYLER = 'Tyler'
+        MEGHAN = 'Meghan'
+
+    class Category(enum.Enum):
+        BUSINESS_EQUIPMENT = 'Business Equipment'
+        BUSINESS_SUPPLIES = 'Business Supplies'
+        GASOLINE = 'Gasoline'
+        VEHICLE_MAINTENANCE = 'Vehicle Maintenance'
+        TRAVEL_EXPENSE = 'Travel Expense'
+        ENTERTAINMENT = 'Entertainment'
+        FOOD = 'Food'
+
     __tablename__ = 'one_time_expenses'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     merchant = db.Column(db.String(64), nullable=False)
     description = db.Column(db.String(128), nullable=False)
     amount_spent = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, nullable=False)
-    paid_by = db.Column(db.Enum(OneTimeExpensePaidByOption), nullable=False)
+    paid_by = db.Column(db.Enum(PaidBy, name='paidby_one_time_expense'),
+                        nullable=False)
     tax_deductible = db.Column(db.Boolean, nullable=False)
-    category = db.Column(db.Enum(OneTimeExpenseCategoryOption), nullable=False)
+    category = db.Column(db.Enum(Category, name='category_one_time_expense'),
+                         nullable=False)
 
     def __init__(self, merchant, description, amount_spent, date, paid_by,
                  tax_deductible, category):
@@ -126,9 +126,9 @@ class OneTimeExpense(db.Model):
         self.description = description
         self.amount_spent = amount_spent
         self.date = date
-        self.paid_by = OneTimeExpensePaidByOption(paid_by)
+        self.paid_by = self.PaidBy(paid_by)
         self.tax_deductible = tax_deductible
-        self.category = OneTimeExpenseCategoryOption(category)
+        self.category = self.Category(category)
 
     def to_json(self):
         return {
@@ -145,19 +145,19 @@ class OneTimeExpense(db.Model):
 
 class RecurringExpense(db.Model):
 
-    class CategoryOption(enum.Enum):
+    class Category(enum.Enum):
         HOUSING = 'Housing'
         ENTERTAINMENT = 'Entertainment'
         UTILITIES = 'Utilities'
         OTHER = 'Other'
 
-    class RecurrenceOption(enum.Enum):
+    class Recurrence(enum.Enum):
         MONTHLY = 'Monthly'
         EVERY_OTHER_MONTH = 'Every Other Month'
         EVERY_SIX_MONTHS = 'Every Six Months'
         ONCE_PER_YEAR = 'Once Per Year'
 
-    class PaidByOption(enum.Enum):
+    class PaidBy(enum.Enum):
         TYLER_AND_MEGHAN = 'Tyler and Meghan'
         TYLER = 'Tyler'
         MEGHAN = 'Meghan'
@@ -168,9 +168,11 @@ class RecurringExpense(db.Model):
     description = db.Column(db.String(128), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     is_deductible = db.Column(db.Boolean, nullable=False)
-    category = db.Column(db.Enum(CategoryOption), nullable=False)
-    recurrence = db.Column(db.Enum(RecurrenceOption), nullable=False)
-    paid_by = db.Column(db.Enum(PaidByOption), nullable=False)
+    category = db.Column(db.Enum(Category, name='category_recurring_expense'),
+                         nullable=False)
+    recurrence = db.Column(db.Enum(Recurrence), nullable=False)
+    paid_by = db.Column(db.Enum(PaidBy, name='paid_by_recurring_expense'),
+                        nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date)
 
@@ -180,8 +182,8 @@ class RecurringExpense(db.Model):
         self.description = description
         self.amount = amount
         self.is_deductible = is_deductible
-        self.category = self.CategoryOption(category)
-        self.recurrence = self.RecurrenceOption(recurrence)
-        self.paid_by = self.PaidByOption(paid_by)
+        self.category = self.Category(category)
+        self.recurrence = self.Recurrence(recurrence)
+        self.paid_by = self.PaidBy(paid_by)
         self.start_date = start_date
         self.end_date = end_date
