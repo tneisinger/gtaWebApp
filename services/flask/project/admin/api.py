@@ -3,9 +3,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
-from project.admin.models import (User, Job, JobPaidToOption,
-                                  JobWorkedByOption, JobConfirmationOption,
-                                  OneTimeExpense, RecurringExpense)
+from project.admin.models import (User, Job, OneTimeExpense, RecurringExpense)
 from project import db
 
 
@@ -70,19 +68,19 @@ def add_job():
     except ValueError as e:
         db.session.rollback()
         err_msg = str(e)
-        if 'is not a valid JobPaidToOption' in err_msg:
+        if 'is not a valid PaidTo' in err_msg:
             err_msg = ("Invalid 'paid_to' value. " +
                        "The valid values for 'paid_to' are: " +
-                       ', '.join([f"'{t.value}'" for t in JobPaidToOption]))
-        elif 'is not a valid JobWorkedByOption' in err_msg:
+                       ', '.join([f"'{t.value}'" for t in Job.PaidTo]))
+        elif 'is not a valid WorkedBy' in err_msg:
             err_msg = ("Invalid 'worked_by' value. " +
                        "The valid values for 'worked_by' are: " +
-                       ', '.join([f"'{t.value}'" for t in JobWorkedByOption]))
-        elif 'is not a valid JobConfirmationOption' in err_msg:
+                       ', '.join([f"'{t.value}'" for t in Job.WorkedBy]))
+        elif 'is not a valid Confirmation' in err_msg:
             err_msg = ("Invalid 'confirmation' value. " +
                        "The valid values for 'confirmation' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in JobConfirmationOption]))
+                                  for t in Job.Confirmation]))
         response_object['message'] = err_msg
         return jsonify(response_object), 400
 

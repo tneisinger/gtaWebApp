@@ -28,33 +28,31 @@ class User(db.Model):
         }
 
 
-class JobPaidToOption(enum.Enum):
-    GLADTIMEAUDIO = 'Gladtime Audio'
-    MEGHAN = 'Meghan'
-    TYLER = 'Tyler'
-    TMSEPARATELY = 'Tyler/Meghan Separately'
-
-
-class JobWorkedByOption(enum.Enum):
-    MEGHAN = 'Meghan'
-    TYLER = 'Tyler'
-    TYLER_AND_MEGHAN = 'Tyler and Meghan'
-
-
-class JobConfirmationOption(enum.Enum):
-    CONFIRMED = 'Confirmed'
-    PENCILLED_IN = 'Pencilled In'
-
-
 class Job(db.Model):
+
+    class PaidTo(enum.Enum):
+        GLADTIMEAUDIO = 'Gladtime Audio'
+        MEGHAN = 'Meghan'
+        TYLER = 'Tyler'
+        TMSEPARATELY = 'Tyler/Meghan Separately'
+
+    class WorkedBy(enum.Enum):
+        MEGHAN = 'Meghan'
+        TYLER = 'Tyler'
+        TYLER_AND_MEGHAN = 'Tyler and Meghan'
+
+    class Confirmation(enum.Enum):
+        CONFIRMED = 'Confirmed'
+        PENCILLED_IN = 'Pencilled In'
+
     __tablename__ = 'jobs'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     client = db.Column(db.String(64), nullable=False)
     description = db.Column(db.String(128), nullable=False)
     amount_paid = db.Column(db.Float, nullable=False)
-    paid_to = db.Column(db.Enum(JobPaidToOption), nullable=False)
-    worked_by = db.Column(db.Enum(JobWorkedByOption), nullable=False)
-    confirmation = db.Column(db.Enum(JobConfirmationOption), nullable=False)
+    paid_to = db.Column(db.Enum(PaidTo), nullable=False)
+    worked_by = db.Column(db.Enum(WorkedBy), nullable=False)
+    confirmation = db.Column(db.Enum(Confirmation), nullable=False)
     has_paid = db.Column(db.Boolean, nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
@@ -67,9 +65,9 @@ class Job(db.Model):
         self.client = client
         self.description = description
         self.amount_paid = amount_paid
-        self.paid_to = JobPaidToOption(paid_to)
-        self.worked_by = JobWorkedByOption(worked_by)
-        self.confirmation = JobConfirmationOption(confirmation)
+        self.paid_to = self.PaidTo(paid_to)
+        self.worked_by = self.WorkedBy(worked_by)
+        self.confirmation = self.Confirmation(confirmation)
         self.has_paid = has_paid
         self.start_date = start_date
         if end_date:

@@ -4,8 +4,7 @@ import json
 from datetime import date, timedelta
 
 from project.tests.base import BaseTestCase
-from project.admin.models import (JobWorkedByOption, JobConfirmationOption,
-                                  JobPaidToOption)
+from project.admin.models import Job
 from project.tests.utils import add_job
 
 
@@ -17,9 +16,9 @@ class TestAdminApiJobs(BaseTestCase):
     today = date.today().isoformat()
 
     # Get the first valid option from each enumeration
-    VALID_PAID_TO = next(option.value for option in JobPaidToOption)
-    VALID_WORKED_BY = next(option.value for option in JobWorkedByOption)
-    VALID_CONFIRMATION = next(option.value for option in JobConfirmationOption)
+    VALID_PAID_TO = next(option.value for option in Job.PaidTo)
+    VALID_WORKED_BY = next(option.value for option in Job.WorkedBy)
+    VALID_CONFIRMATION = next(option.value for option in Job.Confirmation)
 
     def test_add_job(self):
         """Ensure a new job can be added to the database."""
@@ -46,7 +45,7 @@ class TestAdminApiJobs(BaseTestCase):
 
     def test_add_jobs_with_valid_paid_to_vals(self):
         """Ensure jobs with valid paid_to values can be added to the db"""
-        for valid_paid_to_val in [t.value for t in JobPaidToOption]:
+        for valid_paid_to_val in [t.value for t in Job.PaidTo]:
             with self.client:
                 response = self.client.post(
                     '/admin/jobs',
@@ -91,13 +90,13 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertEqual(response.status_code, 400)
             err_msg = ("Invalid 'paid_to' value. " +
                        "The valid values for 'paid_to' are: " +
-                       ', '.join([f"'{t.value}'" for t in JobPaidToOption]))
+                       ', '.join([f"'{t.value}'" for t in Job.PaidTo]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
     def test_add_jobs_with_valid_worked_by_vals(self):
         """Ensure jobs with valid worked_by values can be added to the db"""
-        for valid_worked_by_val in [t.value for t in JobWorkedByOption]:
+        for valid_worked_by_val in [t.value for t in Job.WorkedBy]:
             with self.client:
                 response = self.client.post(
                     '/admin/jobs',
@@ -142,13 +141,13 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertEqual(response.status_code, 400)
             err_msg = ("Invalid 'worked_by' value. " +
                        "The valid values for 'worked_by' are: " +
-                       ', '.join([f"'{t.value}'" for t in JobWorkedByOption]))
+                       ', '.join([f"'{t.value}'" for t in Job.WorkedBy]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
     def test_add_jobs_with_valid_confirmation_vals(self):
         """Ensure jobs with valid confirmation values can be added to the db"""
-        for valid_confirmation_val in [t.value for t in JobConfirmationOption]:
+        for valid_confirmation_val in [t.value for t in Job.Confirmation]:
             with self.client:
                 response = self.client.post(
                     '/admin/jobs',
@@ -194,7 +193,7 @@ class TestAdminApiJobs(BaseTestCase):
             err_msg = ("Invalid 'confirmation' value. " +
                        "The valid values for 'confirmation' are: " +
                        ', '.join([f"'{t.value}'"
-                                  for t in JobConfirmationOption]))
+                                  for t in Job.Confirmation]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
