@@ -468,6 +468,7 @@ def logout_user():
     else:
         return jsonify(response_object), 403
 
+
 @admin_blueprint.route('/auth/status', methods=['GET'])
 def get_user_status():
     # get auth token
