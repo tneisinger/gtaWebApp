@@ -9,7 +9,7 @@ from project.tests.base import BaseTestCase
 from project.tests.utils import add_user
 
 
-class TestAuthBlueprint(BaseTestCase):
+class TestAdminAuthRoutes(BaseTestCase):
 
     def test_user_registration(self):
         with self.client:
