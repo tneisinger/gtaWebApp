@@ -490,3 +490,31 @@ def get_user_status():
         return jsonify(response_object), 401
     else:
         return jsonify(response_object), 401
+
+
+# ==========================
+# CALENDAR AND BUDGET ROUTES
+# ==========================
+
+
+@admin_blueprint.route('/calendar', methods=['GET'])
+def get_calendar_events():
+    """Get jobs and one time expenses from within a date range"""
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    jobs = Job.query.filter(
+            Job.start_date >= start_date,
+            Job.start_date <= end_date).all()
+    expenses = OneTimeExpense.query.filter(
+            OneTimeExpense.date >= start_date,
+            OneTimeExpense.date <= end_date).all()
+    response_object = {
+        'status': 'success',
+        'data': {
+            'jobs': [j.to_json() for j in jobs],
+            'expenses': [e.to_json() for e in expenses]
+        }
+    }
+    return jsonify(response_object), 200
+
+
