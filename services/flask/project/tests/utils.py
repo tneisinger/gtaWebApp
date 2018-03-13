@@ -12,6 +12,12 @@ def add_user(username, email, password):
     return user
 
 
+def make_user_admin(user):
+    user.is_admin = True
+    db.session.add(user)
+    db.session.commit()
+
+
 def add_job(client, description, amount_paid, paid_to, worked_by,
             confirmation, has_paid, start_date, end_date=None):
     job = Job(client, description, amount_paid, paid_to, worked_by,
