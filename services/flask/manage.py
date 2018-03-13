@@ -2,6 +2,7 @@
 
 import unittest
 import coverage
+import click
 from flask.cli import FlaskGroup
 
 from project import create_app, db
@@ -31,6 +32,19 @@ def recreate_db():
 def test():
     """ Runs the tests without code coverage"""
     tests = unittest.TestLoader().discover('project/tests', pattern='test*.py')
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if result.wasSuccessful():
+        return 0
+    return 1
+
+@cli.command()
+def test_narrow():
+    """ Runs the tests without code coverage"""
+    PATTERN = 'test_admin_calendar.py'
+    click.echo('Running only the subset of tests that match this pattern:')
+    click.echo(f'PATTERN: {PATTERN}')
+    click.echo('To change the pattern, edit the manage.py file.')
+    tests = unittest.TestLoader().discover('project/tests', pattern=PATTERN)
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         return 0
