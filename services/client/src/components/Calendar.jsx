@@ -1,10 +1,17 @@
-import React from 'react';
+import React from 'react'
+import BigCalendar from 'react-big-calendar'
+import moment from 'moment'
+import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css'
+import '../css/calendar.css'
 
-const Calendar = () => (
-  <div>
-    <h1>Calendar</h1>
-    <hr/><br/>
-    <p>Calendar goes here.</p>
+// select moment as the localizer for BigCalendar
+BigCalendar.momentLocalizer(moment);
+
+const Calendar = props => (
+  <div className='calendar-container'>
+    <BigCalendar
+      events={[]}
+    />
   </div>
 );
 
