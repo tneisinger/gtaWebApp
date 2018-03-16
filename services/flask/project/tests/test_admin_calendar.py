@@ -369,7 +369,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)  # start_date and end_date is the 6th
-        add_one_time_expense(**self.VALID_EXPENSE_DICT1) # date is the 4th
+        add_one_time_expense(**self.VALID_EXPENSE_DICT1)  # date is the 4th
 
         with self.client:
 
@@ -406,10 +406,10 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'success')
 
             # There should be an empty jobs list in the data
-            self.assertEqual(data['data']['jobs'],[])
+            self.assertEqual(data['data']['jobs'], [])
 
             # There should be an empty expenses list in the data
-            self.assertEqual(data['data']['expenses'],[])
+            self.assertEqual(data['data']['expenses'], [])
 
             # Check that the user data is included and correct
             self.assertEqual(data['data']['user']['username'],
@@ -433,8 +433,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)  # start_date and end_date is the 6th
         add_job(**self.VALID_JOB_DICT2)  # start_date and end_date is the 26th
-        add_one_time_expense(**self.VALID_EXPENSE_DICT1) # date is the 4th
-        add_one_time_expense(**self.VALID_EXPENSE_DICT2) # date is the 16th
+        add_one_time_expense(**self.VALID_EXPENSE_DICT1)  # date is the 4th
+        add_one_time_expense(**self.VALID_EXPENSE_DICT2)  # date is the 16th
 
         with self.client:
 
@@ -471,10 +471,10 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'success')
 
             # There should be a jobs list in the data of length 1
-            self.assertEqual(len(data['data']['jobs']),1)
+            self.assertEqual(len(data['data']['jobs']), 1)
 
             # There should be an expenses list in the data of length 1
-            self.assertEqual(len(data['data']['expenses']),1)
+            self.assertEqual(len(data['data']['expenses']), 1)
 
             # Before comparing the returned job with the job we
             # added, we must pop the id key from the returned job,
@@ -518,9 +518,9 @@ class TestAdminCalendarRoutes(BaseTestCase):
         # Modify the dates of the first job dict so that it spans over the
         # first day of the month
         valid_job_dict1['start_date'] = (self.FIRST_DAY -
-                timedelta(2)).isoformat()
+                                         timedelta(2)).isoformat()
         valid_job_dict1['end_date'] = (self.FIRST_DAY +
-                timedelta(2)).isoformat()
+                                       timedelta(2)).isoformat()
 
         # Add a user to the db
         user = add_user(**self.VALID_USER_DICT1)
@@ -563,7 +563,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'success')
 
             # There should be a jobs list in the data of length 2
-            self.assertEqual(len(data['data']['jobs']),2)
+            self.assertEqual(len(data['data']['jobs']), 2)
 
     def test_get_calendar_events_job_spans_end_of_date_range(self):
         """
@@ -576,9 +576,9 @@ class TestAdminCalendarRoutes(BaseTestCase):
         # Modify the dates of the second job dict so that it spans over the
         # last day of the month
         valid_job_dict2['start_date'] = (self.LAST_DAY -
-                timedelta(2)).isoformat()
+                                         timedelta(2)).isoformat()
         valid_job_dict2['end_date'] = (self.LAST_DAY +
-                timedelta(2)).isoformat()
+                                       timedelta(2)).isoformat()
 
         # Add a user to the db
         user = add_user(**self.VALID_USER_DICT1)
@@ -621,7 +621,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'success')
 
             # There should be a jobs list in the data of length 2
-            self.assertEqual(len(data['data']['jobs']),2)
+            self.assertEqual(len(data['data']['jobs']), 2)
 
 
 if __name__ == "__main__":
