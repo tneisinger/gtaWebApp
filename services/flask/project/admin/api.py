@@ -504,7 +504,7 @@ def get_calendar_events(user):
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
     jobs = Job.query.filter(
-            Job.start_date >= start_date,
+            Job.end_date >= start_date,
             Job.start_date <= end_date).all()
     expenses = OneTimeExpense.query.filter(
             OneTimeExpense.date >= start_date,
