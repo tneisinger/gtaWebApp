@@ -497,9 +497,9 @@ def get_user_status():
 # ==========================
 
 
-@admin_blueprint.route('/calendar', methods=['GET'])
+@admin_blueprint.route('/events', methods=['GET'])
 @check_user_is_admin(pass_user=True)
-def get_calendar_events(user):
+def get_events(user):
     """Get jobs and one time expenses from within a date range"""
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')

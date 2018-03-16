@@ -75,7 +75,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
                   'E1MjA5ODMyNzYsImlhdCIDMTUyMDk4MzI3Mywic3ViIjoxfQ.k' +
                   'YQbY1Fj8pB4oK2nHmRuPWp3bDtHFwa000000000000')
 
-    def test_get_calendar_events(self):
+    def test_get_events(self):
         """
         Test getting jobs and one-time-expenses that fall between the dates
         provided in a query string. (User must be signed in and user must be
@@ -106,13 +106,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # get the user's auth token
             token = json.loads(resp_login.data.decode())['auth_token']
 
-            # request the calendar data
+            # request the events that occurred between start_date and end_date
             request_data = {
                      'start_date': self.FIRST_DAY.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data),
+                url_for('admin.get_events', **request_data),
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
@@ -152,9 +152,9 @@ class TestAdminCalendarRoutes(BaseTestCase):
                              self.VALID_USER_DICT1['email'])
             self.assertEqual(data['data']['user']['id'], 1)
 
-    def test_get_calendar_events_not_signed_in(self):
+    def test_get_events_not_signed_in(self):
         """
-        Test attempting to get jobs and one-time-expenses (calendar events)
+        Test attempting to get jobs and one-time-expenses (events)
         without being signed in.
         """
         # Add a user to the db
@@ -169,13 +169,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
         with self.client:
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': self.FIRST_DAY.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data)
+                url_for('admin.get_events', **request_data)
             )
             data = json.loads(response.data.decode())
 
@@ -184,9 +184,9 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'fail')
             self.assertEqual(data['message'], 'Provide a valid auth token.')
 
-    def test_get_calendar_events_fake_auth_token(self):
+    def test_get_events_fake_auth_token(self):
         """
-        Test attempting to get calendar events using a fake auth token
+        Test attempting to get events using a fake auth token
         """
         # Add a user to the db
         user = add_user(**self.VALID_USER_DICT1)
@@ -210,13 +210,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
                 content_type='application/json'
             )
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': self.FIRST_DAY.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data),
+                url_for('admin.get_events', **request_data),
                 headers={'Authorization': f'Bearer {self.FAKE_TOKEN}'}
             )
             data = json.loads(response.data.decode())
@@ -226,10 +226,9 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'fail')
             self.assertEqual(data['message'], 'Provide a valid auth token.')
 
-    def test_get_calendar_events_empty_auth_header(self):
+    def test_get_events_empty_auth_header(self):
         """
-        Test attempting to get calendar events with an empty Authorization
-        header
+        Test attempting to get events with an empty Authorization header
         """
         # Add a user to the db
         user = add_user(**self.VALID_USER_DICT1)
@@ -253,13 +252,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
                 content_type='application/json'
             )
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': self.FIRST_DAY.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data),
+                url_for('admin.get_events', **request_data),
                 headers={'Authorization': ''}
             )
             data = json.loads(response.data.decode())
@@ -269,10 +268,9 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'fail')
             self.assertEqual(data['message'], 'Provide a valid auth token.')
 
-    def test_get_calendar_events_no_auth_header(self):
+    def test_get_events_no_auth_header(self):
         """
-        Test attempting to get calendar events without an auth
-        header
+        Test attempting to get events without an auth header
         """
         # Add a user to the db
         user = add_user(**self.VALID_USER_DICT1)
@@ -296,13 +294,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
                 content_type='application/json'
             )
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': self.FIRST_DAY.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data)
+                url_for('admin.get_events', **request_data)
             )
             data = json.loads(response.data.decode())
 
@@ -311,9 +309,9 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'fail')
             self.assertEqual(data['message'], 'Provide a valid auth token.')
 
-    def test_get_calendar_events_user_not_admin(self):
+    def test_get_events_user_not_admin(self):
         """
-        Test attempting to get calendar events when the user is not an admin
+        Test attempting to get events when the user is not an admin
         """
         # Add a user to the db
         add_user(**self.VALID_USER_DICT1)
@@ -339,13 +337,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # get the user's auth token
             token = json.loads(resp_login.data.decode())['auth_token']
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': self.FIRST_DAY.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data),
+                url_for('admin.get_events', **request_data),
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
@@ -355,7 +353,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'fail')
             self.assertEqual(data['message'], 'User must be admin.')
 
-    def test_get_calendar_events_no_events_in_range(self):
+    def test_get_events_no_events_in_range(self):
         """
         Test getting jobs and one-time-expenses when there are no events in the
         date range.  The response should include an empty jobs list, an empty
@@ -390,13 +388,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # expense that we added above.
             start_date = self.FIRST_DAY + timedelta(10)
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': start_date.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data),
+                url_for('admin.get_events', **request_data),
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
@@ -418,7 +416,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
                              self.VALID_USER_DICT1['email'])
             self.assertEqual(data['data']['user']['id'], 1)
 
-    def test_get_calendar_events_some_events_out_of_range(self):
+    def test_get_events_some_events_out_of_range(self):
         """
         Test getting jobs and one-time-expenses when there are some events in
         the database that are not within the date range.  Events outside the
@@ -455,13 +453,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # first expense that we added to the db above.
             start_date = self.FIRST_DAY + timedelta(10)
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': start_date.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data),
+                url_for('admin.get_events', **request_data),
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
@@ -507,7 +505,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
                              self.VALID_USER_DICT1['email'])
             self.assertEqual(data['data']['user']['id'], 1)
 
-    def test_get_calendar_events_job_spans_start_of_date_range(self):
+    def test_get_events_job_spans_start_of_date_range(self):
         """
         Test getting jobs and one-time-expenses when a job spands the start of
         the date range.
@@ -547,13 +545,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # get the user's auth token
             token = json.loads(resp_login.data.decode())['auth_token']
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': self.FIRST_DAY.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data),
+                url_for('admin.get_events', **request_data),
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
@@ -565,7 +563,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # There should be a jobs list in the data of length 2
             self.assertEqual(len(data['data']['jobs']), 2)
 
-    def test_get_calendar_events_job_spans_end_of_date_range(self):
+    def test_get_events_job_spans_end_of_date_range(self):
         """
         Test getting jobs and one-time-expenses when a job spands the end of
         the date range.
@@ -605,13 +603,13 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # get the user's auth token
             token = json.loads(resp_login.data.decode())['auth_token']
 
-            # request the calendar data
+            # request the events
             request_data = {
                      'start_date': self.FIRST_DAY.isoformat(),
                      'end_date': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
-                url_for('admin.get_calendar_events', **request_data),
+                url_for('admin.get_events', **request_data),
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
