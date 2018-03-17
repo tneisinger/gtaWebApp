@@ -24,7 +24,7 @@ class App extends Component {
         password: ''
       }
     };
-    this.addUser = this.addUser.bind(this);
+    this.registerUser = this.registerUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
   };
 
@@ -40,16 +40,18 @@ class App extends Component {
     .catch((err) => { console.log(err); });
   };
 
-  addUser(event) {
+  registerUser(event) {
     event.preventDefault();
     const data = {
-      username: this.state.username,
-      email: this.state.email
+      username: this.state.formData.username,
+      email: this.state.formData.email,
+      password: this.state.formData.password
     };
-    axios.post(`${process.env.REACT_APP_USERS_SERVICE_URL}admin/users`, data)
+    axios.post(`${process.env.REACT_APP_USERS_SERVICE_URL}/admin/auth/register`, data)
     .then((res) => {
-      this.getUsers();
-      this.setState({ username: '', email: '' });
+      this.setState({
+        formData: { username: '', email: '', password: '' }
+      });
     })
     .catch((err) => { console.log(err); });
   }
@@ -81,7 +83,7 @@ class App extends Component {
                   <Form
                     formType={'Register'}
                     formData={this.state.formData}
-                    handleUserFormSubmit={this.addUser}
+                    handleUserFormSubmit={this.registerUser}
                     handleFormChange={this.handleChange}
                   />
                 )} />
