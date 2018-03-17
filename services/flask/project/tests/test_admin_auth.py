@@ -14,7 +14,7 @@ class TestAdminAuthRoutes(BaseTestCase):
     def test_user_registration(self):
         with self.client:
             response = self.client.post(
-                '/admin/auth/register',
+                '/admin/register',
                 data=json.dumps({
                     'username': 'justatest',
                     'email': 'test@test.com',
@@ -33,7 +33,7 @@ class TestAdminAuthRoutes(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             response = self.client.post(
-                '/admin/auth/register',
+                '/admin/register',
                 data=json.dumps({
                     'username': 'michael',
                     'email': 'test@test.com',
@@ -51,7 +51,7 @@ class TestAdminAuthRoutes(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             response = self.client.post(
-                '/admin/auth/register',
+                '/admin/register',
                 data=json.dumps({
                     'username': 'test',
                     'email': 'test@test.com2',
@@ -68,7 +68,7 @@ class TestAdminAuthRoutes(BaseTestCase):
     def test_user_registration_invalid_json(self):
         with self.client:
             response = self.client.post(
-                '/admin/auth/register',
+                '/admin/register',
                 data=json.dumps({}),
                 content_type='application/json'
             )
@@ -80,7 +80,7 @@ class TestAdminAuthRoutes(BaseTestCase):
     def test_user_registration_invalid_json_keys_no_username(self):
         with self.client:
             response = self.client.post(
-                '/admin/auth/register',
+                '/admin/register',
                 data=json.dumps({
                     'email': 'test@test.com',
                     'password': 'test'
@@ -95,7 +95,7 @@ class TestAdminAuthRoutes(BaseTestCase):
     def test_user_registration_invalid_json_keys_no_email(self):
         with self.client:
             response = self.client.post(
-                '/admin/auth/register',
+                '/admin/register',
                 data=json.dumps({
                     'username': 'justatest',
                     'password': 'test'
@@ -110,7 +110,7 @@ class TestAdminAuthRoutes(BaseTestCase):
     def test_user_registration_invalid_json_keys_no_password(self):
         with self.client:
             response = self.client.post(
-                '/admin/auth/register',
+                '/admin/register',
                 data=json.dumps({
                     'username': 'justatest',
                     'email': 'test@test.com'
@@ -126,7 +126,7 @@ class TestAdminAuthRoutes(BaseTestCase):
         with self.client:
             add_user('test', 'test@test.com', 'test')
             response = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': 'test@test.com',
                     'password': 'test'
@@ -143,7 +143,7 @@ class TestAdminAuthRoutes(BaseTestCase):
     def test_not_registered_user_login(self):
         with self.client:
             response = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': 'test@test.com',
                     'password': 'test'
@@ -161,7 +161,7 @@ class TestAdminAuthRoutes(BaseTestCase):
         with self.client:
             # user login
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': 'test@test.com',
                     'password': 'test'
@@ -171,7 +171,7 @@ class TestAdminAuthRoutes(BaseTestCase):
             # valid token logout
             token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.get(
-                '/admin/auth/logout',
+                '/admin/logout',
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
@@ -184,7 +184,7 @@ class TestAdminAuthRoutes(BaseTestCase):
         current_app.config['TOKEN_EXPIRATION_SECONDS'] = -1
         with self.client:
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': 'test@test.com',
                     'password': 'test'
@@ -194,7 +194,7 @@ class TestAdminAuthRoutes(BaseTestCase):
             # invalid token logout
             token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.get(
-                '/admin/auth/logout',
+                '/admin/logout',
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
@@ -206,7 +206,7 @@ class TestAdminAuthRoutes(BaseTestCase):
     def test_invalid_logout(self):
         with self.client:
             response = self.client.get(
-                '/admin/auth/logout',
+                '/admin/logout',
                 headers={'Authorization': 'Bearer invalid'})
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
@@ -218,7 +218,7 @@ class TestAdminAuthRoutes(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
         with self.client:
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': 'test@test.com',
                     'password': 'test'
@@ -227,7 +227,7 @@ class TestAdminAuthRoutes(BaseTestCase):
             )
             token = json.loads(resp_login.data.decode())['auth_token']
             response = self.client.get(
-                '/admin/auth/status',
+                '/admin/status',
                 headers={'Authorization': f'Bearer {token}'}
             )
             data = json.loads(response.data.decode())
@@ -241,7 +241,7 @@ class TestAdminAuthRoutes(BaseTestCase):
     def test_invalid_status(self):
         with self.client:
             response = self.client.get(
-                '/admin/auth/status',
+                '/admin/status',
                 headers={'Authorization': 'Bearer invalid'})
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')

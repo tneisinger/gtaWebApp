@@ -376,7 +376,7 @@ def get_all_users():
 # ===========
 
 
-@admin_blueprint.route('/auth/register', methods=['POST'])
+@admin_blueprint.route('/register', methods=['POST'])
 def register_user():
     """Register a new user"""
     post_data = request.get_json()
@@ -417,7 +417,7 @@ def register_user():
         return jsonify(response_object), 400
 
 
-@admin_blueprint.route('/auth/login', methods=['POST'])
+@admin_blueprint.route('/login', methods=['POST'])
 def login_user():
     # get post data
     post_data = request.get_json()
@@ -447,7 +447,7 @@ def login_user():
         return jsonify(response_object), 500
 
 
-@admin_blueprint.route('/auth/logout', methods=['GET'])
+@admin_blueprint.route('/logout', methods=['GET'])
 def logout_user():
     # get auth token
     auth_header = request.headers.get('Authorization')
@@ -469,7 +469,7 @@ def logout_user():
         return jsonify(response_object), 403
 
 
-@admin_blueprint.route('/auth/status', methods=['GET'])
+@admin_blueprint.route('/status', methods=['GET'])
 def get_user_status():
     # get auth token
     auth_header = request.headers.get('Authorization')

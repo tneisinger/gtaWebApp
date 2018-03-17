@@ -47,7 +47,7 @@ class App extends Component {
       email: this.state.formData.email,
       password: this.state.formData.password
     };
-    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/auth/register`, data)
+    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/register`, data)
     .then((res) => {
       this.setState({
         formData: { username: '', email: '', password: '' }

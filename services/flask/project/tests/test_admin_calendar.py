@@ -95,7 +95,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
@@ -202,7 +202,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
@@ -244,7 +244,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
@@ -286,7 +286,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
@@ -326,7 +326,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
@@ -373,7 +373,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
@@ -438,7 +438,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
@@ -534,7 +534,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
@@ -592,7 +592,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # login as user
             resp_login = self.client.post(
-                '/admin/auth/login',
+                '/admin/login',
                 data=json.dumps({
                     'email': self.VALID_USER_DICT1['email'],
                     'password': self.VALID_USER_DICT1['password']
