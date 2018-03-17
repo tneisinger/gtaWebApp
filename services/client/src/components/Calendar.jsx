@@ -1,6 +1,5 @@
 import React from 'react';
-import BigCalendar, { BackIcon, NextIcon } from 'react-big-calendar';
-import Toolbar from 'react-big-calendar';
+import BigCalendar from 'react-big-calendar';
 import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
