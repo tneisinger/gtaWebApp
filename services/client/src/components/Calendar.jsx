@@ -37,21 +37,6 @@ const CustomToolbar = (toolbar) => {
     );
   };
 
-  //return (
-    //<div className='toolbar-container'>
-      //<label className='label-date'>{label()}</label>
-
-      //<div className='back-next-buttons'>
-        //<button className='btn-back' onClick={goToBack}>&#8249;</button>
-        //<button className='btn-current' onClick={goToCurrent}>
-          //today
-        //</button>
-        //<button className='btn-next' onClick={goToNext}>&#8250;</button>
-      //</div>
-    //</div >
-  //);
-
-
   return (
     <div className='rbc-toolbar'>
       <span className='rbc-btn-group'>
