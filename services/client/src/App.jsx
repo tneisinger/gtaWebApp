@@ -55,9 +55,11 @@ class App extends Component {
   }
 
   handleChange(event) {
-    const obj = {};
+    const obj = this.state.formData;
     obj[event.target.name] = event.target.value;
-    this.setState(obj);
+    this.setState({
+      formData: obj
+    });
   };
 
   render() {
@@ -79,12 +81,15 @@ class App extends Component {
                   <Form
                     formType={'Register'}
                     formData={this.state.formData}
+                    handleUserFormSubmit={this.addUser}
+                    handleFormChange={this.handleChange}
                   />
                 )} />
                 <Route exact path='/login' render={() => (
                   <Form
                     formType={'login'}
                     formData={this.state.formData}
+                    handleFormChange={this.handleChange}
                   />
                 )} />
               </Switch>
