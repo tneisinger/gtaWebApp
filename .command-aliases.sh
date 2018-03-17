@@ -25,3 +25,5 @@ alias testflaskn="docker-compose -f docker-compose-dev.yml run flask \
 alias lintflask="docker-compose -f docker-compose-dev.yml run flask \
   flake8 project"
 
+# Access the database via the postgresql command line tool
+alias psqlcli="docker exec -ti flask-db psql -U postgres -W"
