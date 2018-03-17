@@ -33,7 +33,7 @@ class App extends Component {
   };
 
   getUsers() {
-    axios.get(`${process.env.REACT_APP_USERS_SERVICE_URL}/admin/users`)
+    axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/users`)
     .then((res) => {
       this.setState({ users: res.data.data.users });
     })
@@ -47,7 +47,7 @@ class App extends Component {
       email: this.state.formData.email,
       password: this.state.formData.password
     };
-    axios.post(`${process.env.REACT_APP_USERS_SERVICE_URL}/admin/auth/register`, data)
+    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/auth/register`, data)
     .then((res) => {
       this.setState({
         formData: { username: '', email: '', password: '' }

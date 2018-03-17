@@ -51,7 +51,7 @@ services:
       dockerfile: Dockerfile-prod
       args:
         - NODE_ENV=production
-        - REACT_APP_USERS_SERVICE_URL=$${REACT_APP_USERS_SERVICE_URL}
+        - REACT_APP_FLASK_SERVICE_URL=$${REACT_APP_FLASK_SERVICE_URL}
     ports:
       - '3007:80'
     depends_on:
