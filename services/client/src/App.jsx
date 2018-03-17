@@ -26,7 +26,7 @@ class App extends Component {
     };
     this.loginUser = this.loginUser.bind(this);
     this.registerUser = this.registerUser.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleFormChange = this.handleFormChange.bind(this);
   };
 
   componentDidMount() {
@@ -76,7 +76,7 @@ class App extends Component {
     .catch((err) => { console.log(err); });
   }
 
-  handleChange(event) {
+  handleFormChange(event) {
     const obj = this.state.formData;
     obj[event.target.name] = event.target.value;
     this.setState({
@@ -104,7 +104,7 @@ class App extends Component {
                     formType={'Register'}
                     formData={this.state.formData}
                     handleUserFormSubmit={this.registerUser}
-                    handleFormChange={this.handleChange}
+                    handleFormChange={this.handleFormChange}
                   />
                 )} />
                 <Route exact path='/login' render={() => (
@@ -112,7 +112,7 @@ class App extends Component {
                     formType={'login'}
                     formData={this.state.formData}
                     handleUserFormSubmit={this.loginUser}
-                    handleFormChange={this.handleChange}
+                    handleFormChange={this.handleFormChange}
                   />
                 )} />
               </Switch>
