@@ -1,3 +1,7 @@
 .calendar-container {
   height: 600px;
 }
+
+.rbc-toolbar-label {
+  font-size: 20px;
+}
