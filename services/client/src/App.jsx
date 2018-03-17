@@ -24,6 +24,7 @@ class App extends Component {
         password: ''
       }
     };
+    this.loginUser = this.loginUser.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
   };
@@ -47,11 +48,30 @@ class App extends Component {
       email: this.state.formData.email,
       password: this.state.formData.password
     };
-    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/register`, data)
+    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/register`,
+               data
+    )
     .then((res) => {
       this.setState({
         formData: { username: '', email: '', password: '' }
       });
+    })
+    .catch((err) => { console.log(err); });
+  }
+
+  loginUser(event) {
+    event.preventDefault();
+    const data = {
+      email: this.state.formData.email,
+      password: this.state.formData.password
+    };
+    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/login`, data)
+    .then((res) => {
+      this.setState({
+        formData: { username: '', email: '', password: '' }
+      });
+      console.log('Here is the result:');
+      console.log(res);
     })
     .catch((err) => { console.log(err); });
   }
@@ -91,6 +111,7 @@ class App extends Component {
                   <Form
                     formType={'login'}
                     formData={this.state.formData}
+                    handleUserFormSubmit={this.loginUser}
                     handleFormChange={this.handleChange}
                   />
                 )} />
