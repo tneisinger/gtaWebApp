@@ -24,8 +24,7 @@ class App extends Component {
         password: ''
       }
     };
-    this.loginUser = this.loginUser.bind(this);
-    this.registerUser = this.registerUser.bind(this);
+    this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
   };
 
@@ -41,47 +40,34 @@ class App extends Component {
     .catch((err) => { console.log(err); });
   };
 
-  registerUser(event) {
+  handleUserFormSubmit(event) {
     event.preventDefault();
-    const data = {
-      username: this.state.formData.username,
+    const formType = window.location.href.split('/').reverse()[0];
+    let data = {
       email: this.state.formData.email,
-      password: this.state.formData.password
+      password: this.state.formData.password,
     };
-    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/register`,
-               data
-    )
+    if (formType === 'register') {
+      data.username = this.state.formData.username;
+    }
+    const url = `${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/${formType}`
+    axios.post(url, data)
     .then((res) => {
+      // Clear the form inputs
       this.setState({
         formData: { username: '', email: '', password: '' }
       });
-    })
-    .catch((err) => { console.log(err); });
-  }
 
-  loginUser(event) {
-    event.preventDefault();
-    const data = {
-      email: this.state.formData.email,
-      password: this.state.formData.password
-    };
-    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/login`, data)
-    .then((res) => {
-      this.setState({
-        formData: { username: '', email: '', password: '' }
-      });
-      console.log('Here is the result:');
-      console.log(res);
+      // save the user's auth token in their browser's local storage
+      window.localStorage.setItem('authToken', res.data.auth_token);
     })
     .catch((err) => { console.log(err); });
-  }
+  };
 
   handleFormChange(event) {
     const obj = this.state.formData;
     obj[event.target.name] = event.target.value;
-    this.setState({
-      formData: obj
-    });
+    this.setState({ formData: obj });
   };
 
   render() {
@@ -103,7 +89,7 @@ class App extends Component {
                   <Form
                     formType={'Register'}
                     formData={this.state.formData}
-                    handleUserFormSubmit={this.registerUser}
+                    handleUserFormSubmit={this.handleUserFormSubmit}
                     handleFormChange={this.handleFormChange}
                   />
                 )} />
@@ -111,7 +97,7 @@ class App extends Component {
                   <Form
                     formType={'login'}
                     formData={this.state.formData}
-                    handleUserFormSubmit={this.loginUser}
+                    handleUserFormSubmit={this.handleUserFormSubmit}
                     handleFormChange={this.handleFormChange}
                   />
                 )} />

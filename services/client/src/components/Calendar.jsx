@@ -2,12 +2,12 @@ import React from 'react';
 import BigCalendar from 'react-big-calendar';
 import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
+import axios from 'axios';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 import '../css/calendar.css';
 
 // select moment as the localizer for BigCalendar
 BigCalendar.momentLocalizer(moment);
-
 
 const CustomToolbar = (toolbar) => {
   const goToBack = () => {
@@ -66,7 +66,7 @@ class Calendar extends React.Component {
   }
 
   componentDidMount() {
-    this.getDateRange();
+    this.getEvents();
   };
 
   bindScopes(keys) {
@@ -77,14 +77,34 @@ class Calendar extends React.Component {
 
   onNavigate(date, view) {
     console.log('#### onNavigate');
-    this.getDateRange(date);
+    this.getVisibleDateRange(date);
   }
 
-  getDateRange(date = this.state.current_date) {
-    let start_date = moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD');
-    let end_date = moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD');
-    console.log('start_date =', start_date)
-    console.log('end_date =', end_date)
+  getVisibleDateRange(date = this.state.current_date) {
+    let result = {
+      start_date: moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD'),
+      end_date: moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD')
+    }
+    return result;
+  }
+
+  getEvents() {
+    let date_range = this.getVisibleDateRange();
+    axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
+      params: date_range,
+      headers: {
+        'Authorization': `Bearer ${window.localStorage.getItem('authToken')}`
+      }
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+      alert('You are not authorized!');
+      console.log(err.response.data);
+      console.log(err.response.status);
+    });
   }
 
   render() {
