@@ -3,12 +3,14 @@ import BigCalendar from 'react-big-calendar';
 import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
 import axios from 'axios';
+import { Button, Modal } from 'react-bootstrap';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 import '../css/calendar.css';
 
 // select moment as the localizer for BigCalendar
 BigCalendar.momentLocalizer(moment);
 
+// Create a custom toolbar for the calendar
 const CustomToolbar = (toolbar) => {
   const goToBack = () => {
     toolbar.date.setMonth(toolbar.date.getMonth() - 1);
@@ -51,17 +53,21 @@ const CustomToolbar = (toolbar) => {
   );
 }
 
+
 class Calendar extends React.Component {
 
   constructor() {
     super();
     this.state = {
       current_date: new Date(),
-      events: []
+      events: [],
+      showModal: false,
     }
 
     this.bindScopes([
-      'onNavigate'
+      'onNavigate',
+      'showModal',
+      'closeModal'
     ]);
   }
 
@@ -107,19 +113,44 @@ class Calendar extends React.Component {
     });
   }
 
+  showModal() {
+    this.setState({ showModal: true });
+  }
+
+  closeModal() {
+    this.setState({ showModal: false });
+  }
+
   render() {
     return (
-      <div className='calendar-container'>
-        <BigCalendar
-          defaultDate={this.state.current_date}
-          onNavigate={this.onNavigate}
-          events={this.state.events}
-          startAccessor={'start'}
-          endAccessor={'end'}
-          components={{
-            toolbar: CustomToolbar
-          }}
-        />
+      <div>
+        <div className='calendar-container'>
+          <BigCalendar
+            defaultDate={this.state.current_date}
+            onNavigate={this.onNavigate}
+            events={this.state.events}
+            startAccessor={'start'}
+            endAccessor={'end'}
+            components={{ toolbar: CustomToolbar }}
+          />
+        </div>
+
+        <Button bsStyle="primary" bsSize="large" onClick={this.showModal}>
+          Launch the Modal
+        </Button>
+
+        <Modal show={this.state.showModal} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Modal Heading</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h3>Hello there</h3>
+            <p>This is a test</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.closeModal}>Close</Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
