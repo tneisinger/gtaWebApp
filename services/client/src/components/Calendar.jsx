@@ -3,8 +3,11 @@ import BigCalendar from 'react-big-calendar';
 import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
 import axios from 'axios';
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
+
+import EventFormModal from './EventFormModal';
+import ChoiceModal from './ChoiceModal.jsx';
 import '../css/calendar.css';
 
 // select moment as the localizer for BigCalendar
@@ -61,13 +64,44 @@ class Calendar extends React.Component {
     this.state = {
       current_date: new Date(),
       events: [],
-      showModal: false,
+      showChoiceModal: false,
+      showFormModal: false,
+      formType: 'jobForm',
+      formModalHeading: 'Create a New Job',
+      formData: {
+        jobForm: {
+          client: '',
+          description: '',
+          amount_paid: '',
+          paid_to: '',
+          worked_by: '',
+          confirmation: '',
+          has_paid: false,
+          start_date: '',
+          end_date: '',
+        },
+        oneTimeExpenseForm: {
+          merchant: '',
+          description: '',
+          amount_spent: '',
+          date: '',
+          paid_by: '',
+          tax_deductible: false,
+          category: '',
+        }
+      },
     }
 
     this.bindScopes([
       'onNavigate',
-      'showModal',
-      'closeModal'
+      'showFormModal',
+      'closeFormModal',
+      'showChoiceModal',
+      'closeChoiceModal',
+      'handleFormSubmit',
+      'handleFormChange',
+      'showNewJobFormModal',
+      'showNewOneTimeExpenseFormModal',
     ]);
   }
 
@@ -113,12 +147,81 @@ class Calendar extends React.Component {
     });
   }
 
-  showModal() {
-    this.setState({ showModal: true });
+  showChoiceModal() {
+    this.setState({ showChoiceModal: true });
   }
 
-  closeModal() {
-    this.setState({ showModal: false });
+  closeChoiceModal() {
+    this.setState({ showChoiceModal: false });
+  }
+
+  showFormModal() {
+    this.setState({ showFormModal: true });
+  }
+
+  closeFormModal() {
+    this.setState({ showFormModal: false });
+  }
+
+  showNewJobFormModal() {
+    // prepare to reset the job form
+    const formData = this.state.formData;
+    formData.jobForm = {
+        client: '',
+        description: '',
+        amount_paid: '',
+        paid_to: '',
+        worked_by: '',
+        confirmation: '',
+        has_paid: false,
+        start_date: '',
+        end_date: '',
+    }
+
+    // Make the changes
+    this.setState({
+      showChoiceModal: false,
+      showFormModal: true,
+      formType: 'jobForm',
+      formModalHeading: 'Create a new Job',
+      formData: formData,
+    });
+  }
+
+  showNewOneTimeExpenseFormModal() {
+    // prepare to reset the oneTimeExpense form
+    const formData = this.state.formData;
+    formData.oneTimeExpenseForm = {
+      merchant: '',
+      description: '',
+      amount_spent: '',
+      date: '',
+      paid_by: '',
+      tax_deductible: false,
+      category: '',
+    }
+
+    // Make the changes
+    this.setState({
+      showChoiceModal: false,
+      showFormModal: true,
+      formModalHeading: 'Create a new Expense',
+      formType: 'oneTimeExpenseForm',
+      formData: formData,
+    });
+  }
+
+  handleFormChange(event, formType) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const obj = this.state.formData;
+    obj[this.state.formType][target.name] = value;
+    this.setState({ formData: obj });
+  }
+
+  handleFormSubmit(event) {
+    if (event !== undefined) event.preventDefault();
+    this.closeFormModal();
   }
 
   render() {
@@ -135,22 +238,32 @@ class Calendar extends React.Component {
           />
         </div>
 
-        <Button bsStyle="primary" bsSize="large" onClick={this.showModal}>
+        <Button bsStyle="primary" bsSize="large"
+          onClick={this.showChoiceModal}
+        >
           Launch the Modal
         </Button>
 
-        <Modal show={this.state.showModal} onHide={this.closeModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Modal Heading</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <h3>Hello there</h3>
-            <p>This is a test</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.closeModal}>Close</Button>
-          </Modal.Footer>
-        </Modal>
+        <ChoiceModal
+          show={this.state.showChoiceModal}
+          handleClose={this.closeChoiceModal}
+          heading='Select Event Type'
+          leftButtonText='New Job'
+          rightButtonText='New Expense'
+          handleLeftButtonClick={this.showNewJobFormModal}
+          handleRightButtonClick={this.showNewOneTimeExpenseFormModal}
+        />
+
+        <EventFormModal
+          show={this.state.showFormModal}
+          handleClose={this.closeFormModal}
+          heading={this.state.formModalHeading}
+          formType={this.state.formType}
+          formData={this.state.formData}
+          handleFormChange={this.handleFormChange}
+          handleFormSubmit={this.handleFormSubmit}
+        />
+
       </div>
     );
   }
