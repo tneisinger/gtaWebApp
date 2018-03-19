@@ -273,12 +273,6 @@ class Calendar extends React.Component {
           />
         </div>
 
-        <Button bsStyle="primary" bsSize="large"
-          onClick={this.showChoiceModal}
-        >
-          Launch the Modal
-        </Button>
-
         <ChoiceModal
           show={this.state.showChoiceModal}
           handleClose={this.closeChoiceModal}
