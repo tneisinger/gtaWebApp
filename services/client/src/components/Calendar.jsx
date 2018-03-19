@@ -3,7 +3,6 @@ import BigCalendar from 'react-big-calendar';
 import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
 import axios from 'axios';
-import { Button } from 'react-bootstrap';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 
 import EventFormModal from './EventFormModal';
@@ -92,26 +91,8 @@ class Calendar extends React.Component {
       formType: 'jobForm',
       formModalHeading: 'Create a New Job',
       formData: {
-        jobForm: {
-          client: '',
-          description: '',
-          amount_paid: '',
-          paid_to: '',
-          worked_by: '',
-          confirmation: '',
-          has_paid: false,
-          start_date: '',
-          end_date: '',
-        },
-        oneTimeExpenseForm: {
-          merchant: '',
-          description: '',
-          amount_spent: '',
-          date: '',
-          paid_by: '',
-          tax_deductible: false,
-          category: '',
-        }
+        jobForm: this.emptyJobForm,
+        oneTimeExpenseForm: this.emptyOneTimeExpenseForm,
       },
     }
 
