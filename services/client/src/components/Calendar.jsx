@@ -59,8 +59,31 @@ const CustomToolbar = (toolbar) => {
 
 class Calendar extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    this.emptyJobForm = {
+      client: '',
+      description: '',
+      amount_paid: '',
+      paid_to: 'Gladtime Audio',
+      worked_by: 'Meghan',
+      confirmation: 'Confirmed',
+      has_paid: false,
+      start_date: '',
+      end_date: '',
+    }
+
+    this.emptyOneTimeExpenseForm = {
+      merchant: '',
+      description: '',
+      amount_spent: '',
+      date: '',
+      paid_by: 'Gladtime Audio',
+      tax_deductible: false,
+      category: 'Business Equipment',
+    }
+
     this.state = {
       current_date: new Date(),
       events: [],
@@ -100,8 +123,9 @@ class Calendar extends React.Component {
       'closeChoiceModal',
       'handleFormSubmit',
       'handleFormChange',
-      'showNewJobFormModal',
-      'showNewOneTimeExpenseFormModal',
+      'showJobFormModal',
+      'showOneTimeExpenseFormModal',
+      'onSelectDates',
     ]);
   }
 
@@ -163,51 +187,24 @@ class Calendar extends React.Component {
     this.setState({ showFormModal: false });
   }
 
-  showNewJobFormModal() {
-    // prepare to reset the job form
-    const formData = this.state.formData;
-    formData.jobForm = {
-        client: '',
-        description: '',
-        amount_paid: '',
-        paid_to: '',
-        worked_by: '',
-        confirmation: '',
-        has_paid: false,
-        start_date: '',
-        end_date: '',
-    }
+  showJobFormModal() {
 
-    // Make the changes
+    // Hide the choice modal and show the job form modal
     this.setState({
       showChoiceModal: false,
       showFormModal: true,
       formType: 'jobForm',
       formModalHeading: 'Create a new Job',
-      formData: formData,
     });
   }
 
-  showNewOneTimeExpenseFormModal() {
-    // prepare to reset the oneTimeExpense form
-    const formData = this.state.formData;
-    formData.oneTimeExpenseForm = {
-      merchant: '',
-      description: '',
-      amount_spent: '',
-      date: '',
-      paid_by: '',
-      tax_deductible: false,
-      category: '',
-    }
-
-    // Make the changes
+  showOneTimeExpenseFormModal() {
+    // Hide the choice modal and show the one time expense form modal
     this.setState({
       showChoiceModal: false,
       showFormModal: true,
       formModalHeading: 'Create a new Expense',
       formType: 'oneTimeExpenseForm',
-      formData: formData,
     });
   }
 
@@ -224,6 +221,42 @@ class Calendar extends React.Component {
     this.closeFormModal();
   }
 
+  onSelectDates(slotInfo) {
+    let start_date = moment(slotInfo.start).format('YYYY-MM-DD');
+    let end_date = moment(slotInfo.end).format('YYYY-MM-DD');
+
+    // prepare the forms
+    const formData = this.state.formData;
+    formData.jobForm = this.emptyJobForm;
+    formData.jobForm.start_date = start_date;
+    formData.jobForm.end_date = end_date;
+    formData.oneTimeExpenseForm = this.emptyOneTimeExpenseForm;
+    formData.oneTimeExpenseForm.date = start_date;
+
+    // If the user selects multiple days, just open the job form modal.
+    // one time expenses cannot take place over multiple days.
+    if (start_date !== end_date) {
+
+      // Open the job form modal.
+      this.setState({
+        showChoiceModal: false,
+        showFormModal: true,
+        formType: 'jobForm',
+        formModalHeading: 'Create a new Job',
+        formData: formData,
+      });
+
+    } else {
+
+      // Put the dates in the forms and show the choice modal
+      this.setState({
+        formData: formData,
+        showChoiceModal: true,
+      });
+
+    }
+  }
+
   render() {
     return (
       <div>
@@ -235,6 +268,8 @@ class Calendar extends React.Component {
             startAccessor={'start'}
             endAccessor={'end'}
             components={{ toolbar: CustomToolbar }}
+            selectable={true}
+            onSelectSlot={this.onSelectDates}
           />
         </div>
 
@@ -250,8 +285,8 @@ class Calendar extends React.Component {
           heading='Select Event Type'
           leftButtonText='New Job'
           rightButtonText='New Expense'
-          handleLeftButtonClick={this.showNewJobFormModal}
-          handleRightButtonClick={this.showNewOneTimeExpenseFormModal}
+          handleLeftButtonClick={this.showJobFormModal}
+          handleRightButtonClick={this.showOneTimeExpenseFormModal}
         />
 
         <EventFormModal
