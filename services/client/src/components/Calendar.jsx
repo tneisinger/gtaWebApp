@@ -98,10 +98,6 @@ class Calendar extends React.Component {
 
     this.bindScopes([
       'onNavigate',
-      'showFormModal',
-      'closeFormModal',
-      'showChoiceModal',
-      'closeChoiceModal',
       'handleFormSubmit',
       'handleFormChange',
       'showJobFormModal',
@@ -125,12 +121,13 @@ class Calendar extends React.Component {
     this.getVisibleDateRange(date);
   }
 
-  getVisibleDateRange(date = this.state.current_date) {
-    let result = {
+  getVisibleDateRange(date) {
+    date = date || this.state.current_date;
+    let date_range = {
       start_date: moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD'),
       end_date: moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD')
     }
-    return result;
+    return date_range;
   }
 
   getEvents() {
@@ -152,24 +149,7 @@ class Calendar extends React.Component {
     });
   }
 
-  showChoiceModal() {
-    this.setState({ showChoiceModal: true });
-  }
-
-  closeChoiceModal() {
-    this.setState({ showChoiceModal: false });
-  }
-
-  showFormModal() {
-    this.setState({ showFormModal: true });
-  }
-
-  closeFormModal() {
-    this.setState({ showFormModal: false });
-  }
-
   showJobFormModal() {
-
     // Hide the choice modal and show the job form modal
     this.setState({
       showChoiceModal: false,
@@ -199,7 +179,9 @@ class Calendar extends React.Component {
 
   handleFormSubmit(event) {
     if (event !== undefined) event.preventDefault();
-    this.closeFormModal();
+
+    // Close the form modal
+    this.setState({ showFormModal: false });
   }
 
   onSelectDates(slotInfo) {
@@ -256,7 +238,7 @@ class Calendar extends React.Component {
 
         <ChoiceModal
           show={this.state.showChoiceModal}
-          handleClose={this.closeChoiceModal}
+          handleClose={() => this.setState({ showChoiceModal: false })}
           heading='Select Event Type'
           leftButtonText='New Job'
           rightButtonText='New Expense'
@@ -266,7 +248,7 @@ class Calendar extends React.Component {
 
         <EventFormModal
           show={this.state.showFormModal}
-          handleClose={this.closeFormModal}
+          handleClose={() => this.setState({ showFormModal: false })}
           heading={this.state.formModalHeading}
           formType={this.state.formType}
           formData={this.state.formData}
