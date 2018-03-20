@@ -1,8 +1,6 @@
 import React from 'react';
 import BigCalendar from 'react-big-calendar';
-import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
-import axios from 'axios';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 
 import EventFormModal from './EventFormModal';
@@ -84,7 +82,6 @@ class Calendar extends React.Component {
     }
 
     this.state = {
-      current_date: new Date(),
       events: [],
       showChoiceModal: false,
       showFormModal: false,
@@ -107,7 +104,7 @@ class Calendar extends React.Component {
   }
 
   componentDidMount() {
-    this.getEvents();
+    this.props.getEvents();
   };
 
   bindScopes(keys) {
@@ -118,35 +115,6 @@ class Calendar extends React.Component {
 
   onNavigate(date, view) {
     console.log('#### onNavigate');
-    this.getVisibleDateRange(date);
-  }
-
-  getVisibleDateRange(date) {
-    date = date || this.state.current_date;
-    let date_range = {
-      start_date: moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD'),
-      end_date: moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD')
-    }
-    return date_range;
-  }
-
-  getEvents() {
-    let date_range = this.getVisibleDateRange();
-    axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
-      params: date_range,
-      headers: {
-        'Authorization': `Bearer ${window.localStorage.getItem('authToken')}`
-      }
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-      alert('You are not authorized!');
-      console.log(err.response.data);
-      console.log(err.response.status);
-    });
   }
 
   showJobFormModal() {
@@ -225,7 +193,7 @@ class Calendar extends React.Component {
       <div>
         <div className='calendar-container'>
           <BigCalendar
-            defaultDate={this.state.current_date}
+            defaultDate={this.props.currentDate}
             onNavigate={this.onNavigate}
             events={this.state.events}
             startAccessor={'start'}

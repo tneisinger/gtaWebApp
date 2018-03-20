@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Route, Switch } from 'react-router-dom';
+import dates from 'react-big-calendar/lib/utils/dates';
+import moment from 'moment';
 
 import Home from './components/Home';
 import Calendar from './components/Calendar';
@@ -14,6 +16,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentCalendarDate: new Date(),
       users: [],
       username: '',
       email: '',
@@ -26,6 +29,7 @@ class App extends Component {
     };
     this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.getEvents = this.getEvents.bind(this);
   };
 
   componentDidMount() {
@@ -70,6 +74,45 @@ class App extends Component {
     this.setState({ formData: obj });
   };
 
+
+  getDateRange(date) {
+    date = date || this.state.currentCalendarDate;
+    let date_range;
+    if (this.props.location.pathname === '/calendar') {
+      date_range = this.getCalendarDateRange(date);
+    }
+    return date_range;
+  }
+
+  getCalendarDateRange(date) {
+    date = date || this.state.currentCalendarDate;
+    const date_range = {
+      start_date: moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD'),
+      end_date: moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD')
+    }
+    return date_range;
+  }
+
+  getEvents() {
+    console.log('###### ran foreign getEvents');
+    let date_range = this.getDateRange();
+    axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
+      params: date_range,
+      headers: {
+        'Authorization': `Bearer ${window.localStorage.getItem('authToken')}`
+      }
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+      alert('You are not authorized!');
+      console.log(err.response.data);
+      console.log(err.response.status);
+    });
+  }
+
   render() {
     return (
       <div>
@@ -82,7 +125,11 @@ class App extends Component {
               <br/>
               <Switch>
                 <Route exact path='/' component={Home}/>
-                <Route exact path='/calendar' component={Calendar}/>
+                <Route exact path='/calendar' render={()=>
+                  <Calendar
+                    currentDate={this.state.currentCalendarDate}
+                    getEvents={this.getEvents}
+                  />}/>
                 <Route exact path='/budget' component={Budget}/>
                 <Route exact path='/expenses' component={Expenses}/>
                 <Route exact path='/register' render={() => (
