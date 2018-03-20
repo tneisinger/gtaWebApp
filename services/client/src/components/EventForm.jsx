@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const EventForm = (props) => {
   if (props.formType === 'jobForm') {
@@ -239,6 +240,13 @@ const EventForm = (props) => {
       </form>
     )
   }
+};
+
+EventForm.propTypes = {
+  formType: PropTypes.oneOf(['jobForm', 'oneTimeExpenseForm']).isRequired,
+  handleFormSubmit: PropTypes.func.isRequired,
+  formData: PropTypes.object.isRequired,
+  handleFormChange: PropTypes.func.isRequired
 };
 
 export default EventForm;

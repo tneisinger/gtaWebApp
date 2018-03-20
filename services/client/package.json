@@ -6,6 +6,7 @@
     "axios": "^0.18.0",
     "moment": "^2.21.0",
     "npm": "^5.7.1",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-big-calendar": "^0.18.0",
     "react-bootstrap": "^0.32.1",
