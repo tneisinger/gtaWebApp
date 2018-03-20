@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { withRouter, BrowserRouter as Router } from 'react-router-dom';
 
 import App from './App.jsx';
 
+const AppWithRouter = withRouter(App);
+
 ReactDOM.render((
   <Router>
-    <App />
+    <AppWithRouter />
   </Router>
 ), document.getElementById('root'));
