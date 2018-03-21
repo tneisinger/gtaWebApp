@@ -9,14 +9,13 @@ import moment from 'moment';
 import Home from './components/Home';
 import CalendarToolbar from './components/CalendarToolbar.jsx';
 import './css/calendar.css';
-import EventForm from './components/EventForm';
+import Form from './components/Form';
 import { emptyJobFormData, emptyOneTimeExpenseFormData, emptyLoginFormData,
          formTypes, formData }
-from './components/EventForm';
+from './components/Form';
 import FormModal from './components/FormModal';
 import ChoiceModal from './components/ChoiceModal.jsx';
 import NavBar from './components/NavBar';
-import Form from './components/Form';
 
 
 // select moment as the localizer for BigCalendar
@@ -293,7 +292,7 @@ class App extends Component {
                 show={this.state.showFormModal}
                 handleClose={() => this.setState({ showFormModal: false })}
               >
-                <EventForm
+                <Form
                   formType={this.state.formType}
                   formData={this.state.formData}
                   onFormChange={this.handleFormChange}
