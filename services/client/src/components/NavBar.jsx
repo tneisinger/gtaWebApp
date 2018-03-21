@@ -7,7 +7,7 @@ const NavBar = (props) => (
     <Navbar.Header>
       <Navbar.Brand>
         <LinkContainer to="/">
-          <span>{props.title}</span>
+          <span>Gladtime Audio</span>
         </LinkContainer>
       </Navbar.Brand>
       <Navbar.Toggle />
