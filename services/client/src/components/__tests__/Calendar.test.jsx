@@ -4,8 +4,16 @@ import renderer from 'react-test-renderer';
 
 import Calendar from '../Calendar';
 
+const idesOfMarch = new Date(2018, 2, 15);
+const getEvents = () => { console.log('get events') }
+
 test('Calendar renders properly', () => {
-  const wrapper = shallow(<Calendar/>);
+  const wrapper = shallow(
+                    <Calendar
+                      currentDate={idesOfMarch}
+                      getEvents={getEvents}
+                    />
+                  );
   const calendarElement = wrapper.find('.calendar-container');
   expect(calendarElement.length).toBe(1);
 });
