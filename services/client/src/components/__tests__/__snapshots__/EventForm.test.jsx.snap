@@ -1,0 +1,372 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Job form renders a snapshot properly 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <input
+      className="form-control input-lg"
+      name="client"
+      onChange={[Function]}
+      placeholder="Client Name"
+      required={true}
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <input
+      className="form-control input-lg"
+      name="description"
+      onChange={[Function]}
+      placeholder="Description"
+      required={true}
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <input
+      className="form-control input-lg"
+      name="amount_paid"
+      onChange={[Function]}
+      placeholder="Amount Paid"
+      required={true}
+      type="number"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="paid_to"
+    >
+      Paid To
+    </label>
+    <select
+      className="form-control input-lg"
+      id="paid_to"
+      name="paid_to"
+      onChange={[Function]}
+      placeholder="Paid To"
+      required={true}
+      value="Gladtime Audio"
+    >
+      <option
+        value="Gladtime Audio"
+      >
+        Gladtime Audio
+      </option>
+      <option
+        value="Meghan"
+      >
+        Meghan
+      </option>
+      <option
+        value="Tyler"
+      >
+        Tyler
+      </option>
+      <option
+        value="Tyler/Meghan Separately"
+      >
+        Tyler/Meghan Separately
+      </option>
+    </select>
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="worked_by"
+    >
+      Worked By
+    </label>
+    <select
+      className="form-control input-lg"
+      id="worked_by"
+      name="worked_by"
+      onChange={[Function]}
+      required={true}
+      value="Meghan"
+    >
+      <option
+        value="Meghan"
+      >
+        Meghan
+      </option>
+      <option
+        value="Tyler"
+      >
+        Tyler
+      </option>
+      <option
+        value="Tyler and Meghan"
+      >
+        Tyler and Meghan
+      </option>
+    </select>
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="confirmation"
+    >
+      Confirmation
+    </label>
+    <select
+      className="form-control input-lg"
+      id="confirmation"
+      name="confirmation"
+      onChange={[Function]}
+      required={true}
+      value="Confirmed"
+    >
+      <option
+        value="Confirmed"
+      >
+        Confirmed
+      </option>
+      <option
+        value="Pencilled In"
+      >
+        Pencilled In
+      </option>
+    </select>
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="has_paid"
+    >
+      Has Paid
+    </label>
+    <input
+      className="form-check-input checkbox-lg"
+      id="has_paid"
+      name="has_paid"
+      onChange={[Function]}
+      type="checkbox"
+      value={false}
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="start_date"
+    >
+      Start Date
+    </label>
+    <input
+      className="form-control input-lg"
+      id="start_date"
+      name="start_date"
+      onChange={[Function]}
+      required={true}
+      type="date"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="end_date"
+    >
+      End Date
+    </label>
+    <input
+      className="form-control input-lg"
+      id="end_date"
+      name="end_date"
+      onChange={[Function]}
+      required={true}
+      type="date"
+      value=""
+    />
+  </div>
+</form>
+`;
+
+exports[`OneTimeExpense form renders a snapshot properly 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group"
+  >
+    <input
+      className="form-control input-lg"
+      name="merchant"
+      onChange={[Function]}
+      placeholder="Bought From"
+      required={true}
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <input
+      className="form-control input-lg"
+      name="description"
+      onChange={[Function]}
+      placeholder="Description"
+      required={true}
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <input
+      className="form-control input-lg"
+      name="amount_spent"
+      onChange={[Function]}
+      placeholder="Amount Spent"
+      required={true}
+      type="number"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="date"
+    >
+      Date
+    </label>
+    <input
+      className="form-control input-lg"
+      id="date"
+      name="date"
+      onChange={[Function]}
+      required={true}
+      type="date"
+      value=""
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="paid_by"
+    >
+      Paid By
+    </label>
+    <select
+      className="form-control input-lg"
+      id="paid_by"
+      name="paid_by"
+      onChange={[Function]}
+      required={true}
+      value="Gladtime Audio"
+    >
+      <option
+        value="Gladtime Audio"
+      >
+        Gladtime Audio
+      </option>
+      <option
+        value="Meghan"
+      >
+        Meghan
+      </option>
+      <option
+        value="Tyler"
+      >
+        Tyler
+      </option>
+      <option
+        value="Tyler/Meghan Separately"
+      >
+        Tyler/Meghan Separately
+      </option>
+    </select>
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="tax_deductible"
+    >
+      Tax Deductible
+    </label>
+    <input
+      className="form-check-input checkbox-lg"
+      id="tax_deductible"
+      name="tax_deductible"
+      onChange={[Function]}
+      type="checkbox"
+      value={false}
+    />
+  </div>
+  <div
+    className="form-group"
+  >
+    <label
+      htmlFor="category"
+    >
+      Category
+    </label>
+    <select
+      className="form-control input-lg"
+      id="category"
+      name="category"
+      onChange={[Function]}
+      required={true}
+      value="Business Equipment"
+    >
+      <option
+        value="Business Equipment"
+      >
+        Business Equipment
+      </option>
+      <option
+        value="Business Supplies"
+      >
+        Business Supplies
+      </option>
+      <option
+        value="Gasoline"
+      >
+        Gasoline
+      </option>
+      <option
+        value="Vehicle Maintenance"
+      >
+        Vehicle Maintenance
+      </option>
+      <option
+        value="Travel Expense"
+      >
+        Travel Expense
+      </option>
+      <option
+        value="Entertainment"
+      >
+        Entertainment
+      </option>
+      <option
+        value="Food"
+      >
+        Food
+      </option>
+    </select>
+  </div>
+</form>
+`;
