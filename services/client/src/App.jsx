@@ -29,14 +29,6 @@ class App extends Component {
     this.state = {
       currentCalendarDate: new Date(),
       calendarEvents: [],
-      username: '',
-      email: '',
-      title: 'Gladtime Audio',
-      authFormData: {
-        username: '',
-        email: '',
-        password: ''
-      },
       formData: formData,
       showChoiceModal: false,
       showFormModal: false,
@@ -231,7 +223,6 @@ class App extends Component {
     return (
       <div>
         <NavBar
-          title={this.state.title}
           onAuthBtnClick={this.onAuthBtnClick}
         />
         <div className="container">
