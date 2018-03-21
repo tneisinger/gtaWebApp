@@ -15,7 +15,10 @@ const FormModal = (props) => {
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.handleClose}>Close</Button>
-        <Button bsStyle="primary" onClick={props.handleFormSubmit}>
+        <Button
+          bsStyle="primary"
+          onClick={props.children[0].props.onFormSubmit}
+        >
           Save
         </Button>
       </Modal.Footer>

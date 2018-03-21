@@ -13,8 +13,8 @@ formTypes.forEach((formType) => {
     const component = <EventForm
                         formType={formType}
                         formData={formData}
-                        handleFormSubmit={dummyFunction}
-                        handleFormChange={dummyFunction}
+                        onFormChange={dummyFunction}
+                        onFormSubmit={dummyFunction}
                       />;
     const wrapper = shallow(component);
     const form = wrapper.find('form');
@@ -29,8 +29,8 @@ formTypes.forEach((formType) => {
     const component = <EventForm
                         formType={formType}
                         formData={formData}
-                        handleFormSubmit={dummyFunction}
-                        handleFormChange={dummyFunction}
+                        onFormChange={dummyFunction}
+                        onFormSubmit={dummyFunction}
                       />;
     const tree = renderer.create(component).toJSON();
     expect(tree).toMatchSnapshot();

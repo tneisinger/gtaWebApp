@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+
+// Define the valid values for formType
 export const formTypes = ['Job', 'OneTimeExpense'];
 
-
+// Define the appropriate default values for an empty job form
 export const emptyJobFormData = {
   client: '',
   description: '',
@@ -16,6 +18,7 @@ export const emptyJobFormData = {
   end_date: '',
 }
 
+// Define the appropriate default values for an empty oneTimeExpense form
 export const emptyOneTimeExpenseFormData = {
   merchant: '',
   description: '',
@@ -26,6 +29,10 @@ export const emptyOneTimeExpenseFormData = {
   category: 'Business Equipment',
 }
 
+// Define a default formData object.  This is used as the default formData
+// value if no formData prop is provided when this component is instantiated.
+// This can also be imported into another module and used to define the
+// initial state of the formData values.
 export const formData = {};
 formData[formTypes[0]] = emptyJobFormData;
 formData[formTypes[1]] = emptyOneTimeExpenseFormData;
@@ -34,9 +41,10 @@ formData[formTypes[1]] = emptyOneTimeExpenseFormData;
 const EventForm = (props) => {
   const data = props.formData[props.formType];
   return (
-    <form onSubmit={(event) => props.handleFormSubmit(event)}>
-      {props.formType === formTypes[0] &&
+    <form onSubmit={(event) => props.onFormSubmit(event)}>
 
+      {props.formType === formTypes[0] &&
+        /* render the job form inputs */
         <div>
           <div className="form-group">
             <input
@@ -46,7 +54,7 @@ const EventForm = (props) => {
               placeholder="Client Name"
               required
               value={data.client}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -58,7 +66,7 @@ const EventForm = (props) => {
               placeholder="Description"
               required
               value={data.description}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -70,7 +78,7 @@ const EventForm = (props) => {
               placeholder="Amount Paid"
               required
               value={data.amount_paid}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -83,7 +91,7 @@ const EventForm = (props) => {
               placeholder="Paid To"
               required
               value={data.paid_to}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             >
               <option value="Gladtime Audio">Gladtime Audio</option>
               <option value="Meghan">Meghan</option>
@@ -102,7 +110,7 @@ const EventForm = (props) => {
               className="form-control input-lg"
               required
               value={data.worked_by}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             >
               <option value="Meghan">Meghan</option>
               <option value="Tyler">Tyler</option>
@@ -118,7 +126,7 @@ const EventForm = (props) => {
               className="form-control input-lg"
               required
               value={data.confirmation}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             >
               <option value="Confirmed">Confirmed</option>
               <option value="Pencilled In">Pencilled In</option>
@@ -133,7 +141,7 @@ const EventForm = (props) => {
               className="form-check-input checkbox-lg"
               type="checkbox"
               value={data.has_paid}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -146,7 +154,7 @@ const EventForm = (props) => {
               type="date"
               required
               value={data.start_date}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -159,14 +167,14 @@ const EventForm = (props) => {
               type="date"
               required
               value={data.end_date}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
         </div>
       }
 
-      {/* If the formType is OneTimeExpense... */}
       {props.formType === formTypes[1] &&
+        /* Render the oneTimeExpense form inputs */
         <div>
           <div className="form-group">
             <input
@@ -176,7 +184,7 @@ const EventForm = (props) => {
               placeholder="Bought From"
               required
               value={data.merchant}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -188,7 +196,7 @@ const EventForm = (props) => {
               placeholder="Description"
               required
               value={data.description}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -200,7 +208,7 @@ const EventForm = (props) => {
               placeholder="Amount Spent"
               required
               value={data.amount_spent}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -213,7 +221,7 @@ const EventForm = (props) => {
               type="date"
               required
               value={data.date}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -225,7 +233,7 @@ const EventForm = (props) => {
               className="form-control input-lg"
               required
               value={data.paid_by}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             >
               <option value="Gladtime Audio">Gladtime Audio</option>
               <option value="Meghan">Meghan</option>
@@ -244,7 +252,7 @@ const EventForm = (props) => {
               className="form-check-input checkbox-lg"
               type="checkbox"
               value={data.tax_deductible}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             />
           </div>
 
@@ -256,7 +264,7 @@ const EventForm = (props) => {
               className="form-control input-lg"
               required
               value={data.category}
-              onChange={props.handleFormChange}
+              onChange={props.onFormChange}
             >
               <option value="Business Equipment">Business Equipment</option>
               <option value="Business Supplies">Business Supplies</option>
@@ -277,7 +285,8 @@ const EventForm = (props) => {
 EventForm.propTypes = {
   formType: PropTypes.oneOf(formTypes).isRequired,
   formData: PropTypes.object,
-  handleFormChange: PropTypes.func.isRequired
+  onFormChange: PropTypes.func.isRequired,
+  onFormSubmit: PropTypes.func.isRequired
 };
 
 EventForm.defaultProps = {

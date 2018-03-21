@@ -276,12 +276,12 @@ class App extends Component {
                 heading={this.state.formModalHeading}
                 show={this.state.showFormModal}
                 handleClose={() => this.setState({ showFormModal: false })}
-                handleFormSubmit={this.handleFormSubmit}
               >
                 <EventForm
                   formType={this.state.formType}
                   formData={this.state.formData}
-                  handleFormChange={this.handleFormChange}
+                  onFormChange={this.handleFormChange}
+                  onFormSubmit={this.handleFormSubmit}
                 />
               </FormModal>
             </div>
