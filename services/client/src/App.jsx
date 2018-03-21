@@ -33,15 +33,6 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.getUsers();
-  };
-
-  getUsers() {
-    axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/users`)
-    .then((res) => {
-      this.setState({ users: res.data.data.users });
-    })
-    .catch((err) => { console.log(err); });
   };
 
   handleUserFormSubmit(event) {
