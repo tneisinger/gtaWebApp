@@ -16,7 +16,7 @@ exports[`NavBar renders a snapshot properly 1`] = `
         onClick={[Function]}
         style={Object {}}
       >
-        Hello, World!
+        Gladtime Audio
       </span>
       <button
         className="navbar-toggle collapsed"

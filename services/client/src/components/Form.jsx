@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { copy } from '../utils';
+
 
 // Define the valid values for formType
 export const formTypes = ['Job', 'OneTimeExpense', 'Login'];
@@ -38,11 +40,12 @@ export const emptyLoginFormData = {
 // Define a default formData object.  This is used as the default formData
 // value if no formData prop is provided when this component is instantiated.
 // This can also be imported into another module and used to define the
-// initial state of the formData values.
+// initial state of the formData values.  Make copies of the empty data objects
+// so that the original objects don't get changed when formData gets modified.
 export const formData = {};
-formData[formTypes[0]] = emptyJobFormData;
-formData[formTypes[1]] = emptyOneTimeExpenseFormData;
-formData[formTypes[2]] = emptyLoginFormData;
+formData[formTypes[0]] = copy(emptyJobFormData);
+formData[formTypes[1]] = copy(emptyOneTimeExpenseFormData);
+formData[formTypes[2]] = copy(emptyLoginFormData);
 
 
 const Form = (props) => {
