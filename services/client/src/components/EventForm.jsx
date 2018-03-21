@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 
 // Define the valid values for formType
-export const formTypes = ['Job', 'OneTimeExpense'];
+export const formTypes = ['Job', 'OneTimeExpense', 'Login'];
 
 // Define the appropriate default values for an empty job form
 export const emptyJobFormData = {
@@ -29,6 +29,12 @@ export const emptyOneTimeExpenseFormData = {
   category: 'Business Equipment',
 }
 
+export const emptyLoginFormData = {
+  username: '',
+  password: '',
+  private_device: false,
+}
+
 // Define a default formData object.  This is used as the default formData
 // value if no formData prop is provided when this component is instantiated.
 // This can also be imported into another module and used to define the
@@ -36,6 +42,7 @@ export const emptyOneTimeExpenseFormData = {
 export const formData = {};
 formData[formTypes[0]] = emptyJobFormData;
 formData[formTypes[1]] = emptyOneTimeExpenseFormData;
+formData[formTypes[2]] = emptyLoginFormData;
 
 
 const EventForm = (props) => {
@@ -274,6 +281,47 @@ const EventForm = (props) => {
               <option value="Entertainment">Entertainment</option>
               <option value="Food">Food</option>
             </select>
+          </div>
+        </div>
+      }
+
+      {props.formType === formTypes[2] &&
+        /* Render the login form inputs */
+        <div>
+          <div className="form-group">
+            <input
+              name="username"
+              className="form-control input-lg"
+              type="text"
+              placeholder="Enter username"
+              required
+              value={data.username}
+              onChange={props.onFormChange}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              name="password"
+              className="form-control input-lg"
+              type="password"
+              placeholder="Enter password"
+              required
+              value={data.password}
+              onChange={props.onFormChange}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              id="private-device"
+              name="private-device"
+              className="form-check-input checkbox-lg"
+              type="checkbox"
+              value={data.private_device}
+              onChange={props.onFormChange}
+            />
+            <label htmlFor="private-device">
+              Keep me logged in. This is a private device.
+            </label>
           </div>
         </div>
       }

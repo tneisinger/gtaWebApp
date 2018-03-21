@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 const NavBar = (props) => (
@@ -25,15 +25,11 @@ const NavBar = (props) => (
         </LinkContainer>
       </Nav>
       <Nav pullRight>
-        <LinkContainer to="/register">
-          <NavItem eventKey={1}>Register</NavItem>
-        </LinkContainer>
-        <LinkContainer to="/login">
-          <NavItem eventKey={2}>Log In</NavItem>
-        </LinkContainer>
-        <LinkContainer to="/logout">
-          <NavItem eventKey={3}>Log Out</NavItem>
-        </LinkContainer>
+        <NavItem eventKey={1}>
+          <Button bsStyle="primary" onClick={props.onAuthBtnClick}>
+            Login
+          </Button>
+        </NavItem>
       </Nav>
     </Navbar.Collapse>
   </Navbar>

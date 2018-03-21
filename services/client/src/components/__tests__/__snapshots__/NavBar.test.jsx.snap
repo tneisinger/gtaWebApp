@@ -97,37 +97,19 @@ exports[`NavBar renders a snapshot properly 1`] = `
           style={undefined}
         >
           <a
-            href="/register"
+            href="#"
             onClick={[Function]}
             onKeyDown={[Function]}
+            role="button"
           >
-            Register
-          </a>
-        </li>
-        <li
-          className=""
-          role="presentation"
-          style={undefined}
-        >
-          <a
-            href="/login"
-            onClick={[Function]}
-            onKeyDown={[Function]}
-          >
-            Log In
-          </a>
-        </li>
-        <li
-          className=""
-          role="presentation"
-          style={undefined}
-        >
-          <a
-            href="/logout"
-            onClick={[Function]}
-            onKeyDown={[Function]}
-          >
-            Log Out
+            <button
+              className="btn btn-primary"
+              disabled={false}
+              onClick={undefined}
+              type="button"
+            >
+              Login
+            </button>
           </a>
         </li>
       </ul>

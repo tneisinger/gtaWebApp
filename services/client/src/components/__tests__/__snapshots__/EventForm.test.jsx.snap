@@ -201,6 +201,58 @@ exports[`Job form renders a snapshot properly 1`] = `
 </form>
 `;
 
+exports[`Login form renders a snapshot properly 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div>
+    <div
+      className="form-group"
+    >
+      <input
+        className="form-control input-lg"
+        name="username"
+        onChange={[Function]}
+        placeholder="Enter username"
+        required={true}
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      className="form-group"
+    >
+      <input
+        className="form-control input-lg"
+        name="password"
+        onChange={[Function]}
+        placeholder="Enter password"
+        required={true}
+        type="password"
+        value=""
+      />
+    </div>
+    <div
+      className="form-group"
+    >
+      <input
+        className="form-check-input checkbox-lg"
+        id="private-device"
+        name="private-device"
+        onChange={[Function]}
+        type="checkbox"
+        value={false}
+      />
+      <label
+        htmlFor="private-device"
+      >
+        Keep me logged in. This is a private device.
+      </label>
+    </div>
+  </div>
+</form>
+`;
+
 exports[`OneTimeExpense form renders a snapshot properly 1`] = `
 <form
   onSubmit={[Function]}

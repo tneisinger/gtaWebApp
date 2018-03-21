@@ -10,7 +10,8 @@ import Home from './components/Home';
 import CalendarToolbar from './components/CalendarToolbar.jsx';
 import './css/calendar.css';
 import EventForm from './components/EventForm';
-import { emptyJobFormData, emptyOneTimeExpenseFormData, formTypes, formData }
+import { emptyJobFormData, emptyOneTimeExpenseFormData, emptyLoginFormData,
+         formTypes, formData }
 from './components/EventForm';
 import FormModal from './components/FormModal';
 import ChoiceModal from './components/ChoiceModal.jsx';
@@ -58,6 +59,7 @@ class App extends Component {
       'showOneTimeExpenseFormModal',
       'handleFormChange',
       'handleFormSubmit',
+      'onAuthBtnClick',
     ]);
   };
 
@@ -69,6 +71,17 @@ class App extends Component {
 
   componentDidMount() {
   };
+
+  onAuthBtnClick() {
+    // open the form modal to show the login form
+    this.setState({
+      showChoiceModal: false,
+      showFormModal: true,
+      formType: formTypes[2],
+      formModalHeading: 'Login',
+      formData: formData,
+    });
+  }
 
   onNavigate(date, view) {
     console.log('#### onNavigate');
@@ -220,6 +233,7 @@ class App extends Component {
       <div>
         <NavBar
           title={this.state.title}
+          onAuthBtnClick={this.onAuthBtnClick}
         />
         <div className="container">
           <div className="row">
