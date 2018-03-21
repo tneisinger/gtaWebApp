@@ -4,6 +4,7 @@ import moment from 'moment';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 
 import EventFormModal from './EventFormModal';
+import EventForm from './EventForm';
 import { emptyJobFormData, emptyOneTimeExpenseFormData, formTypes, formData }
 from './EventForm';
 import ChoiceModal from './ChoiceModal.jsx';
@@ -192,14 +193,17 @@ class Calendar extends React.Component {
         />
 
         <EventFormModal
+          heading={this.state.formModalHeading}
           show={this.state.showFormModal}
           handleClose={() => this.setState({ showFormModal: false })}
-          heading={this.state.formModalHeading}
-          formType={this.state.formType}
-          formData={this.state.formData}
-          handleFormChange={this.handleFormChange}
           handleFormSubmit={this.handleFormSubmit}
-        />
+        >
+          <EventForm
+            formType={this.state.formType}
+            formData={this.state.formData}
+            handleFormChange={this.handleFormChange}
+          />
+        </EventFormModal>
 
       </div>
     );

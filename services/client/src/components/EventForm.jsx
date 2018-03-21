@@ -276,7 +276,6 @@ const EventForm = (props) => {
 
 EventForm.propTypes = {
   formType: PropTypes.oneOf(formTypes).isRequired,
-  handleFormSubmit: PropTypes.func.isRequired,
   formData: PropTypes.object,
   handleFormChange: PropTypes.func.isRequired
 };
