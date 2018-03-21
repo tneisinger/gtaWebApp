@@ -17,7 +17,7 @@ const FormModal = (props) => {
         <Button onClick={props.handleClose}>Close</Button>
         <Button
           bsStyle="primary"
-          onClick={props.children[0].props.onFormSubmit}
+          onClick={props.children.props.onFormSubmit}
         >
           Save
         </Button>
