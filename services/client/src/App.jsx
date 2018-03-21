@@ -14,8 +14,6 @@ import { emptyJobFormData, emptyOneTimeExpenseFormData, formTypes, formData }
 from './components/EventForm';
 import FormModal from './components/FormModal';
 import ChoiceModal from './components/ChoiceModal.jsx';
-import Budget from './components/Budget';
-import Expenses from './components/Expenses';
 import NavBar from './components/NavBar';
 import Form from './components/Form';
 
@@ -242,8 +240,12 @@ class App extends Component {
                     />
                   }
                 />
-                <Route exact path='/budget' component={Budget}/>
-                <Route exact path='/expenses' component={Expenses}/>
+                <Route exact path='/budget' render={() =>
+                  <p>This is the budget page</p>
+                }/>
+                <Route exact path='/expenses' render={() =>
+                  <p>This is the expenses page</p>
+                }/>
                 <Route exact path='/register' render={() => (
                   <Form
                     formType={'Register'}
