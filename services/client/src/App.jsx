@@ -42,8 +42,6 @@ class App extends Component {
     // `this` keyword to mean this App component instance, we must bind `this`
     // to the method.
     this.bindScopes([
-      'handleUserFormSubmit',
-      'handleAuthFormChange',
       'getEvents',
       'onNavigate',
       'onCalendarDatesSelect',
@@ -172,37 +170,6 @@ class App extends Component {
     this.closeFormModal();
   }
 
-  handleUserFormSubmit(event) {
-    event.preventDefault();
-    const formType = window.location.href.split('/').reverse()[0];
-    let data = {
-      email: this.state.authFormData.email,
-      password: this.state.authFormData.password,
-    };
-    if (formType === 'register') {
-      data.username = this.state.authFormData.username;
-    }
-    const url = `${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/${formType}`
-    axios.post(url, data)
-    .then((res) => {
-      // Clear the form inputs
-      this.setState({
-        authFormData: { username: '', email: '', password: '' }
-      });
-
-      // save the user's auth token in their browser's local storage
-      window.localStorage.setItem('authToken', res.data.auth_token);
-    })
-    .catch((err) => { console.log(err); });
-  };
-
-  handleAuthFormChange(event) {
-    const obj = this.state.authFormData;
-    obj[event.target.name] = event.target.value;
-    this.setState({ authFormData: obj });
-  };
-
-
   getDateRange(date) {
     date = date || this.state.currentCalendarDate;
     let date_range;
@@ -272,22 +239,6 @@ class App extends Component {
                 <Route exact path='/expenses' render={() =>
                   <p>This is the expenses page</p>
                 }/>
-                <Route exact path='/register' render={() => (
-                  <Form
-                    formType={'Register'}
-                    formData={this.state.authFormData}
-                    handleUserFormSubmit={this.handleUserFormSubmit}
-                    handleFormChange={this.handleAuthFormChange}
-                  />
-                )} />
-                <Route exact path='/login' render={() => (
-                  <Form
-                    formType={'login'}
-                    formData={this.state.authFormData}
-                    handleUserFormSubmit={this.handleUserFormSubmit}
-                    handleFormChange={this.handleAuthFormChange}
-                  />
-                )} />
               </Switch>
 
               <ChoiceModal
