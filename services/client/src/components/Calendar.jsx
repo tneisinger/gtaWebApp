@@ -4,6 +4,8 @@ import moment from 'moment';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 
 import EventFormModal from './EventFormModal';
+import { emptyJobFormData, emptyOneTimeExpenseFormData, formTypes, formData }
+from './EventForm';
 import ChoiceModal from './ChoiceModal.jsx';
 import '../css/calendar.css';
 
@@ -59,38 +61,13 @@ class Calendar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.emptyJobForm = {
-      client: '',
-      description: '',
-      amount_paid: '',
-      paid_to: 'Gladtime Audio',
-      worked_by: 'Meghan',
-      confirmation: 'Confirmed',
-      has_paid: false,
-      start_date: '',
-      end_date: '',
-    }
-
-    this.emptyOneTimeExpenseForm = {
-      merchant: '',
-      description: '',
-      amount_spent: '',
-      date: '',
-      paid_by: 'Gladtime Audio',
-      tax_deductible: false,
-      category: 'Business Equipment',
-    }
-
     this.state = {
       events: [],
       showChoiceModal: false,
       showFormModal: false,
-      formType: 'jobForm',
+      formType: formTypes[0],
       formModalHeading: 'Create a New Job',
-      formData: {
-        jobForm: this.emptyJobForm,
-        oneTimeExpenseForm: this.emptyOneTimeExpenseForm,
-      },
+      formData: formData,
     }
 
     this.bindScopes([
@@ -122,7 +99,7 @@ class Calendar extends React.Component {
     this.setState({
       showChoiceModal: false,
       showFormModal: true,
-      formType: 'jobForm',
+      formType: formTypes[0],
       formModalHeading: 'Create a new Job',
     });
   }
@@ -133,16 +110,16 @@ class Calendar extends React.Component {
       showChoiceModal: false,
       showFormModal: true,
       formModalHeading: 'Create a new Expense',
-      formType: 'oneTimeExpenseForm',
+      formType: formTypes[1],
     });
   }
 
-  handleFormChange(event, formType) {
+  handleFormChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
-    const obj = this.state.formData;
-    obj[this.state.formType][target.name] = value;
-    this.setState({ formData: obj });
+    const newFormData = this.state.formData;
+    newFormData[this.state.formType][target.name] = value;
+    this.setState({ formData: newFormData });
   }
 
   handleFormSubmit(event) {
@@ -158,10 +135,10 @@ class Calendar extends React.Component {
 
     // prepare the forms
     const formData = this.state.formData;
-    formData.jobForm = this.emptyJobForm;
+    formData.jobForm = emptyJobFormData;
     formData.jobForm.start_date = start_date;
     formData.jobForm.end_date = end_date;
-    formData.oneTimeExpenseForm = this.emptyOneTimeExpenseForm;
+    formData.oneTimeExpenseForm = emptyOneTimeExpenseFormData;
     formData.oneTimeExpenseForm.date = start_date;
 
     // If the user selects multiple days, just open the job form modal.
@@ -172,7 +149,7 @@ class Calendar extends React.Component {
       this.setState({
         showChoiceModal: false,
         showFormModal: true,
-        formType: 'jobForm',
+        formType: formTypes[0],
         formModalHeading: 'Create a new Job',
         formData: formData,
       });

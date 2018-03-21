@@ -1,8 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+export const formTypes = ['Job', 'OneTimeExpense'];
+
+
+export const emptyJobFormData = {
+  client: '',
+  description: '',
+  amount_paid: '',
+  paid_to: 'Gladtime Audio',
+  worked_by: 'Meghan',
+  confirmation: 'Confirmed',
+  has_paid: false,
+  start_date: '',
+  end_date: '',
+}
+
+export const emptyOneTimeExpenseFormData = {
+  merchant: '',
+  description: '',
+  amount_spent: '',
+  date: '',
+  paid_by: 'Gladtime Audio',
+  tax_deductible: false,
+  category: 'Business Equipment',
+}
+
+export const formData = {};
+formData[formTypes[0]] = emptyJobFormData;
+formData[formTypes[1]] = emptyOneTimeExpenseFormData;
+
+
 const EventForm = (props) => {
-  if (props.formType === 'jobForm') {
+  if (props.formType === formTypes[0]) {
+    const data = props.formData[formTypes[0]];
     return (
       <form onSubmit={(event) => props.handleFormSubmit(event)}>
 
@@ -13,7 +44,7 @@ const EventForm = (props) => {
             type="text"
             placeholder="Client Name"
             required
-            value={props.formData.jobForm.client}
+            value={data.client}
             onChange={props.handleFormChange}
           />
         </div>
@@ -25,7 +56,7 @@ const EventForm = (props) => {
             type="text"
             placeholder="Description"
             required
-            value={props.formData.jobForm.description}
+            value={data.description}
             onChange={props.handleFormChange}
           />
         </div>
@@ -37,7 +68,7 @@ const EventForm = (props) => {
             type="number"
             placeholder="Amount Paid"
             required
-            value={props.formData.jobForm.amount_paid}
+            value={data.amount_paid}
             onChange={props.handleFormChange}
           />
         </div>
@@ -50,7 +81,7 @@ const EventForm = (props) => {
             className="form-control input-lg"
             placeholder="Paid To"
             required
-            value={props.formData.jobForm.paid_to}
+            value={data.paid_to}
             onChange={props.handleFormChange}
           >
             <option value="Gladtime Audio">Gladtime Audio</option>
@@ -69,7 +100,7 @@ const EventForm = (props) => {
             name="worked_by"
             className="form-control input-lg"
             required
-            value={props.formData.jobForm.worked_by}
+            value={data.worked_by}
             onChange={props.handleFormChange}
           >
             <option value="Meghan">Meghan</option>
@@ -85,7 +116,7 @@ const EventForm = (props) => {
             name="confirmation"
             className="form-control input-lg"
             required
-            value={props.formData.jobForm.confirmation}
+            value={data.confirmation}
             onChange={props.handleFormChange}
           >
             <option value="Confirmed">Confirmed</option>
@@ -100,7 +131,7 @@ const EventForm = (props) => {
             name="has_paid"
             className="form-check-input checkbox-lg"
             type="checkbox"
-            value={props.formData.jobForm.has_paid}
+            value={data.has_paid}
             onChange={props.handleFormChange}
           />
         </div>
@@ -113,7 +144,7 @@ const EventForm = (props) => {
             className="form-control input-lg"
             type="date"
             required
-            value={props.formData.jobForm.start_date}
+            value={data.start_date}
             onChange={props.handleFormChange}
           />
         </div>
@@ -126,14 +157,15 @@ const EventForm = (props) => {
             className="form-control input-lg"
             type="date"
             required
-            value={props.formData.jobForm.end_date}
+            value={data.end_date}
             onChange={props.handleFormChange}
           />
         </div>
 
       </form>
     )
-  } else if (props.formType === 'oneTimeExpenseForm') {
+  } else if (props.formType === formTypes[1]) {
+    const data = props.formData[formTypes[1]];
     return (
       <form onSubmit={(event) => props.handleFormSubmit(event)}>
 
@@ -144,7 +176,7 @@ const EventForm = (props) => {
             type="text"
             placeholder="Bought From"
             required
-            value={props.formData.oneTimeExpenseForm.merchant}
+            value={data.merchant}
             onChange={props.handleFormChange}
           />
         </div>
@@ -156,7 +188,7 @@ const EventForm = (props) => {
             type="text"
             placeholder="Description"
             required
-            value={props.formData.oneTimeExpenseForm.description}
+            value={data.description}
             onChange={props.handleFormChange}
           />
         </div>
@@ -168,7 +200,7 @@ const EventForm = (props) => {
             type="number"
             placeholder="Amount Spent"
             required
-            value={props.formData.oneTimeExpenseForm.amount_spent}
+            value={data.amount_spent}
             onChange={props.handleFormChange}
           />
         </div>
@@ -181,7 +213,7 @@ const EventForm = (props) => {
             className="form-control input-lg"
             type="date"
             required
-            value={props.formData.oneTimeExpenseForm.date}
+            value={data.date}
             onChange={props.handleFormChange}
           />
         </div>
@@ -193,7 +225,7 @@ const EventForm = (props) => {
             name="paid_by"
             className="form-control input-lg"
             required
-            value={props.formData.oneTimeExpenseForm.paid_by}
+            value={data.paid_by}
             onChange={props.handleFormChange}
           >
             <option value="Gladtime Audio">Gladtime Audio</option>
@@ -212,7 +244,7 @@ const EventForm = (props) => {
             name="tax_deductible"
             className="form-check-input checkbox-lg"
             type="checkbox"
-            value={props.formData.oneTimeExpenseForm.tax_deductible}
+            value={data.tax_deductible}
             onChange={props.handleFormChange}
           />
         </div>
@@ -224,7 +256,7 @@ const EventForm = (props) => {
             name="category"
             className="form-control input-lg"
             required
-            value={props.formData.oneTimeExpenseForm.category}
+            value={data.category}
             onChange={props.handleFormChange}
           >
             <option value="Business Equipment">Business Equipment</option>
@@ -243,10 +275,14 @@ const EventForm = (props) => {
 };
 
 EventForm.propTypes = {
-  formType: PropTypes.oneOf(['jobForm', 'oneTimeExpenseForm']).isRequired,
+  formType: PropTypes.oneOf(formTypes).isRequired,
   handleFormSubmit: PropTypes.func.isRequired,
-  formData: PropTypes.object.isRequired,
+  formData: PropTypes.object,
   handleFormChange: PropTypes.func.isRequired
 };
+
+EventForm.defaultProps = {
+  formData: formData
+}
 
 export default EventForm;
