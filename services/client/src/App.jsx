@@ -35,7 +35,6 @@ class App extends Component {
     // to the method.
     this.bindScopes([
       'getEvents',
-      'onNavigate',
       'onCalendarDatesSelect',
       'showJobFormModal',
       'showOneTimeExpenseFormModal',
@@ -60,10 +59,6 @@ class App extends Component {
       formType: formTypes.login,
       formModalHeading: 'Login',
     });
-  }
-
-  onNavigate(date, view) {
-    console.log('#### onNavigate');
   }
 
   closeFormModal() {
@@ -204,7 +199,6 @@ class App extends Component {
                 <Route exact path='/calendar' render={()=>
                     <Calendar
                       currentDate={this.state.currentCalendarDate}
-                      onNavigate={this.onNavigate}
                       events={this.state.calendarEvents}
                       getEvents={this.getEvents}
                       selectable={true}
