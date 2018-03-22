@@ -35,7 +35,7 @@ global.localStorage = new LocalStorageMock;
 describe('Calendar', () => {
   let props = {
     events: [],
-    getEvents: jest.fn(),
+    setEvents: jest.fn(),
   };
   let mountedCalendar;
   const calendar = () => {
@@ -50,7 +50,7 @@ describe('Calendar', () => {
   beforeEach(() => {
     props = {
       events: [],
-      getEvents: jest.fn(),
+      setEvents: jest.fn(),
     };
     mountedCalendar = undefined;
   });
