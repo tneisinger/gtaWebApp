@@ -47,8 +47,8 @@ class App extends Component {
       'onCalendarDatesSelect',
       'showJobFormModal',
       'showOneTimeExpenseFormModal',
-      'handleFormChange',
-      'handleFormSubmit',
+      'onFormChange',
+      'onFormSubmit',
       'onAuthBtnClick',
       'closeFormModal',
     ]);
@@ -154,7 +154,7 @@ class App extends Component {
     });
   }
 
-  handleFormChange(event) {
+  onFormChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const newFormData = this.state.formData;
@@ -162,7 +162,7 @@ class App extends Component {
     this.setState({ formData: newFormData });
   }
 
-  handleFormSubmit(event) {
+  onFormSubmit(event) {
     // If event passed in, prevent default form behavior
     if (event !== undefined) event.preventDefault();
 
@@ -259,8 +259,8 @@ class App extends Component {
                 <Form
                   formType={this.state.formType}
                   formData={this.state.formData}
-                  onFormChange={this.handleFormChange}
-                  onFormSubmit={this.handleFormSubmit}
+                  onFormChange={this.onFormChange}
+                  onFormSubmit={this.onFormSubmit}
                 />
               </FormModal>
             </div>
