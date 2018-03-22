@@ -154,7 +154,7 @@ class App extends Component {
     formType = formType || this.state.formType;
 
     if (formType === 'all') {
-      return copy(defaultFormData);
+      return deepcopy(defaultFormData);
     }
 
     const updatedFormData = this.state.formData;
