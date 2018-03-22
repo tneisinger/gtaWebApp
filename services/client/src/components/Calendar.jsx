@@ -20,6 +20,16 @@ class Calendar extends Component {
 
   constructor(props) {
     super(props);
+
+    this.bindScopes([
+      'onNavigate',
+    ]);
+  }
+
+  bindScopes(keys) {
+    for (let key of keys) {
+      this[key] = this[key].bind(this);
+    }
   }
 
   componentDidMount() {
@@ -35,11 +45,17 @@ class Calendar extends Component {
     return [start_date, end_date];
   }
 
+  onNavigate(date, view) {
+    const [start_date, end_date] = this.getDateRange(date);
+    console.log('start_date:', start_date);
+    console.log('end_date:', end_date);
+  }
+
   render() {
     return (
       <BigCalendar
         date={this.props.currentDate}
-        onNavigate={this.props.onNavigate}
+        onNavigate={this.onNavigate}
         events={this.props.events}
         components={{ toolbar: CalendarToolbar }}
         selectable={true}
