@@ -105,11 +105,9 @@ class App extends Component {
 
     // prepare the forms
     const formData = this.state.formData;
-    formData.jobForm = copy(emptyJobFormData);
-    formData.jobForm.start_date = start_date;
-    formData.jobForm.end_date = end_date;
-    formData.oneTimeExpenseForm = copy(emptyOneTimeExpenseFormData);
-    formData.oneTimeExpenseForm.date = start_date;
+    formData[formTypes[0]].start_date = start_date;
+    formData[formTypes[0]].end_date = end_date;
+    formData[formTypes[1]].date = start_date;
 
     // If the user selects multiple days, just open the job form modal.
     // one time expenses cannot take place over multiple days.
