@@ -34,7 +34,7 @@ class App extends Component {
       formData: formData,
       showChoiceModal: false,
       showFormModal: false,
-      formType: formTypes[0],
+      formType: formTypes.login,
       formModalHeading: '',
     };
 
@@ -69,7 +69,7 @@ class App extends Component {
     this.setState({
       showChoiceModal: false,
       showFormModal: true,
-      formType: formTypes[2],
+      formType: formTypes.login,
       formModalHeading: 'Login',
       formData: formData,
     });
@@ -81,11 +81,11 @@ class App extends Component {
 
   closeFormModal() {
     // If the current formType is the login form...
-    if (this.state.formType === formTypes[2]) {
+    if (this.state.formType === formTypes.login) {
 
       // reset the login form to protect the user's info
       const updatedFormData = this.state.formData;
-      updatedFormData[formTypes[2]] = copy(emptyLoginFormData);
+      updatedFormData[formTypes.login] = copy(emptyLoginFormData);
 
       // reset the login form and hide the form modal
       this.setState({
@@ -105,9 +105,9 @@ class App extends Component {
 
     // prepare the forms
     const formData = this.state.formData;
-    formData[formTypes[0]].start_date = start_date;
-    formData[formTypes[0]].end_date = end_date;
-    formData[formTypes[1]].date = start_date;
+    formData[formTypes.job].start_date = start_date;
+    formData[formTypes.job].end_date = end_date;
+    formData[formTypes.oneTimeExpense].date = start_date;
 
     // If the user selects multiple days, just open the job form modal.
     // one time expenses cannot take place over multiple days.
@@ -117,7 +117,7 @@ class App extends Component {
       this.setState({
         showChoiceModal: false,
         showFormModal: true,
-        formType: formTypes[0],
+        formType: formTypes.job,
         formModalHeading: 'Create a new Job',
         formData: formData,
       });
@@ -138,7 +138,7 @@ class App extends Component {
     this.setState({
       showChoiceModal: false,
       showFormModal: true,
-      formType: formTypes[0],
+      formType: formTypes.job,
       formModalHeading: 'Create a new Job',
     });
   }
@@ -149,7 +149,7 @@ class App extends Component {
       showChoiceModal: false,
       showFormModal: true,
       formModalHeading: 'Create a new Expense',
-      formType: formTypes[1],
+      formType: formTypes.oneTimeExpense,
     });
   }
 

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Job form renders a snapshot properly 1`] = `
+exports[`jobForm form renders a snapshot properly 1`] = `
 <form
   onSubmit={[Function]}
 >
@@ -201,7 +201,7 @@ exports[`Job form renders a snapshot properly 1`] = `
 </form>
 `;
 
-exports[`Login form renders a snapshot properly 1`] = `
+exports[`loginForm form renders a snapshot properly 1`] = `
 <form
   onSubmit={[Function]}
 >
@@ -253,7 +253,7 @@ exports[`Login form renders a snapshot properly 1`] = `
 </form>
 `;
 
-exports[`OneTimeExpense form renders a snapshot properly 1`] = `
+exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
 <form
   onSubmit={[Function]}
 >

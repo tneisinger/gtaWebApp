@@ -8,7 +8,7 @@ import Form, { emptyJobFormData, emptyOneTimeExpenseFormData,
 
 const dummyFunction = () => { console.log('dummy function ran') };
 
-formTypes.forEach((formType) => {
+Object.values(formTypes).forEach((formType) => {
   test(`${formType} form renders properly`, () => {
     const component = <Form
                         formType={formType}

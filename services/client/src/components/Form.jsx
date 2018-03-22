@@ -4,8 +4,13 @@ import PropTypes from 'prop-types';
 import { copy } from '../utils';
 
 
-// Define the valid values for formType
-export const formTypes = ['Job', 'OneTimeExpense', 'Login'];
+// Define the valid values for formType.  Treat this as an enumeration
+// of the valid formTypes.
+export const formTypes = {
+  job: 'jobForm',
+  oneTimeExpense: 'oneTimeExpenseForm',
+  login: 'loginForm'
+}
 
 // Define the appropriate default values for an empty job form
 export const emptyJobFormData = {
@@ -43,9 +48,9 @@ export const emptyLoginFormData = {
 // initial state of the formData values.  Make copies of the empty data objects
 // so that the original objects don't get changed when formData gets modified.
 export const formData = {};
-formData[formTypes[0]] = copy(emptyJobFormData);
-formData[formTypes[1]] = copy(emptyOneTimeExpenseFormData);
-formData[formTypes[2]] = copy(emptyLoginFormData);
+formData[formTypes.job] = copy(emptyJobFormData);
+formData[formTypes.oneTimeExpense] = copy(emptyOneTimeExpenseFormData);
+formData[formTypes.login] = copy(emptyLoginFormData);
 
 
 const Form = (props) => {
@@ -53,7 +58,7 @@ const Form = (props) => {
   return (
     <form onSubmit={(event) => props.onFormSubmit(event)}>
 
-      {props.formType === formTypes[0] &&
+      {props.formType === formTypes.job &&
         /* render the job form inputs */
         <div>
           <div className="form-group">
@@ -183,7 +188,7 @@ const Form = (props) => {
         </div>
       }
 
-      {props.formType === formTypes[1] &&
+      {props.formType === formTypes.oneTimeExpense &&
         /* Render the oneTimeExpense form inputs */
         <div>
           <div className="form-group">
@@ -288,7 +293,7 @@ const Form = (props) => {
         </div>
       }
 
-      {props.formType === formTypes[2] &&
+      {props.formType === formTypes.login &&
         /* Render the login form inputs */
         <div>
           <div className="form-group">
@@ -334,7 +339,7 @@ const Form = (props) => {
 };
 
 Form.propTypes = {
-  formType: PropTypes.oneOf(formTypes).isRequired,
+  formType: PropTypes.oneOf(Object.values(formTypes)).isRequired,
   formData: PropTypes.object,
   onFormChange: PropTypes.func.isRequired,
   onFormSubmit: PropTypes.func.isRequired
