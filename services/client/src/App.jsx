@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Route, Switch } from 'react-router-dom';
 import '../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
-import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
 import { Button } from 'react-bootstrap';
 
@@ -174,27 +173,11 @@ class App extends Component {
     return updatedFormData;
   }
 
-  getDateRange(date) {
-    date = date || this.state.currentCalendarDate;
-    let date_range;
-    if (this.props.location.pathname === '/calendar') {
-      date_range = this.getCalendarDateRange(date);
-    }
-    return date_range;
-  }
-
-  getCalendarDateRange(date) {
-    date = date || this.state.currentCalendarDate;
-    const date_range = {
-      start_date: moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD'),
-      end_date: moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD')
-    }
-    return date_range;
-  }
-
-  getEvents() {
-    console.log('###### ran foreign getEvents');
-    let date_range = this.getDateRange();
+  getEvents(start_date, end_date) {
+    let date_range = {
+      start_date: start_date,
+      end_date: end_date
+    };
     axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
       params: date_range,
       headers: {
@@ -206,9 +189,9 @@ class App extends Component {
     })
     .catch((err) => {
       console.log(err);
-      alert('You are not authorized!');
-      console.log(err.response.data);
-      console.log(err.response.status);
+      //alert('You are not authorized!');
+      //console.log(err.response.data);
+      //console.log(err.response.status);
     });
   }
 
@@ -229,6 +212,7 @@ class App extends Component {
                       currentDate={this.state.currentCalendarDate}
                       onNavigate={this.onNavigate}
                       events={this.state.calendarEvents}
+                      getEvents={this.getEvents}
                       components={{ toolbar: CalendarToolbar }}
                       selectable={true}
                       onSelectSlot={this.onCalendarDatesSelect}
