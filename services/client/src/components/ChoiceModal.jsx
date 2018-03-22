@@ -7,20 +7,15 @@ const ChoiceModal = (props) => {
     <Modal
       className="choice-modal"
       show={props.show}
-      onHide={props.handleClose}
+      onHide={props.onHide}
     >
       <Modal.Header closeButton>
         <Modal.Title className="text-center modal-header">
-          {props.heading}
+          {props.title}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Button bsStyle="primary" onClick={props.handleLeftButtonClick}>
-          {props.leftButtonText}
-        </Button>
-        <Button bsStyle="danger" onClick={props.handleRightButtonClick}>
-          {props.rightButtonText}
-        </Button>
+        {props.children}
       </Modal.Body>
     </Modal>
   )

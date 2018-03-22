@@ -5,6 +5,7 @@ import BigCalendar from 'react-big-calendar';
 import '../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
+import { Button } from 'react-bootstrap';
 
 import Home from './components/Home';
 import CalendarToolbar from './components/CalendarToolbar.jsx';
@@ -243,13 +244,19 @@ class App extends Component {
 
               <ChoiceModal
                 show={this.state.showChoiceModal}
-                handleClose={() => this.setState({ showChoiceModal: false })}
-                heading='Select Event Type'
-                leftButtonText='New Job'
-                rightButtonText='New Expense'
-                handleLeftButtonClick={this.showJobFormModal}
-                handleRightButtonClick={this.showOneTimeExpenseFormModal}
-              />
+                onHide={() => this.setState({ showChoiceModal: false })}
+                title='Select Event Type'
+              >
+                <Button bsStyle="primary" onClick={this.showJobFormModal}>
+                  New Job
+                </Button>
+                <Button
+                  bsStyle="danger"
+                  onClick={this.showOneTimeExpenseFormModal}
+                >
+                  New Expense
+                </Button>
+              </ChoiceModal>
 
               <FormModal
                 heading={this.state.formModalHeading}
@@ -263,6 +270,7 @@ class App extends Component {
                   onFormSubmit={this.onFormSubmit}
                 />
               </FormModal>
+
             </div>
           </div>
         </div>
