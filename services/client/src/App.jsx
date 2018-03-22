@@ -7,7 +7,6 @@ import { Button } from 'react-bootstrap';
 
 import Home from './components/Home';
 import Calendar from './components/Calendar';
-import CalendarToolbar from './components/CalendarToolbar.jsx';
 import './css/calendar.css';
 import Form from './components/Form';
 import { formTypes, defaultFormData } from './components/Form';
@@ -54,9 +53,6 @@ class App extends Component {
       this[key] = this[key].bind(this);
     }
   }
-
-  componentDidMount() {
-  };
 
   onAuthBtnClick() {
     // open the form modal to show the login form
@@ -213,7 +209,6 @@ class App extends Component {
                       onNavigate={this.onNavigate}
                       events={this.state.calendarEvents}
                       getEvents={this.getEvents}
-                      components={{ toolbar: CalendarToolbar }}
                       selectable={true}
                       onSelectSlot={this.onCalendarDatesSelect}
                     />
