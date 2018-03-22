@@ -13,7 +13,7 @@ export const formTypes = {
 }
 
 // Define the appropriate default values for an empty job form
-export const emptyJobFormData = {
+const emptyJobFormData = {
   client: '',
   description: '',
   amount_paid: '',
@@ -26,7 +26,7 @@ export const emptyJobFormData = {
 }
 
 // Define the appropriate default values for an empty oneTimeExpense form
-export const emptyOneTimeExpenseFormData = {
+const emptyOneTimeExpenseFormData = {
   merchant: '',
   description: '',
   amount_spent: '',
@@ -36,21 +36,22 @@ export const emptyOneTimeExpenseFormData = {
   category: 'Business Equipment',
 }
 
-export const emptyLoginFormData = {
+// Define the appropriate default values for an empty login form
+const emptyLoginFormData = {
   username: '',
   password: '',
   private_device: false,
 }
 
-// Define a default formData object.  This is used as the default formData
+// Define a defaultFormData object.  This is used as the default formData
 // value if no formData prop is provided when this component is instantiated.
 // This can also be imported into another module and used to define the
 // initial state of the formData values.  Make copies of the empty data objects
 // so that the original objects don't get changed when formData gets modified.
-export const formData = {};
-formData[formTypes.job] = copy(emptyJobFormData);
-formData[formTypes.oneTimeExpense] = copy(emptyOneTimeExpenseFormData);
-formData[formTypes.login] = copy(emptyLoginFormData);
+export const defaultFormData = {};
+defaultFormData[formTypes.job] = copy(emptyJobFormData);
+defaultFormData[formTypes.oneTimeExpense] = copy(emptyOneTimeExpenseFormData);
+defaultFormData[formTypes.login] = copy(emptyLoginFormData);
 
 
 const Form = (props) => {
@@ -320,14 +321,14 @@ const Form = (props) => {
           </div>
           <div className="form-group">
             <input
-              id="private-device"
-              name="private-device"
+              id="private_device"
+              name="private_device"
               className="form-check-input checkbox-lg"
               type="checkbox"
               value={data.private_device}
               onChange={props.onFormChange}
             />
-            <label htmlFor="private-device">
+            <label htmlFor="private_device">
               Keep me logged in. This is a private device.
             </label>
           </div>
@@ -346,7 +347,7 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
-  formData: formData
+  formData: defaultFormData
 }
 
 export default Form;

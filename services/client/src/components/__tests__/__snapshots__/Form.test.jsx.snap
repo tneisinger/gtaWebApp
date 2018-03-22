@@ -237,14 +237,14 @@ exports[`loginForm form renders a snapshot properly 1`] = `
     >
       <input
         className="form-check-input checkbox-lg"
-        id="private-device"
-        name="private-device"
+        id="private_device"
+        name="private_device"
         onChange={[Function]}
         type="checkbox"
         value={false}
       />
       <label
-        htmlFor="private-device"
+        htmlFor="private_device"
       >
         Keep me logged in. This is a private device.
       </label>
