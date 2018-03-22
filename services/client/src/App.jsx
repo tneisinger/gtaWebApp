@@ -34,7 +34,7 @@ class App extends Component {
     // `this` keyword to mean this App component instance, we must bind `this`
     // to the method.
     this.bindScopes([
-      'getEvents',
+      'setCalendarEvents',
       'onCalendarDatesSelect',
       'showJobFormModal',
       'showOneTimeExpenseFormModal',
@@ -162,26 +162,8 @@ class App extends Component {
     return updatedFormData;
   }
 
-  getEvents(start_date, end_date) {
-    let date_range = {
-      start_date: start_date,
-      end_date: end_date
-    };
-    axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
-      params: date_range,
-      headers: {
-        'Authorization': `Bearer ${window.localStorage.getItem('authToken')}`
-      }
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-      //alert('You are not authorized!');
-      //console.log(err.response.data);
-      //console.log(err.response.status);
-    });
+  setCalendarEvents(events) {
+    this.setState({ calendarEvents: events });
   }
 
   render() {
@@ -200,7 +182,7 @@ class App extends Component {
                     <Calendar
                       currentDate={this.state.currentCalendarDate}
                       events={this.state.calendarEvents}
-                      getEvents={this.getEvents}
+                      setEvents={this.setCalendarEvents}
                       selectable={true}
                       onSelectSlot={this.onCalendarDatesSelect}
                     />

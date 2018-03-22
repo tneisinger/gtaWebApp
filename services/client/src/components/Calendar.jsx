@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import BigCalendar from 'react-big-calendar';
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 import dates from 'react-big-calendar/lib/utils/dates';
@@ -34,7 +35,29 @@ class Calendar extends Component {
 
   componentDidMount() {
     const [start_date, end_date] = this.getDateRange();
-    this.props.getEvents(start_date, end_date);
+    this.getEvents(start_date, end_date);
+  }
+
+  getEvents(start_date, end_date) {
+    let date_range = {
+      start_date: start_date,
+      end_date: end_date
+    };
+    axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
+      params: date_range,
+      headers: {
+        'Authorization': `Bearer ${window.localStorage.getItem('authToken')}`
+      }
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+      //alert('You are not authorized!');
+      //console.log(err.response.data);
+      //console.log(err.response.status);
+    });
   }
 
   getDateRange(date) {
