@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Route, Switch } from 'react-router-dom';
-import BigCalendar from 'react-big-calendar';
 import '../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
 import { Button } from 'react-bootstrap';
 
 import Home from './components/Home';
+import Calendar from './components/Calendar';
 import CalendarToolbar from './components/CalendarToolbar.jsx';
 import './css/calendar.css';
 import Form from './components/Form';
@@ -17,9 +17,6 @@ import ChoiceModal from './components/ChoiceModal.jsx';
 import NavBar from './components/NavBar';
 import { copy, deepcopy } from './utils';
 
-
-// select moment as the localizer for BigCalendar
-BigCalendar.momentLocalizer(moment);
 
 class App extends Component {
 
@@ -228,12 +225,10 @@ class App extends Component {
               <Switch>
                 <Route exact path='/' component={Home}/>
                 <Route exact path='/calendar' render={()=>
-                    <BigCalendar
-                      defaultDate={this.state.currentCalendarDate}
+                    <Calendar
+                      currentDate={this.state.currentCalendarDate}
                       onNavigate={this.onNavigate}
                       events={this.state.calendarEvents}
-                      startAccessor={'start'}
-                      endAccessor={'end'}
                       components={{ toolbar: CalendarToolbar }}
                       selectable={true}
                       onSelectSlot={this.onCalendarDatesSelect}
