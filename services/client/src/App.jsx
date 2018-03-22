@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Route, Switch } from 'react-router-dom';
-import '../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import { Button } from 'react-bootstrap';
 
 import Home from './components/Home';
 import Calendar from './components/Calendar';
-import './css/calendar.css';
 import Form from './components/Form';
 import { formTypes, defaultFormData } from './components/Form';
 import FormModal from './components/FormModal';
