@@ -11,13 +11,11 @@ import Home from './components/Home';
 import CalendarToolbar from './components/CalendarToolbar.jsx';
 import './css/calendar.css';
 import Form from './components/Form';
-import { emptyJobFormData, emptyOneTimeExpenseFormData, emptyLoginFormData,
-         formTypes, formData }
-from './components/Form';
+import { formTypes, defaultFormData } from './components/Form';
 import FormModal from './components/FormModal';
 import ChoiceModal from './components/ChoiceModal.jsx';
 import NavBar from './components/NavBar';
-import { copy } from './utils';
+import { copy, deepcopy } from './utils';
 
 
 // select moment as the localizer for BigCalendar
@@ -31,7 +29,7 @@ class App extends Component {
     this.state = {
       currentCalendarDate: new Date(),
       calendarEvents: [],
-      formData: formData,
+      formData: deepcopy(defaultFormData),
       showChoiceModal: false,
       showFormModal: false,
       formType: formTypes.login,
@@ -71,7 +69,6 @@ class App extends Component {
       showFormModal: true,
       formType: formTypes.login,
       formModalHeading: 'Login',
-      formData: formData,
     });
   }
 
@@ -83,14 +80,10 @@ class App extends Component {
     // If the current formType is the login form...
     if (this.state.formType === formTypes.login) {
 
-      // reset the login form to protect the user's info
-      const updatedFormData = this.state.formData;
-      updatedFormData[formTypes.login] = copy(emptyLoginFormData);
-
       // reset the login form and hide the form modal
       this.setState({
         showFormModal: false,
-        formData: updatedFormData,
+        formData: this.getResetFormData(),
       });
 
     // If any other form type, just hide the modal
@@ -165,8 +158,23 @@ class App extends Component {
     // If event passed in, prevent default form behavior
     if (event !== undefined) event.preventDefault();
 
-    // Close the form modal
-    this.closeFormModal();
+    // Close the form modal and reset the current form to its default
+    this.setState({
+      showFormModal: false,
+      formData: this.getResetFormData(),
+    });
+  }
+
+  getResetFormData(formType) {
+    formType = formType || this.state.formType;
+
+    if (formType === 'all') {
+      return copy(defaultFormData);
+    }
+
+    const updatedFormData = this.state.formData;
+    updatedFormData[formType] = copy(defaultFormData[formType]);
+    return updatedFormData;
   }
 
   getDateRange(date) {
