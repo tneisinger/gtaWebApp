@@ -22,13 +22,17 @@ class Calendar extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    const [start_date, end_date] = this.getDateRange();
+    this.props.getEvents(start_date, end_date);
+  }
+
   getDateRange(date) {
     date = date || this.props.currentDate;
-    const date_range = {
-      start_date: moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD'),
-      end_date: moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD')
-    }
-    return date_range;
+    const start_date = moment(dates.firstVisibleDay(date))
+                         .format('YYYY-MM-DD');
+    const end_date = moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD');
+    return [start_date, end_date];
   }
 
   render() {
