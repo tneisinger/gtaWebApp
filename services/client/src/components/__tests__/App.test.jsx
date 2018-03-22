@@ -5,8 +5,8 @@ import BigCalendar from 'react-big-calendar';
 
 import App from '../../App';
 import NavBar from '../NavBar';
+import Calendar from '../Calendar';
 import FormModal from '../FormModal';
-import CalendarToolbar from '../CalendarToolbar';
 
 
 test('App renders without crashing', () => {
@@ -56,12 +56,6 @@ describe('App', () => {
       routerHistory = ['/calendar']
     });
 
-    it('should render a BigCalendar', () => {
-      expect(app().find(BigCalendar).length).toBe(1);
-    });
-
-    it('should render a custom CalendarToolbar', () => {
-      expect(app().find(CalendarToolbar).length).toBe(1);
-    });
+    // Tests for the calendar page go here
   });
 });
