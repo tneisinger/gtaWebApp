@@ -43,6 +43,7 @@ class Calendar extends Component {
         events={this.props.events}
         components={{ toolbar: CalendarToolbar }}
         selectable={true}
+        views={['month']}
         onSelectSlot={this.props.onSelectSlot}
       />
     );
