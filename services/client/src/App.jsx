@@ -20,7 +20,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      userIsAdmin: null,
+      username: null,
+      userLoggedIn: null,
       calendarEvents: [],
       formData: deepcopy(defaultFormData),
       showChoiceModal: false,
@@ -55,33 +56,44 @@ class App extends Component {
     this.checkUserStatus();
   }
 
-
   checkUserStatus() {
     const authToken = window.localStorage.getItem('authToken');
-    if (authToken) {
+    if (!authToken) {
+      // If there is no auth token, the user is not logged in
+      this.setState({ username: null, userLoggedIn: false });
+    } else {
       axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/status`, {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
       })
-      .then((res) => {
+      .then((response) => {
+        console.log(response)
         this.setState({
-          userIsAdmin: res.data.data.is_admin
+          userLoggedIn: true,
+          username: response.data.data.username,
         });
       })
       .catch((err) => {
-        this.setState({ userIsAdmin: false });
+        this.setState({
+          userLoggedIn: false,
+          username: null,
+        });
       });
-    } else {
-      this.setState({ userIsAdmin: false });
     }
   }
 
   onAuthBtnClick() {
-    if (this.state.userIsAdmin) {
+    // If the user is currently logged in...
+    if (this.state.userLoggedIn) {
       // Logout the user
       window.localStorage.clear();
-      this.setState({ userIsAdmin: false });
+      this.setState({
+        userLoggedIn: false,
+        username: null,
+      });
+
+    // If the user isn't currently logged in
     } else {
       // open the form modal to show the login form
       this.setState({
@@ -209,7 +221,8 @@ class App extends Component {
     .then(function(response) {
       window.localStorage.setItem('authToken', response.data.auth_token);
       self.setState({
-        userIsAdmin: response.data.user.is_admin
+        userLoggedIn: true,
+        username: response.data.user.username,
       });
     })
     .catch(function(error) {
@@ -247,7 +260,8 @@ class App extends Component {
       <div>
         <NavBar
           onAuthBtnClick={this.onAuthBtnClick}
-          userIsAdmin={this.state.userIsAdmin}
+          username={this.state.username}
+          userLoggedIn={this.state.userLoggedIn}
         />
         <div className="container">
           <div className="row">

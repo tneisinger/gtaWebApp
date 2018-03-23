@@ -14,8 +14,8 @@ const NavBar = (props) => (
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
-      {props.userIsAdmin &&
-        <Nav>
+      {props.userLoggedIn &&
+        <Nav pullLeft>
           <LinkContainer to="/calendar">
             <NavItem eventKey={1}>Calendar</NavItem>
           </LinkContainer>
@@ -27,30 +27,34 @@ const NavBar = (props) => (
           </LinkContainer>
         </Nav>
       }
-      {props.userIsAdmin !== null &&
-        <Nav pullRight>
-          <NavItem eventKey={1}>
+      <Nav pullRight>
+        <NavItem eventKey={1}>
+          {props.username &&
+            <span className='user-greeting'>
+              Hi, {props.username}
+            </span>
+          }
+        </NavItem>
+        <NavItem eventKey={2}>
+          {props.userLoggedIn !== null &&
             <Button
               className="auth-btn"
               bsStyle="primary"
               onClick={props.onAuthBtnClick}
             >
-              {props.userIsAdmin ? 'Logout' : 'Login'}
+              {props.userLoggedIn ? 'Logout' : 'Login'}
             </Button>
-          </NavItem>
-        </Nav>
-      }
+          }
+        </NavItem>
+      </Nav>
     </Navbar.Collapse>
   </Navbar>
 )
 
 NavBar.propTypes = {
   onAuthBtnClick: PropTypes.func,
-  userIsAdmin: PropTypes.oneOf([null, true, false])
+  username: PropTypes.string
 }
 
-NavBar.defaultProps = {
-  userIsAdmin: null
-}
 
 export default NavBar;

@@ -9,7 +9,8 @@ describe('The NavBar component', () => {
 
   let props = {
     onAuthBtnClick: undefined,
-    userIsAdmin: undefined,
+    userLoggedIn: undefined,
+    username: undefined,
   };
 
   // Initialize a variable that will hold the mounted NavBar component
@@ -43,7 +44,8 @@ describe('The NavBar component', () => {
     // Reset the prop values for each test
     props = {
       onAuthBtnClick: undefined,
-      userIsAdmin: undefined,
+      userLoggedIn: undefined,
+      username: undefined,
     };
 
     // throw away the old mountedNavBar
@@ -53,15 +55,16 @@ describe('The NavBar component', () => {
     navbarTree = undefined;
   });
 
-  describe('when userIsAdmin is set to true', () => {
+  describe('when the user is logged in', () => {
     beforeEach(() => {
-      props.userIsAdmin = true;
+      props.userLoggedIn = true;
+      props.username = 'Tyler';
     });
 
     it('should render the calendar, budget, and expenses links', () => {
-      const navbarNavs = navbar().find('.navbar-nav');
-      expect(navbarNavs.length).toBeGreaterThan(1);
-      expect(navbarNavs.first().find('li').length).toBeGreaterThan(1);
+      const navLeft = navbar().find('.navbar-left');
+      expect(navLeft.length).toBe(1);
+      expect(navLeft.find('a').length).toBeGreaterThan(1);
     });
 
     it('the text of the login/logout button should be "Logout"', () => {
@@ -69,26 +72,36 @@ describe('The NavBar component', () => {
       expect(authBtn.text()).toBe('Logout');
     });
 
+    it('the user greeting text should be rendered', () => {
+      const userGreeting = navbar().find('span.user-greeting');
+      expect(userGreeting.text()).toMatch(props.username);
+    });
+
     it('should render properly', () => {
       expect(tree()).toMatchSnapshot();
     });
 
   });
 
-  describe('when userIsAdmin is set to false', () => {
+  describe('when the user is not logged in', () => {
     beforeEach(() => {
-      props.userIsAdmin = false;
+      props.username = null;
+      props.userLoggedIn = false;
     });
 
     it('should NOT render the calendar, budget, and expenses links', () => {
-      const navbarNavs = navbar().find('.navbar-nav');
-      expect(navbarNavs.length).toBe(1);
-      expect(navbarNavs.find('button').length).toBe(1);
+      const navLeft = navbar().find('.navbar-left');
+      expect(navLeft.length).toBe(0);
     });
 
     it('the text of the login/logout button should be "Login"', () => {
       const authBtn = navbar().find('button.auth-btn');
-      expect(authBtn.text()).toBe('Login');
+      expect(authBtn.text()).toMatch('Login');
+    });
+
+    it('there should be no user greeting', () => {
+        const userGreeting = navbar().find('span.user-greeting');
+        expect(userGreeting.length).toBe(0);
     });
 
     it('should render properly', () => {
@@ -96,20 +109,25 @@ describe('The NavBar component', () => {
     });
   });
 
-  describe('when userIsAdmin is set to null', () => {
+  describe('when the userLoggedIn prop is not set', () => {
     beforeEach(() => {
-      props.userIsAdmin = null;
+      props.username = null;
+      props.userLoggedIn = null;
     });
 
-    it('should NOT render the admin links or the auth button', () => {
-      const navbarNavs = navbar().find('.navbar-nav');
-      expect(navbarNavs.length).toBe(0);
-      expect(navbarNavs.find('button').length).toBe(0);
+    it('should NOT render the calendar, budget, and expenses links', () => {
+      const navLeft = navbar().find('.navbar-left');
+      expect(navLeft.length).toBe(0);
     });
 
-    it('the login/logout button should not be rendered', () => {
+    it('No login/logout button should be rendered', () => {
       const authBtn = navbar().find('button.auth-btn');
       expect(authBtn.length).toBe(0);
+    });
+
+    it('there should be no user greeting', () => {
+        const userGreeting = navbar().find('span.user-greeting');
+        expect(userGreeting.length).toBe(0);
     });
 
     it('should render properly', () => {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The NavBar component when userIsAdmin is set to false should render properly 1`] = `
+exports[`The NavBar component when the user is logged in should render properly 1`] = `
 <nav
   className="navbar navbar-inverse"
 >
@@ -44,128 +44,7 @@ exports[`The NavBar component when userIsAdmin is set to false should render pro
       className="navbar-collapse collapse"
     >
       <ul
-        className="nav navbar-nav navbar-right"
-        role={null}
-      >
-        <li
-          className=""
-          role="presentation"
-          style={undefined}
-        >
-          <a
-            href="#"
-            onClick={[Function]}
-            onKeyDown={[Function]}
-            role="button"
-          >
-            <button
-              className="auth-btn btn btn-primary"
-              disabled={false}
-              onClick={undefined}
-              type="button"
-            >
-              Login
-            </button>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-`;
-
-exports[`The NavBar component when userIsAdmin is set to null should render properly 1`] = `
-<nav
-  className="navbar navbar-inverse"
->
-  <div
-    className="container"
-  >
-    <div
-      className="navbar-header"
-    >
-      <span
-        className="navbar-brand  active"
-        href="/"
-        onClick={[Function]}
-        style={Object {}}
-      >
-        Gladtime Audio
-      </span>
-      <button
-        className="navbar-toggle collapsed"
-        onClick={[Function]}
-        type="button"
-      >
-        <span
-          className="sr-only"
-        >
-          Toggle navigation
-        </span>
-        <span
-          className="icon-bar"
-        />
-        <span
-          className="icon-bar"
-        />
-        <span
-          className="icon-bar"
-        />
-      </button>
-    </div>
-    <div
-      aria-expanded={null}
-      className="navbar-collapse collapse"
-    />
-  </div>
-</nav>
-`;
-
-exports[`The NavBar component when userIsAdmin is set to true should render properly 1`] = `
-<nav
-  className="navbar navbar-inverse"
->
-  <div
-    className="container"
-  >
-    <div
-      className="navbar-header"
-    >
-      <span
-        className="navbar-brand  active"
-        href="/"
-        onClick={[Function]}
-        style={Object {}}
-      >
-        Gladtime Audio
-      </span>
-      <button
-        className="navbar-toggle collapsed"
-        onClick={[Function]}
-        type="button"
-      >
-        <span
-          className="sr-only"
-        >
-          Toggle navigation
-        </span>
-        <span
-          className="icon-bar"
-        />
-        <span
-          className="icon-bar"
-        />
-        <span
-          className="icon-bar"
-        />
-      </button>
-    </div>
-    <div
-      aria-expanded={null}
-      className="navbar-collapse collapse"
-    >
-      <ul
-        className="nav navbar-nav"
+        className="nav navbar-nav navbar-left"
         role={null}
       >
         <li
@@ -223,6 +102,25 @@ exports[`The NavBar component when userIsAdmin is set to true should render prop
             onKeyDown={[Function]}
             role="button"
           >
+            <span
+              className="user-greeting"
+            >
+              Hi, 
+              Tyler
+            </span>
+          </a>
+        </li>
+        <li
+          className=""
+          role="presentation"
+          style={undefined}
+        >
+          <a
+            href="#"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+          >
             <button
               className="auth-btn btn btn-primary"
               disabled={false}
@@ -232,6 +130,169 @@ exports[`The NavBar component when userIsAdmin is set to true should render prop
               Logout
             </button>
           </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+`;
+
+exports[`The NavBar component when the user is not logged in should render properly 1`] = `
+<nav
+  className="navbar navbar-inverse"
+>
+  <div
+    className="container"
+  >
+    <div
+      className="navbar-header"
+    >
+      <span
+        className="navbar-brand  active"
+        href="/"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Gladtime Audio
+      </span>
+      <button
+        className="navbar-toggle collapsed"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="sr-only"
+        >
+          Toggle navigation
+        </span>
+        <span
+          className="icon-bar"
+        />
+        <span
+          className="icon-bar"
+        />
+        <span
+          className="icon-bar"
+        />
+      </button>
+    </div>
+    <div
+      aria-expanded={null}
+      className="navbar-collapse collapse"
+    >
+      <ul
+        className="nav navbar-nav navbar-right"
+        role={null}
+      >
+        <li
+          className=""
+          role="presentation"
+          style={undefined}
+        >
+          <a
+            href="#"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+          />
+        </li>
+        <li
+          className=""
+          role="presentation"
+          style={undefined}
+        >
+          <a
+            href="#"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+          >
+            <button
+              className="auth-btn btn btn-primary"
+              disabled={false}
+              onClick={undefined}
+              type="button"
+            >
+              Login
+            </button>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+`;
+
+exports[`The NavBar component when the userLoggedIn prop is not set should render properly 1`] = `
+<nav
+  className="navbar navbar-inverse"
+>
+  <div
+    className="container"
+  >
+    <div
+      className="navbar-header"
+    >
+      <span
+        className="navbar-brand  active"
+        href="/"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Gladtime Audio
+      </span>
+      <button
+        className="navbar-toggle collapsed"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="sr-only"
+        >
+          Toggle navigation
+        </span>
+        <span
+          className="icon-bar"
+        />
+        <span
+          className="icon-bar"
+        />
+        <span
+          className="icon-bar"
+        />
+      </button>
+    </div>
+    <div
+      aria-expanded={null}
+      className="navbar-collapse collapse"
+    >
+      <ul
+        className="nav navbar-nav navbar-right"
+        role={null}
+      >
+        <li
+          className=""
+          role="presentation"
+          style={undefined}
+        >
+          <a
+            href="#"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+          />
+        </li>
+        <li
+          className=""
+          role="presentation"
+          style={undefined}
+        >
+          <a
+            href="#"
+            onClick={[Function]}
+            onKeyDown={[Function]}
+            role="button"
+          />
         </li>
       </ul>
     </div>
