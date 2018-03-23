@@ -59,7 +59,7 @@ exports[`The NavBar component when userIsAdmin is set to false should render pro
             role="button"
           >
             <button
-              className="btn btn-primary"
+              className="auth-btn btn btn-primary"
               disabled={false}
               onClick={undefined}
               type="button"
@@ -177,12 +177,12 @@ exports[`The NavBar component when userIsAdmin is set to true should render prop
             role="button"
           >
             <button
-              className="btn btn-primary"
+              className="auth-btn btn btn-primary"
               disabled={false}
               onClick={undefined}
               type="button"
             >
-              Login
+              Logout
             </button>
           </a>
         </li>

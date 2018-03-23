@@ -13,7 +13,7 @@ const NavBar = (props) => (
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
-      {props.userIsAdmin === true &&
+      {props.userIsAdmin &&
         <Nav>
           <LinkContainer to="/calendar">
             <NavItem eventKey={1}>Calendar</NavItem>
@@ -28,8 +28,12 @@ const NavBar = (props) => (
       }
       <Nav pullRight>
         <NavItem eventKey={1}>
-          <Button bsStyle="primary" onClick={props.onAuthBtnClick}>
-            Login
+          <Button
+            className="auth-btn"
+            bsStyle="primary"
+            onClick={props.onAuthBtnClick}
+          >
+            {props.userIsAdmin ? 'Logout' : 'Login'}
           </Button>
         </NavItem>
       </Nav>

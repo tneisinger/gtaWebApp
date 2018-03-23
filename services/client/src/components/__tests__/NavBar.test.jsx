@@ -5,12 +5,6 @@ import { MemoryRouter as Router } from 'react-router-dom';
 
 import NavBar from '../NavBar';
 
-test('NavBar renders properly', () => {
-  const wrapper = shallow(<NavBar/>);
-  const element = wrapper.find('span');
-  expect(element.length).toBe(1);
-});
-
 describe('The NavBar component', () => {
 
   let props = {
@@ -70,6 +64,11 @@ describe('The NavBar component', () => {
       expect(navbarNavs.first().find('li').length).toBeGreaterThan(1);
     });
 
+    it('the text of the login/logout button should be "Logout"', () => {
+      const authBtn = navbar().find('button.auth-btn');
+      expect(authBtn.text()).toBe('Logout');
+    });
+
     it('should render properly', () => {
       expect(tree()).toMatchSnapshot();
     });
@@ -85,6 +84,11 @@ describe('The NavBar component', () => {
       const navbarNavs = navbar().find('.navbar-nav');
       expect(navbarNavs.length).toBe(1);
       expect(navbarNavs.find('button').length).toBe(1);
+    });
+
+    it('the text of the login/logout button should be "Login"', () => {
+      const authBtn = navbar().find('button.auth-btn');
+      expect(authBtn.text()).toBe('Login');
     });
 
     it('should render properly', () => {
