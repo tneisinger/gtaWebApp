@@ -435,6 +435,10 @@ def login_user():
         if user and bcrypt.check_password_hash(user.password, password):
             auth_token = user.encode_auth_token(user.id)
             if auth_token:
+                response_object['user'] = {
+                        'username': user.username,
+                        'is_admin': user.is_admin
+                }
                 response_object['status'] = 'success'
                 response_object['message'] = 'Successfully logged in.'
                 response_object['auth_token'] = auth_token.decode()

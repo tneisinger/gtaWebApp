@@ -138,6 +138,9 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertEqual(data['message'], 'Successfully logged in.')
             self.assertTrue(data['auth_token'])
             self.assertTrue(response.content_type == 'application/json')
+            self.assertTrue(data['user'])
+            self.assertEqual(data['user']['username'], 'test')
+            self.assertEqual(data['user']['is_admin'], False)
             self.assertEqual(response.status_code, 200)
 
     def test_not_registered_user_login(self):
