@@ -175,11 +175,55 @@ class App extends Component {
     // If event passed in, prevent default form behavior
     if (event !== undefined) event.preventDefault();
 
+    // Based on the current formType, perform a request
+    switch(this.state.formType) {
+      case formTypes.login:
+        this.requestLogin();
+        break;
+      case formTypes.job:
+        this.requestCreateJob();
+        break;
+      case formTypes.oneTimeExpense:
+        this.requestCreateOneTimeExpense()
+        break;
+      default:
+        console.log('Unknown formType.  Unable to submit form.');
+    }
+
     // Close the form modal and reset the current form to its default
     this.setState({
       showFormModal: false,
       formData: this.getResetFormData(),
     });
+  }
+
+  requestLogin() {
+    // We need to refer to 'this' in an axios request, so get a ref to it
+    const self = this;
+
+    // Prepare form data
+    const data = this.state.formData[formTypes.login]
+
+    // Make the login request
+    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/login`, data)
+    .then(function(response) {
+      window.localStorage.setItem('authToken', response.data.auth_token);
+      self.setState({
+        userIsAdmin: response.data.user.is_admin
+      });
+    })
+    .catch(function(error) {
+      console.log('There was an error when you tried to log in');
+      console.log(error);
+    });
+  }
+
+  requestCreateJob() {
+    console.log('ran requestCreateJob');
+  }
+
+  requestCreateOneTimeExpense() {
+    console.log('ran requestCreateOneTimeExpense');
   }
 
   getResetFormData(formType) {
