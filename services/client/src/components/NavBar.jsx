@@ -13,17 +13,19 @@ const NavBar = (props) => (
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
-      <Nav>
-        <LinkContainer to="/calendar">
-          <NavItem eventKey={1}>Calendar</NavItem>
-        </LinkContainer>
-        <LinkContainer to="/budget">
-          <NavItem eventKey={2}>Budget</NavItem>
-        </LinkContainer>
-        <LinkContainer to="/expenses">
-          <NavItem eventKey={3}>Expenses</NavItem>
-        </LinkContainer>
-      </Nav>
+      {props.userIsAdmin === true &&
+        <Nav>
+          <LinkContainer to="/calendar">
+            <NavItem eventKey={1}>Calendar</NavItem>
+          </LinkContainer>
+          <LinkContainer to="/budget">
+            <NavItem eventKey={2}>Budget</NavItem>
+          </LinkContainer>
+          <LinkContainer to="/expenses">
+            <NavItem eventKey={3}>Expenses</NavItem>
+          </LinkContainer>
+        </Nav>
+      }
       <Nav pullRight>
         <NavItem eventKey={1}>
           <Button bsStyle="primary" onClick={props.onAuthBtnClick}>
