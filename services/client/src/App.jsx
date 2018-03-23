@@ -183,7 +183,6 @@ class App extends Component {
                       currentDate={this.state.currentCalendarDate}
                       events={this.state.calendarEvents}
                       setEvents={this.setCalendarEvents}
-                      selectable={true}
                       onSelectSlot={this.onCalendarDatesSelect}
                     />
                   }
