@@ -20,7 +20,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      userIsAdmin: false,
+      userIsAdmin: null,
       calendarEvents: [],
       formData: deepcopy(defaultFormData),
       showChoiceModal: false,
@@ -48,6 +48,32 @@ class App extends Component {
   bindScopes(keys) {
     for (let key of keys) {
       this[key] = this[key].bind(this);
+    }
+  }
+
+  componentDidMount() {
+    this.checkUserStatus();
+  }
+
+
+  checkUserStatus() {
+    const authToken = window.localStorage.getItem('authToken');
+    if (authToken) {
+      axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/status`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      })
+      .then((res) => {
+        this.setState({
+          userIsAdmin: res.data.data.is_admin
+        });
+      })
+      .catch((err) => {
+        this.setState({ userIsAdmin: false });
+      });
+    } else {
+      this.setState({ userIsAdmin: false });
     }
   }
 
