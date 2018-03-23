@@ -34,9 +34,13 @@ global.localStorage = new LocalStorageMock;
 
 
 describe('The Calendar component', () => {
+
+  // Define a date to use for the tests
+  const idesOfMarch = new Date(2018, 2, 15);
+
   // Initialize the props that will get passed into Calendar
   let props = {
-    currentDate: new Date(2018, 2, 15),
+    defaultDate: idesOfMarch,
     events: [],
     setEvents: jest.fn(),
     onSelectSlot:jest.fn()
@@ -69,7 +73,7 @@ describe('The Calendar component', () => {
   beforeEach(() => {
     // Reset the prop values for each test
     props = {
-      currentDate: new Date(2018, 2, 15),
+      defaultDate: idesOfMarch,
       events: [],
       setEvents: jest.fn(),
       onSelectSlot:jest.fn()

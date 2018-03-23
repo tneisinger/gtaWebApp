@@ -20,7 +20,6 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentCalendarDate: new Date(),
       calendarEvents: [],
       formData: deepcopy(defaultFormData),
       showChoiceModal: false,
@@ -180,7 +179,7 @@ class App extends Component {
                 <Route exact path='/' component={Home}/>
                 <Route exact path='/calendar' render={()=>
                     <Calendar
-                      currentDate={this.state.currentCalendarDate}
+                      defaultDate={new Date()}
                       events={this.state.calendarEvents}
                       setEvents={this.setCalendarEvents}
                       onSelectSlot={this.onCalendarDatesSelect}

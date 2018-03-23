@@ -34,17 +34,16 @@ class Calendar extends Component {
   }
 
   componentDidMount() {
-    const [start_date, end_date] = this.getDateRange();
-    this.getEvents(start_date, end_date);
+    this.getEvents();
   }
 
-  getEvents(start_date, end_date) {
-    let date_range = {
-      start_date: start_date,
-      end_date: end_date
-    };
+  getEvents() {
+    const [start_date, end_date] = this.getDateRange();
     axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
-      params: date_range,
+      params: {
+        start_date: start_date,
+        end_date: end_date,
+      },
       headers: {
         'Authorization': `Bearer ${window.localStorage.getItem('authToken')}`
       }
@@ -61,7 +60,7 @@ class Calendar extends Component {
   }
 
   getDateRange(date) {
-    date = date || this.props.currentDate;
+    date = date || this.props.defaultDate;
     const start_date = moment(dates.firstVisibleDay(date))
                          .format('YYYY-MM-DD');
     const end_date = moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD');
@@ -77,7 +76,7 @@ class Calendar extends Component {
   render() {
     return (
       <BigCalendar
-        date={this.props.currentDate}
+        defaultDate={this.props.defaultDate}
         onNavigate={this.onNavigate}
         events={this.props.events}
         components={{ toolbar: CalendarToolbar }}
