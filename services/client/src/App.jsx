@@ -78,13 +78,19 @@ class App extends Component {
   }
 
   onAuthBtnClick() {
-    // open the form modal to show the login form
-    this.setState({
-      showChoiceModal: false,
-      showFormModal: true,
-      formType: formTypes.login,
-      formModalHeading: 'Login',
-    });
+    if (this.state.userIsAdmin) {
+      // Logout the user
+      window.localStorage.clear();
+      this.setState({ userIsAdmin: false });
+    } else {
+      // open the form modal to show the login form
+      this.setState({
+        showChoiceModal: false,
+        showFormModal: true,
+        formType: formTypes.login,
+        formModalHeading: 'Login',
+      });
+    }
   }
 
   closeFormModal() {
