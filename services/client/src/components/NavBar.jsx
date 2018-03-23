@@ -26,17 +26,19 @@ const NavBar = (props) => (
           </LinkContainer>
         </Nav>
       }
-      <Nav pullRight>
-        <NavItem eventKey={1}>
-          <Button
-            className="auth-btn"
-            bsStyle="primary"
-            onClick={props.onAuthBtnClick}
-          >
-            {props.userIsAdmin ? 'Logout' : 'Login'}
-          </Button>
-        </NavItem>
-      </Nav>
+      {props.userIsAdmin !== null &&
+        <Nav pullRight>
+          <NavItem eventKey={1}>
+            <Button
+              className="auth-btn"
+              bsStyle="primary"
+              onClick={props.onAuthBtnClick}
+            >
+              {props.userIsAdmin ? 'Logout' : 'Login'}
+            </Button>
+          </NavItem>
+        </Nav>
+      }
     </Navbar.Collapse>
   </Navbar>
 )

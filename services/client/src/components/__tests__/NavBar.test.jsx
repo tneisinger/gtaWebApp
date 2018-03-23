@@ -96,4 +96,25 @@ describe('The NavBar component', () => {
     });
   });
 
+  describe('when userIsAdmin is set to null', () => {
+    beforeEach(() => {
+      props.userIsAdmin = null;
+    });
+
+    it('should NOT render the admin links or the auth button', () => {
+      const navbarNavs = navbar().find('.navbar-nav');
+      expect(navbarNavs.length).toBe(0);
+      expect(navbarNavs.find('button').length).toBe(0);
+    });
+
+    it('the login/logout button should not be rendered', () => {
+      const authBtn = navbar().find('button.auth-btn');
+      expect(authBtn.length).toBe(0);
+    });
+
+    it('should render properly', () => {
+      expect(tree()).toMatchSnapshot();
+    });
+  });
+
 });
