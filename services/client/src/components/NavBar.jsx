@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -42,5 +43,14 @@ const NavBar = (props) => (
     </Navbar.Collapse>
   </Navbar>
 )
+
+NavBar.propTypes = {
+  onAuthBtnClick: PropTypes.func,
+  userIsAdmin: PropTypes.oneOf([null, true, false])
+}
+
+NavBar.defaultProps = {
+  userIsAdmin: null
+}
 
 export default NavBar;
