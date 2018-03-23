@@ -20,6 +20,7 @@ class App extends Component {
     super(props);
 
     this.state = {
+      userIsAdmin: false,
       calendarEvents: [],
       formData: deepcopy(defaultFormData),
       showChoiceModal: false,
@@ -170,6 +171,7 @@ class App extends Component {
       <div>
         <NavBar
           onAuthBtnClick={this.onAuthBtnClick}
+          userIsAdmin={this.state.userIsAdmin}
         />
         <div className="container">
           <div className="row">
