@@ -128,7 +128,7 @@ class TestAdminAuthRoutes(BaseTestCase):
             response = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': 'test@test.com',
+                    'username': 'test',
                     'password': 'test'
                 }),
                 content_type='application/json'
@@ -145,7 +145,7 @@ class TestAdminAuthRoutes(BaseTestCase):
             response = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': 'test@test.com',
+                    'username': 'test',
                     'password': 'test'
                 }),
                 content_type='application/json'
@@ -163,7 +163,7 @@ class TestAdminAuthRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': 'test@test.com',
+                    'username': 'test',
                     'password': 'test'
                 }),
                 content_type='application/json'
@@ -186,7 +186,7 @@ class TestAdminAuthRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': 'test@test.com',
+                    'username': 'test',
                     'password': 'test'
                 }),
                 content_type='application/json'
@@ -220,7 +220,7 @@ class TestAdminAuthRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': 'test@test.com',
+                    'username': 'test',
                     'password': 'test'
                 }),
                 content_type='application/json'

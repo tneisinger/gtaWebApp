@@ -427,11 +427,11 @@ def login_user():
     }
     if not post_data:
         return jsonify(response_object), 400
-    email = post_data.get('email')
+    username = post_data.get('username')
     password = post_data.get('password')
     try:
         # fetch the user data
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
             auth_token = user.encode_auth_token(user.id)
             if auth_token:

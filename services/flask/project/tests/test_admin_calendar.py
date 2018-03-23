@@ -21,7 +21,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
     # Create a dictionary for a valid user
     VALID_USER_DICT1 = {
-        'username': 'test user 1',
+        'username': 'testUser1',
         'email': 'user1@email.com',
         'password': 'somePassword'
     }
@@ -97,7 +97,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
@@ -204,7 +204,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
@@ -246,7 +246,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
@@ -288,7 +288,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
@@ -328,7 +328,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
@@ -375,7 +375,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
@@ -440,7 +440,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
@@ -536,7 +536,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
@@ -594,7 +594,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
-                    'email': self.VALID_USER_DICT1['email'],
+                    'username': self.VALID_USER_DICT1['username'],
                     'password': self.VALID_USER_DICT1['password']
                 }),
                 content_type='application/json'
