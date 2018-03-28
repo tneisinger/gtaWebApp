@@ -309,50 +309,6 @@ class TestAdminCalendarRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'fail')
             self.assertEqual(data['message'], 'Provide a valid auth token.')
 
-    def test_get_events_user_not_admin(self):
-        """
-        Test attempting to get events when the user is not an admin
-        """
-        # Add a user to the db
-        add_user(**self.VALID_USER_DICT1)
-
-        # Leave the user's is_admin database column set to False
-
-        # Add a job and an expense to the database
-        add_job(**self.VALID_JOB_DICT1)
-        add_one_time_expense(**self.VALID_EXPENSE_DICT1)
-
-        with self.client:
-
-            # login as user
-            resp_login = self.client.post(
-                '/admin/login',
-                data=json.dumps({
-                    'username': self.VALID_USER_DICT1['username'],
-                    'password': self.VALID_USER_DICT1['password']
-                }),
-                content_type='application/json'
-            )
-
-            # get the user's auth token
-            token = json.loads(resp_login.data.decode())['auth_token']
-
-            # request the events
-            request_data = {
-                     'start_date': self.FIRST_DAY.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
-            }
-            response = self.client.get(
-                url_for('admin.get_events', **request_data),
-                headers={'Authorization': f'Bearer {token}'}
-            )
-            data = json.loads(response.data.decode())
-
-            # Assert that it failed
-            self.assertEqual(response.status_code, 401)
-            self.assertEqual(data['status'], 'fail')
-            self.assertEqual(data['message'], 'User must be admin.')
-
     def test_get_events_no_events_in_range(self):
         """
         Test getting jobs and one-time-expenses when there are no events in the

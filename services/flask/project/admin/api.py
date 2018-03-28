@@ -5,7 +5,7 @@ from sqlalchemy import exc, or_
 
 from project.admin.models import (User, Job, OneTimeExpense, RecurringExpense)
 from project import db, bcrypt
-from project.admin.decorators import check_user_is_admin
+from project.admin.decorators import users_only
 
 admin_blueprint = Blueprint('admin', __name__)
 
@@ -505,7 +505,7 @@ def get_user_status():
 
 
 @admin_blueprint.route('/events', methods=['GET'])
-@check_user_is_admin(pass_user=True)
+@users_only(pass_user=True)
 def get_events(user):
     """Get jobs and one time expenses from within a date range"""
     start_date = request.args.get('start_date')

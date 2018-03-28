@@ -5,10 +5,11 @@ from flask import jsonify, request
 from project.admin.models import User
 
 
-class check_user_is_admin(object):
+class users_only(object):
     """
-    Check that the current user has an auth_token for a user that is_admin.
-    If so, run the decorated route_function
+    Check that the client has an auth_token for a valid user.  If so, run the
+    decorated route_function.  Optinally pass the user info into the route
+    function if pass_user is set to True.
     """
 
     def __init__(self, pass_user=False):
@@ -31,19 +32,14 @@ class check_user_is_admin(object):
                 if not isinstance(resp, int):
                     return jsonify(response_object), 401
 
-                # If the token is valid and the user is_admin, allow access
+                # If the token is valid, allow access
                 user = User.query.filter_by(id=resp).first()
-                if user.is_admin:
-                    if self.pass_user:
-                        return route_function(user)
-                    else:
-                        return route_function()
+                if self.pass_user:
+                    return route_function(user)
                 else:
-                    # Tell the user that he/she must be admin
-                    response_object['message'] = 'User must be admin.'
-                    return jsonify(response_object), 401
+                    return route_function()
 
-            # If the user is not signed in or isn't admin, deny access
+            # If the user is not signed in, deny access
             return jsonify(response_object), 401
 
         return wrapper
