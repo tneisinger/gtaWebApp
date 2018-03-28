@@ -389,6 +389,7 @@ def register_user():
     username = post_data.get('username')
     email = post_data.get('email')
     password = post_data.get('password')
+    is_private_device = post_data.get('is_private_device')
     try:
         # check for existing user
         user = User.query.filter(
@@ -403,7 +404,8 @@ def register_user():
             db.session.add(new_user)
             db.session.commit()
             # generate auth token
-            auth_token = new_user.encode_auth_token(new_user.id)
+            auth_token = new_user.encode_auth_token(new_user.id,
+                                                    is_private_device)
             response_object['status'] = 'success'
             response_object['message'] = 'Successfully registered.'
             response_object['auth_token'] = auth_token.decode()
@@ -429,11 +431,12 @@ def login_user():
         return jsonify(response_object), 400
     username = post_data.get('username')
     password = post_data.get('password')
+    is_private_device = post_data.get('is_private_device')
     try:
         # fetch the user data
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
-            auth_token = user.encode_auth_token(user.id)
+            auth_token = user.encode_auth_token(user.id, is_private_device)
             if auth_token:
                 response_object['user'] = {
                         'username': user.username,

@@ -19,6 +19,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                     'username': 'justatest',
                     'email': 'test@test.com',
                     'password': '123456',
+                    'is_private_device': True
                 }),
                 content_type='application/json'
             )
@@ -37,7 +38,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'michael',
                     'email': 'test@test.com',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json',
             )
@@ -55,7 +57,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'email': 'test@test.com2',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json',
             )
@@ -83,7 +86,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 '/admin/register',
                 data=json.dumps({
                     'email': 'test@test.com',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json',
             )
@@ -98,7 +102,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 '/admin/register',
                 data=json.dumps({
                     'username': 'justatest',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json',
             )
@@ -113,7 +118,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 '/admin/register',
                 data=json.dumps({
                     'username': 'justatest',
-                    'email': 'test@test.com'
+                    'email': 'test@test.com',
+                    'is_private_device': True
                 }),
                 content_type='application/json',
             )
@@ -129,7 +135,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 '/admin/login',
                 data=json.dumps({
                     'username': 'test',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json'
             )
@@ -149,7 +156,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 '/admin/login',
                 data=json.dumps({
                     'username': 'test',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json'
             )
@@ -167,7 +175,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 '/admin/login',
                 data=json.dumps({
                     'username': 'test',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json'
             )
@@ -184,13 +193,14 @@ class TestAdminAuthRoutes(BaseTestCase):
 
     def test_invalid_logout_expired_token(self):
         add_user('test', 'test@test.com', 'test')
-        current_app.config['TOKEN_EXPIRATION_SECONDS'] = -1
+        current_app.config['TOKEN_EXPIRE_SECONDS_LONG'] = -1
         with self.client:
             resp_login = self.client.post(
                 '/admin/login',
                 data=json.dumps({
                     'username': 'test',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json'
             )
@@ -224,7 +234,8 @@ class TestAdminAuthRoutes(BaseTestCase):
                 '/admin/login',
                 data=json.dumps({
                     'username': 'test',
-                    'password': 'test'
+                    'password': 'test',
+                    'is_private_device': True
                 }),
                 content_type='application/json'
             )
@@ -251,6 +262,93 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertTrue(
                 data['message'] == 'Invalid token. Please log in again.')
             self.assertEqual(response.status_code, 401)
+
+    def test_status_expired_token(self):
+        add_user('test', 'test@test.com', 'test')
+        current_app.config['TOKEN_EXPIRE_SECONDS_LONG'] = -1
+        current_app.config['TOKEN_EXPIRE_DAYS_LONG'] = -1
+        with self.client:
+            resp_login = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': 'test',
+                    'password': 'test',
+                    'is_private_device': True
+                }),
+                content_type='application/json'
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
+            response = self.client.get(
+                '/admin/status',
+                headers={'Authorization': f'Bearer {token}'})
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            print(data['message'])
+            self.assertTrue(
+                data['message'] == 'Signature expired. Please log in again.')
+            self.assertEqual(response.status_code, 401)
+
+    def test_status_private_device_uses_long_token_expire(self):
+        add_user('test', 'test@test.com', 'test')
+
+        # The LONG TOKEN_EXPIRE constants should be used when the user logs in
+        # with is_private_device set to true, so if we set the SHORT constants
+        # to an invalid value, we should still get a good status response.
+        current_app.config['TOKEN_EXPIRE_SECONDS_SHORT'] = -1
+        current_app.config['TOKEN_EXPIRE_DAYS_SHORT'] = -1
+        with self.client:
+            resp_login = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': 'test',
+                    'password': 'test',
+                    'is_private_device': True
+                }),
+                content_type='application/json'
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
+            response = self.client.get(
+                '/admin/status',
+                headers={'Authorization': f'Bearer {token}'}
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['data'] is not None)
+            self.assertTrue(data['data']['username'] == 'test')
+            self.assertTrue(data['data']['email'] == 'test@test.com')
+            self.assertFalse(data['data']['is_admin'])
+            self.assertEqual(response.status_code, 200)
+
+    def test_status_public_device_uses_short_token_expire(self):
+        add_user('test', 'test@test.com', 'test')
+
+        # The SHORT TOKEN_EXPIRE constants should be used when the user logs in
+        # with is_private_device set to false, so if we set the LONG constants
+        # to an invalid value, we should still get a good status response.
+        current_app.config['TOKEN_EXPIRE_SECONDS_LONG'] = -1
+        current_app.config['TOKEN_EXPIRE_DAYS_LONG'] = -1
+        with self.client:
+            resp_login = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': 'test',
+                    'password': 'test',
+                    'is_private_device': False
+                }),
+                content_type='application/json'
+            )
+            token = json.loads(resp_login.data.decode())['auth_token']
+            response = self.client.get(
+                '/admin/status',
+                headers={'Authorization': f'Bearer {token}'}
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['data'] is not None)
+            self.assertTrue(data['data']['username'] == 'test')
+            self.assertTrue(data['data']['email'] == 'test@test.com')
+            self.assertFalse(data['data']['is_admin'])
+            self.assertEqual(response.status_code, 200)
 
 
 if __name__ == '__main__':

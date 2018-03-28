@@ -29,8 +29,10 @@ class TestDevelopmentConfig(TestCase):
         )
         self.assertTrue(app.config['DEBUG_TB_ENABLED'])
         self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
-        self.assertTrue(app.config['TOKEN_EXPIRATION_DAYS'] == 30)
-        self.assertTrue(app.config['TOKEN_EXPIRATION_SECONDS'] == 0)
+        self.assertTrue(app.config['TOKEN_EXPIRE_DAYS_LONG'] == 30)
+        self.assertTrue(app.config['TOKEN_EXPIRE_SECONDS_LONG'] == 0)
+        self.assertTrue(app.config['TOKEN_EXPIRE_DAYS_SHORT'] == 0)
+        self.assertTrue(app.config['TOKEN_EXPIRE_SECONDS_SHORT'] == 600)
 
 
 class TestTestingConfig(TestCase):
@@ -51,8 +53,10 @@ class TestTestingConfig(TestCase):
         )
         self.assertFalse(app.config['DEBUG_TB_ENABLED'])
         self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 4)
-        self.assertTrue(app.config['TOKEN_EXPIRATION_DAYS'] == 0)
-        self.assertTrue(app.config['TOKEN_EXPIRATION_SECONDS'] == 3)
+        self.assertTrue(app.config['TOKEN_EXPIRE_DAYS_LONG'] == 0)
+        self.assertTrue(app.config['TOKEN_EXPIRE_SECONDS_LONG'] == 3)
+        self.assertTrue(app.config['TOKEN_EXPIRE_DAYS_SHORT'] == 0)
+        self.assertTrue(app.config['TOKEN_EXPIRE_SECONDS_SHORT'] == 1)
 
 
 class TestProductionConfig(TestCase):
@@ -68,8 +72,10 @@ class TestProductionConfig(TestCase):
         self.assertFalse(app.config['TESTING'])
         self.assertFalse(app.config['DEBUG_TB_ENABLED'])
         self.assertTrue(app.config['BCRYPT_LOG_ROUNDS'] == 13)
-        self.assertTrue(app.config['TOKEN_EXPIRATION_DAYS'] == 30)
-        self.assertTrue(app.config['TOKEN_EXPIRATION_SECONDS'] == 0)
+        self.assertTrue(app.config['TOKEN_EXPIRE_DAYS_LONG'] == 30)
+        self.assertTrue(app.config['TOKEN_EXPIRE_SECONDS_LONG'] == 0)
+        self.assertTrue(app.config['TOKEN_EXPIRE_DAYS_SHORT'] == 0)
+        self.assertTrue(app.config['TOKEN_EXPIRE_SECONDS_SHORT'] == 600)
 
 
 if __name__ == '__main__':

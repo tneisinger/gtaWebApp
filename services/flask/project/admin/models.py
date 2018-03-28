@@ -32,11 +32,19 @@ class User(db.Model):
             'is_admin': self.is_admin
         }
 
-    def encode_auth_token(self, user_id):
+    def encode_auth_token(self, user_id, is_private_device):
         """Generates the auth token"""
+        # If the user says they are using a private device, use the long
+        # expiration timeframe.
+        if is_private_device:
+            exp_days = current_app.config.get('TOKEN_EXPIRE_DAYS_LONG')
+            exp_seconds = current_app.config.get('TOKEN_EXPIRE_SECONDS_LONG')
+        # If the user is not on a private device, use the short time frame.
+        else:
+            exp_days = current_app.config.get('TOKEN_EXPIRE_DAYS_SHORT')
+            exp_seconds = current_app.config.get('TOKEN_EXPIRE_SECONDS_SHORT')
+
         try:
-            exp_days = current_app.config.get('TOKEN_EXPIRATION_DAYS')
-            exp_seconds = current_app.config.get('TOKEN_EXPIRATION_SECONDS')
             exp = (datetime.datetime.utcnow() +
                    datetime.timedelta(exp_days, exp_seconds))
             payload = {
