@@ -54,14 +54,14 @@ def test_narrow():
 def seed_db():
     """Seeds the database."""
     db.session.add(User(
-        username='tyler',
+        username='Tyler',
         email='tjneisi@gmail.com',
-        password='somePassword'
+        password='somepassword'
     ))
     db.session.add(User(
-        username='meghan',
+        username='Meghan',
         email="meghanunderwood8@gmail.com",
-        password='somePassword'
+        password='somepassword'
     ))
     db.session.commit()
 
