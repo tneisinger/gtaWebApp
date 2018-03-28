@@ -439,8 +439,7 @@ def login_user():
             auth_token = user.encode_auth_token(user.id, is_private_device)
             if auth_token:
                 response_object['user'] = {
-                        'username': user.username,
-                        'is_admin': user.is_admin
+                        'username': user.username
                 }
                 response_object['status'] = 'success'
                 response_object['message'] = 'Successfully logged in.'

@@ -15,21 +15,18 @@ class User(db.Model):
     username = db.Column(db.String(128), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    is_admin = db.Column(db.Boolean(), default=False, nullable=False)
 
-    def __init__(self, username, email, password, is_admin=False):
+    def __init__(self, username, email, password):
         self.username = username
         self.email = email
         self.password = bcrypt.generate_password_hash(
                 password, current_app.config.get('BCRYPT_LOG_ROUNDS')).decode()
-        self.is_admin = is_admin
 
     def to_json(self):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.email,
-            'is_admin': self.is_admin
+            'email': self.email
         }
 
     def encode_auth_token(self, user_id, is_private_device):

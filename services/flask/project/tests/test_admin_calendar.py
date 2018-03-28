@@ -7,8 +7,7 @@ from flask import url_for
 
 from project.tests.base import BaseTestCase
 from project.admin.models import Job, OneTimeExpense
-from project.tests.utils import (add_user, make_user_admin, add_job,
-                                 add_one_time_expense)
+from project.tests.utils import (add_user, add_job, add_one_time_expense)
 
 
 class TestAdminCalendarRoutes(BaseTestCase):
@@ -78,14 +77,11 @@ class TestAdminCalendarRoutes(BaseTestCase):
     def test_get_events(self):
         """
         Test getting jobs and one-time-expenses that fall between the dates
-        provided in a query string. (User must be signed in and user must be
-        admin to get a successful response.)
+        provided in a query string. (User must be signed in to get a successful
+        response.)
         """
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)
@@ -158,10 +154,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
         without being signed in.
         """
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)
@@ -189,10 +182,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
         Test attempting to get events using a fake auth token
         """
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)
@@ -231,10 +221,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
         Test attempting to get events with an empty Authorization header
         """
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)
@@ -273,10 +260,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
         Test attempting to get events without an auth header
         """
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)
@@ -316,10 +300,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
         expenses list, and the user data.
         """
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)  # start_date and end_date is the 6th
@@ -379,10 +360,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
         date range should not be returned.
         """
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
         add_job(**self.VALID_JOB_DICT1)  # start_date and end_date is the 6th
@@ -477,10 +455,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
                                        timedelta(2)).isoformat()
 
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add the job events to the db
         add_job(**valid_job_dict1)
@@ -535,10 +510,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
                                        timedelta(2)).isoformat()
 
         # Add a user to the db
-        user = add_user(**self.VALID_USER_DICT1)
-
-        # Set the user's is_admin database column to True
-        make_user_admin(user)
+        add_user(**self.VALID_USER_DICT1)
 
         # Add the jobs to the db
         add_job(**self.VALID_JOB_DICT1)

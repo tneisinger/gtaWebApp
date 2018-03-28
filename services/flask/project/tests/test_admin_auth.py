@@ -147,7 +147,6 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertTrue(data['user'])
             self.assertEqual(data['user']['username'], 'test')
-            self.assertEqual(data['user']['is_admin'], False)
             self.assertEqual(response.status_code, 200)
 
     def test_not_registered_user_login(self):
@@ -249,7 +248,6 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertTrue(data['data'] is not None)
             self.assertTrue(data['data']['username'] == 'test')
             self.assertTrue(data['data']['email'] == 'test@test.com')
-            self.assertFalse(data['data']['is_admin'])
             self.assertEqual(response.status_code, 200)
 
     def test_invalid_status(self):
@@ -316,7 +314,6 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertTrue(data['data'] is not None)
             self.assertTrue(data['data']['username'] == 'test')
             self.assertTrue(data['data']['email'] == 'test@test.com')
-            self.assertFalse(data['data']['is_admin'])
             self.assertEqual(response.status_code, 200)
 
     def test_status_public_device_uses_short_token_expire(self):
@@ -347,7 +344,6 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertTrue(data['data'] is not None)
             self.assertTrue(data['data']['username'] == 'test')
             self.assertTrue(data['data']['email'] == 'test@test.com')
-            self.assertFalse(data['data']['is_admin'])
             self.assertEqual(response.status_code, 200)
 
 
