@@ -19,7 +19,7 @@ const FormModal = (props) => {
           bsStyle="primary"
           onClick={props.children.props.onFormSubmit}
         >
-          Save
+          Submit
         </Button>
       </Modal.Footer>
     </Modal>
