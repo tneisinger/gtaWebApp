@@ -20,7 +20,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      username: null,
+      username: '',
       userLoggedIn: null,
       calendarEvents: [],
       formData: deepcopy(defaultFormData),
