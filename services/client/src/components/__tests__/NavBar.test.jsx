@@ -1,12 +1,11 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import renderer from 'react-test-renderer';
 import { MemoryRouter as Router } from 'react-router-dom';
 
 import NavBar from '../NavBar';
 
 describe('The NavBar component', () => {
-
   let props = {
     onAuthBtnClick: undefined,
     userLoggedIn: undefined,
@@ -24,21 +23,19 @@ describe('The NavBar component', () => {
   // create it and then return it.
   const navbar = () => {
     if (!mountedNavBar) {
-      mountedNavBar = mount(
-        <Router location='/'><NavBar {...props} /></Router>
-      );
+      mountedNavBar = mount(<Router location="/"><NavBar {...props} /></Router>);
     }
     return mountedNavBar;
-  }
+  };
 
   const tree = () => {
     if (!navbarTree) {
       navbarTree = renderer.create(
-        <Router location='/'><NavBar {...props} /></Router>
-      ).toJSON()
+        <Router location="/"><NavBar {...props} /></Router>,
+      ).toJSON();
     }
     return navbarTree;
-  }
+  };
 
   beforeEach(() => {
     // Reset the prop values for each test
@@ -80,7 +77,6 @@ describe('The NavBar component', () => {
     it('should render properly', () => {
       expect(tree()).toMatchSnapshot();
     });
-
   });
 
   describe('when the user is not logged in', () => {
@@ -100,8 +96,8 @@ describe('The NavBar component', () => {
     });
 
     it('there should be no user greeting', () => {
-        const userGreeting = navbar().find('span.user-greeting');
-        expect(userGreeting.length).toBe(0);
+      const userGreeting = navbar().find('span.user-greeting');
+      expect(userGreeting.length).toBe(0);
     });
 
     it('should render properly', () => {
@@ -126,13 +122,12 @@ describe('The NavBar component', () => {
     });
 
     it('there should be no user greeting', () => {
-        const userGreeting = navbar().find('span.user-greeting');
-        expect(userGreeting.length).toBe(0);
+      const userGreeting = navbar().find('span.user-greeting');
+      expect(userGreeting.length).toBe(0);
     });
 
     it('should render properly', () => {
       expect(tree()).toMatchSnapshot();
     });
   });
-
 });
