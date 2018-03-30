@@ -9,8 +9,8 @@ import { copy } from '../utils';
 export const formTypes = {
   job: 'jobForm',
   oneTimeExpense: 'oneTimeExpenseForm',
-  login: 'loginForm'
-}
+  login: 'loginForm',
+};
 
 // Define the appropriate default values for an empty job form
 const emptyJobFormData = {
@@ -23,7 +23,7 @@ const emptyJobFormData = {
   has_paid: false,
   start_date: '',
   end_date: '',
-}
+};
 
 // Define the appropriate default values for an empty oneTimeExpense form
 const emptyOneTimeExpenseFormData = {
@@ -34,14 +34,14 @@ const emptyOneTimeExpenseFormData = {
   paid_by: 'Gladtime Audio',
   tax_deductible: false,
   category: 'Business Equipment',
-}
+};
 
 // Define the appropriate default values for an empty login form
 const emptyLoginFormData = {
   username: '',
   password: '',
   private_device: false,
-}
+};
 
 // Define a defaultFormData object.  This is used as the default formData
 // value if no formData prop is provided when this component is instantiated.
@@ -57,7 +57,7 @@ defaultFormData[formTypes.login] = copy(emptyLoginFormData);
 const Form = (props) => {
   const data = props.formData[props.formType];
   return (
-    <form onSubmit={(event) => props.onFormSubmit(event)}>
+    <form onSubmit={event => props.onFormSubmit(event)}>
 
       {props.formType === formTypes.job &&
         /* render the job form inputs */
@@ -99,92 +99,104 @@ const Form = (props) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="paid_to">Paid To</label>
-            <select
-              id="paid_to"
-              name="paid_to"
-              className="form-control input-lg"
-              placeholder="Paid To"
-              required
-              value={data.paid_to}
-              onChange={props.onFormChange}
-            >
-              <option value="Gladtime Audio">Gladtime Audio</option>
-              <option value="Meghan">Meghan</option>
-              <option value="Tyler">Tyler</option>
-              <option value="Tyler/Meghan Separately">
-                Tyler/Meghan Separately
-              </option>
-            </select>
+            <label htmlFor="paid_to">
+              Paid To
+              <select
+                id="paid_to"
+                name="paid_to"
+                className="form-control input-lg"
+                placeholder="Paid To"
+                required
+                value={data.paid_to}
+                onChange={props.onFormChange}
+              >
+                <option value="Gladtime Audio">Gladtime Audio</option>
+                <option value="Meghan">Meghan</option>
+                <option value="Tyler">Tyler</option>
+                <option value="Tyler/Meghan Separately">
+                  Tyler/Meghan Separately
+                </option>
+              </select>
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="worked_by">Worked By</label>
-            <select
-              id="worked_by"
-              name="worked_by"
-              className="form-control input-lg"
-              required
-              value={data.worked_by}
-              onChange={props.onFormChange}
-            >
-              <option value="Meghan">Meghan</option>
-              <option value="Tyler">Tyler</option>
-              <option value="Tyler and Meghan">Tyler and Meghan</option>
-            </select>
+            <label htmlFor="worked_by">
+              Worked By
+              <select
+                id="worked_by"
+                name="worked_by"
+                className="form-control input-lg"
+                required
+                value={data.worked_by}
+                onChange={props.onFormChange}
+              >
+                <option value="Meghan">Meghan</option>
+                <option value="Tyler">Tyler</option>
+                <option value="Tyler and Meghan">Tyler and Meghan</option>
+              </select>
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmation">Confirmation</label>
-            <select
-              id="confirmation"
-              name="confirmation"
-              className="form-control input-lg"
-              required
-              value={data.confirmation}
-              onChange={props.onFormChange}
-            >
-              <option value="Confirmed">Confirmed</option>
-              <option value="Pencilled In">Pencilled In</option>
-            </select>
+            <label htmlFor="confirmation">
+              Confirmation
+              <select
+                id="confirmation"
+                name="confirmation"
+                className="form-control input-lg"
+                required
+                value={data.confirmation}
+                onChange={props.onFormChange}
+              >
+                <option value="Confirmed">Confirmed</option>
+                <option value="Pencilled In">Pencilled In</option>
+              </select>
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="has_paid">Has Paid</label>
-            <input
-              id="has_paid"
-              name="has_paid"
-              className="form-check-input checkbox-lg"
-              type="checkbox"
-              value={data.has_paid}
-              onChange={props.onFormChange}
-            />
+            <label htmlFor="has_paid">
+              Has Paid
+              <input
+                id="has_paid"
+                name="has_paid"
+                className="form-check-input checkbox-lg"
+                type="checkbox"
+                value={data.has_paid}
+                onChange={props.onFormChange}
+              />
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="start_date">Start Date</label>
-            <input
-              id="start_date"
-              name="start_date"
-              className="form-control input-lg"
-              type="date"
-              required
-              value={data.start_date}
-              onChange={props.onFormChange}
-            />
+            <label htmlFor="start_date">
+              Start Date
+              <input
+                id="start_date"
+                name="start_date"
+                className="form-control input-lg"
+                type="date"
+                required
+                value={data.start_date}
+                onChange={props.onFormChange}
+              />
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="end_date">End Date</label>
-            <input
-              id="end_date"
-              name="end_date"
-              className="form-control input-lg"
-              type="date"
-              required
-              value={data.end_date}
-              onChange={props.onFormChange}
-            />
+            <label htmlFor="end_date">
+              End Date
+              <input
+                id="end_date"
+                name="end_date"
+                className="form-control input-lg"
+                type="date"
+                required
+                value={data.end_date}
+                onChange={props.onFormChange}
+              />
+            </label>
           </div>
         </div>
       }
@@ -229,67 +241,75 @@ const Form = (props) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="date">Date</label>
-            <input
-              id="date"
-              name="date"
-              className="form-control input-lg"
-              type="date"
-              required
-              value={data.date}
-              onChange={props.onFormChange}
-            />
+            <label htmlFor="date">
+              Date
+              <input
+                id="date"
+                name="date"
+                className="form-control input-lg"
+                type="date"
+                required
+                value={data.date}
+                onChange={props.onFormChange}
+              />
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="paid_by">Paid By</label>
-            <select
-              id="paid_by"
-              name="paid_by"
-              className="form-control input-lg"
-              required
-              value={data.paid_by}
-              onChange={props.onFormChange}
-            >
-              <option value="Gladtime Audio">Gladtime Audio</option>
-              <option value="Meghan">Meghan</option>
-              <option value="Tyler">Tyler</option>
-              <option value="Tyler/Meghan Separately">
-                Tyler/Meghan Separately
-              </option>
-            </select>
+            <label htmlFor="paid_by">
+              Paid By
+              <select
+                id="paid_by"
+                name="paid_by"
+                className="form-control input-lg"
+                required
+                value={data.paid_by}
+                onChange={props.onFormChange}
+              >
+                <option value="Gladtime Audio">Gladtime Audio</option>
+                <option value="Meghan">Meghan</option>
+                <option value="Tyler">Tyler</option>
+                <option value="Tyler/Meghan Separately">
+                  Tyler/Meghan Separately
+                </option>
+              </select>
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="tax_deductible">Tax Deductible</label>
-            <input
-              id="tax_deductible"
-              name="tax_deductible"
-              className="form-check-input checkbox-lg"
-              type="checkbox"
-              value={data.tax_deductible}
-              onChange={props.onFormChange}
-            />
+            <label htmlFor="tax_deductible">
+              Tax Deductible
+              <input
+                id="tax_deductible"
+                name="tax_deductible"
+                className="form-check-input checkbox-lg"
+                type="checkbox"
+                value={data.tax_deductible}
+                onChange={props.onFormChange}
+              />
+            </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="category">Category</label>
-            <select
-              id="category"
-              name="category"
-              className="form-control input-lg"
-              required
-              value={data.category}
-              onChange={props.onFormChange}
-            >
-              <option value="Business Equipment">Business Equipment</option>
-              <option value="Business Supplies">Business Supplies</option>
-              <option value="Gasoline">Gasoline</option>
-              <option value="Vehicle Maintenance">Vehicle Maintenance</option>
-              <option value="Travel Expense">Travel Expense</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Food">Food</option>
-            </select>
+            <label htmlFor="category">
+              Category
+              <select
+                id="category"
+                name="category"
+                className="form-control input-lg"
+                required
+                value={data.category}
+                onChange={props.onFormChange}
+              >
+                <option value="Business Equipment">Business Equipment</option>
+                <option value="Business Supplies">Business Supplies</option>
+                <option value="Gasoline">Gasoline</option>
+                <option value="Vehicle Maintenance">Vehicle Maintenance</option>
+                <option value="Travel Expense">Travel Expense</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Food">Food</option>
+              </select>
+            </label>
           </div>
         </div>
       }
@@ -320,15 +340,15 @@ const Form = (props) => {
             />
           </div>
           <div className="form-group">
-            <input
-              id="private_device"
-              name="private_device"
-              className="form-check-input checkbox-lg"
-              type="checkbox"
-              value={data.private_device}
-              onChange={props.onFormChange}
-            />
             <label htmlFor="private_device">
+              <input
+                id="private_device"
+                name="private_device"
+                className="form-check-input checkbox-lg"
+                type="checkbox"
+                value={data.private_device}
+                onChange={props.onFormChange}
+              />
               Keep me logged in. This is a private device.
             </label>
           </div>
@@ -336,18 +356,47 @@ const Form = (props) => {
       }
 
     </form>
-  )
+  );
+};
+
+// Define the shape of the formData prop for use in the propType defs
+const formDataShape = {
+  jobForm: {
+    client: PropTypes.string,
+    description: PropTypes.string,
+    amount_paid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    paid_to: PropTypes.string,
+    worked_by: PropTypes.string,
+    confirmation: PropTypes.string,
+    has_paid: PropTypes.bool,
+    start_date: PropTypes.string,
+    end_date: PropTypes.string,
+  },
+  oneTimeExpenseForm: {
+    merchant: PropTypes.string,
+    description: PropTypes.string,
+    amount_spent: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    date: PropTypes.string,
+    paid_by: PropTypes.string,
+    tax_deductible: PropTypes.bool,
+    category: PropTypes.string,
+  },
+  loginForm: {
+    username: PropTypes.string,
+    password: PropTypes.string,
+    private_device: PropTypes.bool,
+  },
 };
 
 Form.propTypes = {
   formType: PropTypes.oneOf(Object.values(formTypes)).isRequired,
-  formData: PropTypes.object,
+  formData: PropTypes.shape(formDataShape),
   onFormChange: PropTypes.func.isRequired,
-  onFormSubmit: PropTypes.func.isRequired
+  onFormSubmit: PropTypes.func.isRequired,
 };
 
 Form.defaultProps = {
-  formData: defaultFormData
-}
+  formData: defaultFormData,
+};
 
 export default Form;
