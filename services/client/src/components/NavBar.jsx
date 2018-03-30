@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
-const NavBar = (props) => (
+const NavBar = props => (
   <Navbar inverse collapseOnSelect>
     <Navbar.Header>
       <Navbar.Brand>
@@ -30,7 +30,7 @@ const NavBar = (props) => (
       <Nav pullRight>
         <NavItem eventKey={1}>
           {props.username &&
-            <span className='user-greeting'>
+            <span className="user-greeting">
               Hi, {props.username}
             </span>
           }
@@ -49,12 +49,18 @@ const NavBar = (props) => (
       </Nav>
     </Navbar.Collapse>
   </Navbar>
-)
+);
 
 NavBar.propTypes = {
-  onAuthBtnClick: PropTypes.func,
-  username: PropTypes.string
-}
+  onAuthBtnClick: PropTypes.func.isRequired,
+  username: PropTypes.string,
+  userLoggedIn: PropTypes.oneOf([null, true, false]),
+};
+
+NavBar.defaultProps = {
+  username: '',
+  userLoggedIn: null,
+};
 
 
 export default NavBar;
