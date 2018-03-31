@@ -31,18 +31,18 @@ const CalendarToolbar = (toolbar) => {
   };
 
   return (
-    <div className='rbc-toolbar'>
-      <span className='rbc-btn-group'>
-        <button type='button' onClick={goToBack}>prev</button>
-        <button type='button' onClick={goToNext}>next</button>
+    <div className="rbc-toolbar">
+      <span className="rbc-btn-group">
+        <button type="button" onClick={goToBack}>prev</button>
+        <button type="button" onClick={goToNext}>next</button>
       </span>
-      <span className='rbc-toolbar-label'>{label()}</span>
-      <span className='rbc-btn-group'>
-        <button type='button' onClick={goToCurrent}>today</button>
+      <span className="rbc-toolbar-label">{label()}</span>
+      <span className="rbc-btn-group">
+        <button type="button" onClick={goToCurrent}>today</button>
       </span>
     </div >
   );
-}
+};
 
 
 export default CalendarToolbar;
