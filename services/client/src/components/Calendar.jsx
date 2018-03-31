@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import BigCalendar from 'react-big-calendar';
-import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 import dates from 'react-big-calendar/lib/utils/dates';
 import moment from 'moment';
-import { Button } from 'react-bootstrap';
+import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 
-import CalendarToolbar from './CalendarToolbar.jsx';
+import CalendarToolbar from './CalendarToolbar';
 import '../css/calendar.css';
-import { formTypes, defaultFormData } from './Form';
-import ChoiceModal from './ChoiceModal.jsx';
-import NavBar from './NavBar';
 
 
 // select moment as the localizer for BigCalendar
@@ -18,7 +15,6 @@ BigCalendar.momentLocalizer(moment);
 
 
 class Calendar extends Component {
-
   constructor(props) {
     super(props);
 
@@ -27,50 +23,43 @@ class Calendar extends Component {
     ]);
   }
 
-  bindScopes(keys) {
-    for (let key of keys) {
-      this[key] = this[key].bind(this);
-    }
-  }
-
   componentDidMount() {
     this.getEvents();
   }
 
+  onNavigate(date) {
+    const [startDate, endDate] = this.getDateRange(date);
+    return [startDate, endDate];
+  }
+
   getEvents() {
-    const [start_date, end_date] = this.getDateRange();
+    const [startDate, endDate] = this.getDateRange();
     axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
       params: {
-        start_date: start_date,
-        end_date: end_date,
+        startDate,
+        endDate,
       },
       headers: {
-        'Authorization': `Bearer ${window.localStorage.getItem('authToken')}`
-      }
-    })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-      //alert('You are not authorized!');
-      //console.log(err.response.data);
-      //console.log(err.response.status);
+        Authorization: `Bearer ${window.localStorage.getItem('authToken')}`,
+      },
+    }).then((res) => {
+      // TODO:
+    }).catch((err) => {
+      // TODO: [err.response.data, err.response.status];
     });
   }
 
-  getDateRange(date) {
-    date = date || this.props.defaultDate;
-    const start_date = moment(dates.firstVisibleDay(date))
-                         .format('YYYY-MM-DD');
-    const end_date = moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD');
-    return [start_date, end_date];
+  getDateRange(inputDate) {
+    const date = inputDate || this.props.defaultDate;
+    const startDate = moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD');
+    const endDate = moment(dates.lastVisibleDay(date)).format('YYYY-MM-DD');
+    return [startDate, endDate];
   }
 
-  onNavigate(date, view) {
-    const [start_date, end_date] = this.getDateRange(date);
-    console.log('start_date:', start_date);
-    console.log('end_date:', end_date);
+  bindScopes(keys) {
+    keys.forEach((key) => {
+      this[key] = this[key].bind(this);
+    });
   }
 
   render() {
@@ -80,12 +69,18 @@ class Calendar extends Component {
         onNavigate={this.onNavigate}
         events={this.props.events}
         components={{ toolbar: CalendarToolbar }}
-        selectable={true}
+        selectable={true} // eslint-disable-line react/jsx-boolean-value
         views={['month']}
         onSelectSlot={this.props.onSelectSlot}
       />
     );
   }
 }
+
+Calendar.propTypes = {
+  onSelectSlot: PropTypes.func.isRequired,
+  events: PropTypes.arrayOf(PropTypes.object).isRequired,
+  defaultDate: PropTypes.instanceOf(Date).isRequired,
+};
 
 export default Calendar;
