@@ -367,7 +367,7 @@ const Form = (props) => {
 
 // Define the shape of the formData prop for use in the propType defs
 const formDataShape = {
-  jobForm: {
+  jobForm: PropTypes.shape({
     client: PropTypes.string,
     description: PropTypes.string,
     amount_paid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -377,8 +377,8 @@ const formDataShape = {
     has_paid: PropTypes.bool,
     start_date: PropTypes.string,
     end_date: PropTypes.string,
-  },
-  oneTimeExpenseForm: {
+  }),
+  oneTimeExpenseForm: PropTypes.shape({
     merchant: PropTypes.string,
     description: PropTypes.string,
     amount_spent: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -386,12 +386,12 @@ const formDataShape = {
     paid_by: PropTypes.string,
     tax_deductible: PropTypes.bool,
     category: PropTypes.string,
-  },
-  loginForm: {
+  }),
+  loginForm: PropTypes.shape({
     username: PropTypes.string,
     password: PropTypes.string,
     private_device: PropTypes.bool,
-  },
+  }),
 };
 
 Form.propTypes = {
