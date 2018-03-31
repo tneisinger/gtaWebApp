@@ -52,12 +52,15 @@ const NavBar = props => (
 );
 
 NavBar.propTypes = {
-  onAuthBtnClick: PropTypes.func.isRequired,
+  onAuthBtnClick: PropTypes.func,
   username: PropTypes.string,
   userLoggedIn: PropTypes.oneOf([null, true, false]),
 };
 
+const defaultAuthBtnFn = () => alert('Auth button clicked!');
+
 NavBar.defaultProps = {
+  onAuthBtnClick: defaultAuthBtnFn,
   username: '',
   userLoggedIn: null,
 };
