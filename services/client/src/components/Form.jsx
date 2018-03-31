@@ -12,6 +12,12 @@ export const formTypes = {
   login: 'loginForm',
 };
 
+// Define an exception for when an unknown formType is discovered
+export const UnknownFormTypeException = message => {
+  this.message = message
+  this.name = 'UnknownFormTypeException';
+};
+
 // Define the appropriate default values for an empty job form
 const emptyJobFormData = {
   client: '',
