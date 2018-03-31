@@ -124,7 +124,7 @@ exports[`The NavBar component when the user is logged in should render properly 
             <button
               className="auth-btn btn btn-primary"
               disabled={false}
-              onClick={undefined}
+              onClick={[Function]}
               type="button"
             >
               Logout
@@ -210,7 +210,7 @@ exports[`The NavBar component when the user is not logged in should render prope
             <button
               className="auth-btn btn btn-primary"
               disabled={false}
-              onClick={undefined}
+              onClick={[Function]}
               type="button"
             >
               Login

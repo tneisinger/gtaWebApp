@@ -51,37 +51,37 @@ exports[`jobForm form renders a snapshot properly 1`] = `
         htmlFor="paid_to"
       >
         Paid To
-      </label>
-      <select
-        className="form-control input-lg"
-        id="paid_to"
-        name="paid_to"
-        onChange={[Function]}
-        placeholder="Paid To"
-        required={true}
-        value="Gladtime Audio"
-      >
-        <option
+        <select
+          className="form-control input-lg"
+          id="paid_to"
+          name="paid_to"
+          onChange={[Function]}
+          placeholder="Paid To"
+          required={true}
           value="Gladtime Audio"
         >
-          Gladtime Audio
-        </option>
-        <option
-          value="Meghan"
-        >
-          Meghan
-        </option>
-        <option
-          value="Tyler"
-        >
-          Tyler
-        </option>
-        <option
-          value="Tyler/Meghan Separately"
-        >
-          Tyler/Meghan Separately
-        </option>
-      </select>
+          <option
+            value="Gladtime Audio"
+          >
+            Gladtime Audio
+          </option>
+          <option
+            value="Meghan"
+          >
+            Meghan
+          </option>
+          <option
+            value="Tyler"
+          >
+            Tyler
+          </option>
+          <option
+            value="Tyler/Meghan Separately"
+          >
+            Tyler/Meghan Separately
+          </option>
+        </select>
+      </label>
     </div>
     <div
       className="form-group"
@@ -90,31 +90,31 @@ exports[`jobForm form renders a snapshot properly 1`] = `
         htmlFor="worked_by"
       >
         Worked By
-      </label>
-      <select
-        className="form-control input-lg"
-        id="worked_by"
-        name="worked_by"
-        onChange={[Function]}
-        required={true}
-        value="Meghan"
-      >
-        <option
+        <select
+          className="form-control input-lg"
+          id="worked_by"
+          name="worked_by"
+          onChange={[Function]}
+          required={true}
           value="Meghan"
         >
-          Meghan
-        </option>
-        <option
-          value="Tyler"
-        >
-          Tyler
-        </option>
-        <option
-          value="Tyler and Meghan"
-        >
-          Tyler and Meghan
-        </option>
-      </select>
+          <option
+            value="Meghan"
+          >
+            Meghan
+          </option>
+          <option
+            value="Tyler"
+          >
+            Tyler
+          </option>
+          <option
+            value="Tyler and Meghan"
+          >
+            Tyler and Meghan
+          </option>
+        </select>
+      </label>
     </div>
     <div
       className="form-group"
@@ -123,26 +123,26 @@ exports[`jobForm form renders a snapshot properly 1`] = `
         htmlFor="confirmation"
       >
         Confirmation
-      </label>
-      <select
-        className="form-control input-lg"
-        id="confirmation"
-        name="confirmation"
-        onChange={[Function]}
-        required={true}
-        value="Confirmed"
-      >
-        <option
+        <select
+          className="form-control input-lg"
+          id="confirmation"
+          name="confirmation"
+          onChange={[Function]}
+          required={true}
           value="Confirmed"
         >
-          Confirmed
-        </option>
-        <option
-          value="Pencilled In"
-        >
-          Pencilled In
-        </option>
-      </select>
+          <option
+            value="Confirmed"
+          >
+            Confirmed
+          </option>
+          <option
+            value="Pencilled In"
+          >
+            Pencilled In
+          </option>
+        </select>
+      </label>
     </div>
     <div
       className="form-group"
@@ -151,15 +151,15 @@ exports[`jobForm form renders a snapshot properly 1`] = `
         htmlFor="has_paid"
       >
         Has Paid
+        <input
+          className="form-check-input checkbox-lg"
+          id="has_paid"
+          name="has_paid"
+          onChange={[Function]}
+          type="checkbox"
+          value={false}
+        />
       </label>
-      <input
-        className="form-check-input checkbox-lg"
-        id="has_paid"
-        name="has_paid"
-        onChange={[Function]}
-        type="checkbox"
-        value={false}
-      />
     </div>
     <div
       className="form-group"
@@ -168,16 +168,16 @@ exports[`jobForm form renders a snapshot properly 1`] = `
         htmlFor="start_date"
       >
         Start Date
+        <input
+          className="form-control input-lg"
+          id="start_date"
+          name="start_date"
+          onChange={[Function]}
+          required={true}
+          type="date"
+          value=""
+        />
       </label>
-      <input
-        className="form-control input-lg"
-        id="start_date"
-        name="start_date"
-        onChange={[Function]}
-        required={true}
-        type="date"
-        value=""
-      />
     </div>
     <div
       className="form-group"
@@ -186,16 +186,16 @@ exports[`jobForm form renders a snapshot properly 1`] = `
         htmlFor="end_date"
       >
         End Date
+        <input
+          className="form-control input-lg"
+          id="end_date"
+          name="end_date"
+          onChange={[Function]}
+          required={true}
+          type="date"
+          value=""
+        />
       </label>
-      <input
-        className="form-control input-lg"
-        id="end_date"
-        name="end_date"
-        onChange={[Function]}
-        required={true}
-        type="date"
-        value=""
-      />
     </div>
   </div>
 </form>
@@ -235,17 +235,17 @@ exports[`loginForm form renders a snapshot properly 1`] = `
     <div
       className="form-group"
     >
-      <input
-        className="form-check-input checkbox-lg"
-        id="private_device"
-        name="private_device"
-        onChange={[Function]}
-        type="checkbox"
-        value={false}
-      />
       <label
         htmlFor="private_device"
       >
+        <input
+          className="form-check-input checkbox-lg"
+          id="private_device"
+          name="private_device"
+          onChange={[Function]}
+          type="checkbox"
+          value={false}
+        />
         Keep me logged in. This is a private device.
       </label>
     </div>
@@ -304,16 +304,16 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
         htmlFor="date"
       >
         Date
+        <input
+          className="form-control input-lg"
+          id="date"
+          name="date"
+          onChange={[Function]}
+          required={true}
+          type="date"
+          value=""
+        />
       </label>
-      <input
-        className="form-control input-lg"
-        id="date"
-        name="date"
-        onChange={[Function]}
-        required={true}
-        type="date"
-        value=""
-      />
     </div>
     <div
       className="form-group"
@@ -322,36 +322,36 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
         htmlFor="paid_by"
       >
         Paid By
-      </label>
-      <select
-        className="form-control input-lg"
-        id="paid_by"
-        name="paid_by"
-        onChange={[Function]}
-        required={true}
-        value="Gladtime Audio"
-      >
-        <option
+        <select
+          className="form-control input-lg"
+          id="paid_by"
+          name="paid_by"
+          onChange={[Function]}
+          required={true}
           value="Gladtime Audio"
         >
-          Gladtime Audio
-        </option>
-        <option
-          value="Meghan"
-        >
-          Meghan
-        </option>
-        <option
-          value="Tyler"
-        >
-          Tyler
-        </option>
-        <option
-          value="Tyler/Meghan Separately"
-        >
-          Tyler/Meghan Separately
-        </option>
-      </select>
+          <option
+            value="Gladtime Audio"
+          >
+            Gladtime Audio
+          </option>
+          <option
+            value="Meghan"
+          >
+            Meghan
+          </option>
+          <option
+            value="Tyler"
+          >
+            Tyler
+          </option>
+          <option
+            value="Tyler/Meghan Separately"
+          >
+            Tyler/Meghan Separately
+          </option>
+        </select>
+      </label>
     </div>
     <div
       className="form-group"
@@ -360,15 +360,15 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
         htmlFor="tax_deductible"
       >
         Tax Deductible
+        <input
+          className="form-check-input checkbox-lg"
+          id="tax_deductible"
+          name="tax_deductible"
+          onChange={[Function]}
+          type="checkbox"
+          value={false}
+        />
       </label>
-      <input
-        className="form-check-input checkbox-lg"
-        id="tax_deductible"
-        name="tax_deductible"
-        onChange={[Function]}
-        type="checkbox"
-        value={false}
-      />
     </div>
     <div
       className="form-group"
@@ -377,51 +377,51 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
         htmlFor="category"
       >
         Category
-      </label>
-      <select
-        className="form-control input-lg"
-        id="category"
-        name="category"
-        onChange={[Function]}
-        required={true}
-        value="Business Equipment"
-      >
-        <option
+        <select
+          className="form-control input-lg"
+          id="category"
+          name="category"
+          onChange={[Function]}
+          required={true}
           value="Business Equipment"
         >
-          Business Equipment
-        </option>
-        <option
-          value="Business Supplies"
-        >
-          Business Supplies
-        </option>
-        <option
-          value="Gasoline"
-        >
-          Gasoline
-        </option>
-        <option
-          value="Vehicle Maintenance"
-        >
-          Vehicle Maintenance
-        </option>
-        <option
-          value="Travel Expense"
-        >
-          Travel Expense
-        </option>
-        <option
-          value="Entertainment"
-        >
-          Entertainment
-        </option>
-        <option
-          value="Food"
-        >
-          Food
-        </option>
-      </select>
+          <option
+            value="Business Equipment"
+          >
+            Business Equipment
+          </option>
+          <option
+            value="Business Supplies"
+          >
+            Business Supplies
+          </option>
+          <option
+            value="Gasoline"
+          >
+            Gasoline
+          </option>
+          <option
+            value="Vehicle Maintenance"
+          >
+            Vehicle Maintenance
+          </option>
+          <option
+            value="Travel Expense"
+          >
+            Travel Expense
+          </option>
+          <option
+            value="Entertainment"
+          >
+            Entertainment
+          </option>
+          <option
+            value="Food"
+          >
+            Food
+          </option>
+        </select>
+      </label>
     </div>
   </div>
 </form>
