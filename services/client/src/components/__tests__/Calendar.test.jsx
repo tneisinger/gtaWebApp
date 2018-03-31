@@ -1,10 +1,8 @@
 import React from 'react';
 import moxios from 'moxios';
-import { shallow, mount } from 'enzyme';
-import BigCalendar from 'react-big-calendar';
+import { mount } from 'enzyme';
 
 import Calendar from '../Calendar';
-import CalendarToolbar from '../CalendarToolbar';
 
 
 // create a class to mock localStorage
@@ -28,13 +26,12 @@ class LocalStorageMock {
   removeItem(key) {
     delete this.store[key];
   }
-};
+}
 
-global.localStorage = new LocalStorageMock;
+global.localStorage = new LocalStorageMock();
 
 
 describe('The Calendar component', () => {
-
   // Define a date to use for the tests
   const idesOfMarch = new Date(2018, 2, 15);
 
@@ -43,7 +40,7 @@ describe('The Calendar component', () => {
     defaultDate: idesOfMarch,
     events: [],
     setEvents: jest.fn(),
-    onSelectSlot:jest.fn()
+    onSelectSlot: jest.fn(),
   };
 
   // Initialize a variable that will hold the mounted Calendar component
@@ -52,9 +49,9 @@ describe('The Calendar component', () => {
   // Define a function for mocking an empty response to an /admin/events
   // get request
   const mockEmptyGetEventsResponse = () => {
-    let request = moxios.requests.mostRecent();
+    const request = moxios.requests.mostRecent();
     request.respondWith({
-      status: 200
+      status: 200,
     });
   };
 
@@ -63,12 +60,10 @@ describe('The Calendar component', () => {
   // create it and then return it.
   const calendar = () => {
     if (!mountedCalendar) {
-      mountedCalendar = mount(
-          <Calendar {...props} />
-      );
+      mountedCalendar = mount(<Calendar {...props} />);
     }
     return mountedCalendar;
-  }
+  };
 
   beforeEach(() => {
     // Reset the prop values for each test
@@ -76,7 +71,7 @@ describe('The Calendar component', () => {
       defaultDate: idesOfMarch,
       events: [],
       setEvents: jest.fn(),
-      onSelectSlot:jest.fn()
+      onSelectSlot: jest.fn(),
     };
 
     // throw away the old mountedCalendar
