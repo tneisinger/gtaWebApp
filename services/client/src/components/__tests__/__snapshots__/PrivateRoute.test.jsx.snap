@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The PrivateRoute component when userLoggedIn is false should render properly 1`] = `undefined`;
+
+exports[`The PrivateRoute component when userLoggedIn is true should render properly 1`] = `undefined`;
