@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import moment from 'moment';
 import { Button } from 'react-bootstrap';
 
+import PrivateRoute from './components/PrivateRoute';
 import Home from './components/Home';
 import Calendar from './components/Calendar';
 import Form, { formTypes, defaultFormData, UnknownFormTypeException }
@@ -262,17 +263,17 @@ class App extends Component {
               <br />
               <Switch>
                 <Route exact path="/" component={Home} />
-                <Route
-                  exact
+                <PrivateRoute
+                  userLoggedIn={this.state.userLoggedIn}
                   path="/calendar"
-                  render={() =>
-  (<Calendar
-    defaultDate={new Date()}
-    events={this.state.calendarEvents}
-    setEvents={this.setCalendarEvents}
-    onSelectSlot={this.onCalendarDatesSelect}
-  />)
-                  }
+                  exact
+                  component={Calendar}
+                  componentProps={{
+                    defaultDate: new Date(),
+                    events: this.state.calendarEvents,
+                    setEvents: this.setCalendarEvents,
+                    onSelectSlot: this.onCalendarDatesSelect,
+                  }}
                 />
                 <Route
                   exact
