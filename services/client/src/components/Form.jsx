@@ -70,6 +70,7 @@ const Form = (props) => {
         <div>
           <div className="form-group">
             <input
+              autoFocus
               name="client"
               className="form-control input-lg"
               type="text"
@@ -212,6 +213,7 @@ const Form = (props) => {
         <div>
           <div className="form-group">
             <input
+              autoFocus
               name="merchant"
               className="form-control input-lg"
               type="text"
@@ -325,6 +327,7 @@ const Form = (props) => {
         <div>
           <div className="form-group">
             <input
+              autoFocus
               name="username"
               className="form-control input-lg"
               type="text"
