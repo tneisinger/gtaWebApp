@@ -9,6 +9,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <input
+        autoFocus={true}
         className="form-control input-lg"
         name="client"
         onChange={[Function]}
@@ -210,6 +211,7 @@ exports[`loginForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <input
+        autoFocus={true}
         className="form-control input-lg"
         name="username"
         onChange={[Function]}
@@ -262,6 +264,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <input
+        autoFocus={true}
         className="form-control input-lg"
         name="merchant"
         onChange={[Function]}
