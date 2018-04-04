@@ -19,6 +19,9 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    // Shorter constant that contains the root url to the flask api service
+    this.FLASK_URL_ROOT = process.env.REACT_APP_FLASK_SERVICE_URL;
+
     this.state = {
       username: '',
       userLoggedIn: null,
@@ -78,8 +81,8 @@ class App extends Component {
 
     // prepare the forms
     const { formData } = this.state;
-    formData[formTypes.job].startDate = startDate;
-    formData[formTypes.job].endDate = endDate;
+    formData[formTypes.job].start_date = startDate;
+    formData[formTypes.job].end_date = endDate;
     formData[formTypes.oneTimeExpense].date = startDate;
 
     // If the user selects multiple days, just open the job form modal.
@@ -160,7 +163,7 @@ class App extends Component {
     const data = this.state.formData[formTypes.login];
 
     // Make the login request
-    axios.post(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/login`, data)
+    axios.post(`${this.FLASK_URL_ROOT}/admin/login`, data)
       .then((response) => {
         window.localStorage.setItem('authToken', response.data.auth_token);
         self.setState({
@@ -174,8 +177,40 @@ class App extends Component {
       });
   }
 
-  // requestCreateJob() {
-  // }
+  requestCreateJob() {
+    // We need to refer to 'this' in an axios request, so get a ref to it
+    const self = this;
+
+    // Prepare the form data
+    const data = this.state.formData[formTypes.job];
+
+    // Get the current authToken
+    const authToken = window.localStorage.getItem('authToken');
+
+    // If no authToken, redirect to the homepage and, if necessary, change
+    // state to reflect that the user is not logged in.
+    if (!authToken) {
+      this.props.history.push('/');
+      if (this.state.username || this.state.userLoggedIn) {
+        this.setState({ username: '', userLoggedIn: false });
+      }
+    } else {
+      // Attempt to add the job to the db
+      axios.post(`${this.FLASK_URL_ROOT}/admin/jobs`, data, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        }
+      })
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+          console.log(error.response);
+        })
+      ;
+    }
+  }
 
   // requestCreateOneTimeExpense() {
   // }
@@ -219,9 +254,9 @@ class App extends Component {
     const authToken = window.localStorage.getItem('authToken');
     if (!authToken) {
       // If there is no auth token, the user is not logged in
-      this.setState({ username: null, userLoggedIn: false });
+      this.setState({ username: '', userLoggedIn: false });
     } else {
-      axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/status`, {
+      axios.get(`${this.FLASK_URL_ROOT}/admin/status`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
