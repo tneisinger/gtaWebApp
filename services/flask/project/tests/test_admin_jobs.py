@@ -6,7 +6,7 @@ from datetime import date, timedelta
 
 from project.tests.base import BaseTestCase
 from project.admin.models import Job
-from project.tests.utils import add_job
+from project.tests.utils import add_job, add_user
 
 
 class TestAdminApiJobs(BaseTestCase):
@@ -21,10 +21,38 @@ class TestAdminApiJobs(BaseTestCase):
     VALID_WORKED_BY = next(option.value for option in Job.WorkedBy)
     VALID_CONFIRMATION = next(option.value for option in Job.Confirmation)
 
+    # Create a dictionary for a valid user
+    VALID_USER_DICT1 = {
+        'username': 'testUser1',
+        'email': 'user1@email.com',
+        'password': 'somePassword'
+    }
+
     def test_add_job(self):
-        """Ensure a new job can be added to the database."""
+        """
+        Ensure a new job can be added to the database. The client is only
+        allowed to create a new job if they are logged in as a user.
+        """
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         with self.client:
-            response = self.client.post(
+
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Attempt to add a job to the database
+            add_job_response = self.client.post(
                 '/admin/jobs',
                 data=json.dumps({
                     'client': 'Test Client',
@@ -37,18 +65,36 @@ class TestAdminApiJobs(BaseTestCase):
                     'start_date': self.today,
                     'end_date': self.today
                 }),
+                headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 201)
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 201)
             self.assertIn('Test Client job was added!', data['message'])
             self.assertIn('success', data['status'])
 
     def test_add_jobs_with_valid_paid_to_vals(self):
         """Ensure jobs with valid paid_to values can be added to the db"""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         for valid_paid_to_val in [t.value for t in Job.PaidTo]:
             with self.client:
-                response = self.client.post(
+
+                # login as user
+                login_response = self.client.post(
+                    '/admin/login',
+                    data=json.dumps({
+                        'username': self.VALID_USER_DICT1['username'],
+                        'password': self.VALID_USER_DICT1['password']
+                    }),
+                    content_type='application/json'
+                )
+
+                # get the user's auth token
+                token = json.loads(login_response.data.decode())['auth_token']
+
+                add_job_response = self.client.post(
                     '/admin/jobs',
                     data=json.dumps({
                         'client': valid_paid_to_val,
@@ -61,18 +107,35 @@ class TestAdminApiJobs(BaseTestCase):
                         'start_date': self.today,
                         'end_date': self.today
                     }),
+                    headers={'Authorization': f'Bearer {token}'},
                     content_type='application/json',
                 )
-                data = json.loads(response.data.decode())
-                self.assertEqual(response.status_code, 201)
+                data = json.loads(add_job_response.data.decode())
+                self.assertEqual(add_job_response.status_code, 201)
                 self.assertIn(valid_paid_to_val + ' job was added!',
                               data['message'])
                 self.assertIn('success', data['status'])
 
     def test_add_job_with_invalid_paid_to_val(self):
         """Ensure a job with an invalid paid_to value cannot be added."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         with self.client:
-            response = self.client.post(
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            add_job_response = self.client.post(
                 '/admin/jobs',
                 data=json.dumps({
                     'client': 'Test Client',
@@ -85,10 +148,11 @@ class TestAdminApiJobs(BaseTestCase):
                     'start_date': self.today,
                     'end_date': self.today
                 }),
+                headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 400)
             err_msg = ("Invalid 'paid_to' value. " +
                        "The valid values for 'paid_to' are: " +
                        ', '.join([f"'{t.value}'" for t in Job.PaidTo]))
@@ -97,9 +161,25 @@ class TestAdminApiJobs(BaseTestCase):
 
     def test_add_jobs_with_valid_worked_by_vals(self):
         """Ensure jobs with valid worked_by values can be added to the db"""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         for valid_worked_by_val in [t.value for t in Job.WorkedBy]:
             with self.client:
-                response = self.client.post(
+                # login as user
+                login_response = self.client.post(
+                    '/admin/login',
+                    data=json.dumps({
+                        'username': self.VALID_USER_DICT1['username'],
+                        'password': self.VALID_USER_DICT1['password']
+                    }),
+                    content_type='application/json'
+                )
+
+                # get the user's auth token
+                token = json.loads(login_response.data.decode())['auth_token']
+
+                add_job_response = self.client.post(
                     '/admin/jobs',
                     data=json.dumps({
                         'client': valid_worked_by_val,
@@ -112,18 +192,35 @@ class TestAdminApiJobs(BaseTestCase):
                         'start_date': self.today,
                         'end_date': self.today
                     }),
+                    headers={'Authorization': f'Bearer {token}'},
                     content_type='application/json',
                 )
-                data = json.loads(response.data.decode())
-                self.assertEqual(response.status_code, 201)
+                data = json.loads(add_job_response.data.decode())
+                self.assertEqual(add_job_response.status_code, 201)
                 self.assertIn(valid_worked_by_val + ' job was added!',
                               data['message'])
                 self.assertIn('success', data['status'])
 
     def test_add_job_with_invalid_worked_by_val(self):
         """Ensure a job with an invalid confirmation cannot be added."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         with self.client:
-            response = self.client.post(
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            add_job_response = self.client.post(
                 '/admin/jobs',
                 data=json.dumps({
                     'client': 'Test Client',
@@ -136,10 +233,11 @@ class TestAdminApiJobs(BaseTestCase):
                     'start_date': self.today,
                     'end_date': self.today
                 }),
+                headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 400)
             err_msg = ("Invalid 'worked_by' value. " +
                        "The valid values for 'worked_by' are: " +
                        ', '.join([f"'{t.value}'" for t in Job.WorkedBy]))
@@ -148,9 +246,25 @@ class TestAdminApiJobs(BaseTestCase):
 
     def test_add_jobs_with_valid_confirmation_vals(self):
         """Ensure jobs with valid confirmation values can be added to the db"""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         for valid_confirmation_val in [t.value for t in Job.Confirmation]:
             with self.client:
-                response = self.client.post(
+                # login as user
+                login_response = self.client.post(
+                    '/admin/login',
+                    data=json.dumps({
+                        'username': self.VALID_USER_DICT1['username'],
+                        'password': self.VALID_USER_DICT1['password']
+                    }),
+                    content_type='application/json'
+                )
+
+                # get the user's auth token
+                token = json.loads(login_response.data.decode())['auth_token']
+
+                add_job_response = self.client.post(
                     '/admin/jobs',
                     data=json.dumps({
                         'client': 'Client ' + valid_confirmation_val,
@@ -163,18 +277,35 @@ class TestAdminApiJobs(BaseTestCase):
                         'start_date': self.today,
                         'end_date': self.today
                     }),
+                    headers={'Authorization': f'Bearer {token}'},
                     content_type='application/json',
                 )
-                data = json.loads(response.data.decode())
-                self.assertEqual(response.status_code, 201)
+                data = json.loads(add_job_response.data.decode())
+                self.assertEqual(add_job_response.status_code, 201)
                 self.assertIn(valid_confirmation_val + ' job was added!',
                               data['message'])
                 self.assertIn('success', data['status'])
 
     def test_add_job_with_invalid_confirmation_val(self):
         """Ensure a job with an invalid confirmation cannot be added."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         with self.client:
-            response = self.client.post(
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            add_job_response = self.client.post(
                 '/admin/jobs',
                 data=json.dumps({
                     'client': 'Test Client',
@@ -187,10 +318,11 @@ class TestAdminApiJobs(BaseTestCase):
                     'start_date': self.today,
                     'end_date': self.today
                 }),
+                headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 400)
             err_msg = ("Invalid 'confirmation' value. " +
                        "The valid values for 'confirmation' are: " +
                        ', '.join([f"'{t.value}'"
@@ -200,21 +332,55 @@ class TestAdminApiJobs(BaseTestCase):
 
     def test_add_job_empty_json(self):
         """Ensure an error is thrown if the JSON object is empty."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         with self.client:
-            response = self.client.post(
+
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            add_job_response = self.client.post(
                 '/admin/jobs',
                 data=json.dumps({}),
+                headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 400)
             self.assertIn('Invalid payload.', data['message'])
             self.assertIn('fail', data['status'])
 
     def test_add_job_invalid_json_no_client_key(self):
         """Ensure error thrown if JSON object does not have a client key."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         with self.client:
-            response = self.client.post(
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            add_job_response = self.client.post(
                 '/admin/jobs',
                 data=json.dumps({
                     'description': 'Test Description',
@@ -226,17 +392,34 @@ class TestAdminApiJobs(BaseTestCase):
                     'start_date': self.today,
                     'end_date': self.today
                 }),
+                headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 400)
             self.assertIn('Invalid payload.', data['message'])
             self.assertIn('fail', data['status'])
 
     def test_add_job_amount_paid_not_a_number(self):
         """Ensure error thrown if amount_paid is a non-numeric string"""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         with self.client:
-            response = self.client.post(
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            add_job_response = self.client.post(
                 '/admin/jobs',
                 data=json.dumps({
                     'client': 'Test Client',
@@ -249,17 +432,34 @@ class TestAdminApiJobs(BaseTestCase):
                     'start_date': self.today,
                     'end_date': self.today
                 }),
+                headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 400)
             self.assertIn("'amount_paid' must be a number.", data['message'])
             self.assertIn('fail', data['status'])
 
     def test_add_job_start_date_later_than_end_date(self):
         """Ensure error is thrown if start_date later than end_date."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
         with self.client:
-            response = self.client.post(
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            add_job_response = self.client.post(
                 '/admin/jobs',
                 data=json.dumps({
                     'client': 'Test Client',
@@ -272,11 +472,39 @@ class TestAdminApiJobs(BaseTestCase):
                     'start_date': self.today,
                     'end_date': self.yesterday
                 }),
+                headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 400)
             self.assertIn('end_date must be equal to', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_add_job_no_auth_token(self):
+        """
+        Ensure a new job can be added to the database. The client is only
+        allowed to create a new job if they are logged in as a user.
+        """
+        with self.client:
+            # Attempt to add a job to the database
+            add_job_response = self.client.post(
+                '/admin/jobs',
+                data=json.dumps({
+                    'client': 'Test Client',
+                    'description': 'Test Description',
+                    'amount_paid': 666.01,
+                    'paid_to': self.VALID_PAID_TO,
+                    'worked_by': self.VALID_WORKED_BY,
+                    'confirmation': self.VALID_CONFIRMATION,
+                    'has_paid': False,
+                    'start_date': self.today,
+                    'end_date': self.today
+                }),
+                content_type='application/json',
+            )
+            data = json.loads(add_job_response.data.decode())
+            self.assertEqual(add_job_response.status_code, 401)
+            self.assertIn('Provide a valid auth token.', data['message'])
             self.assertIn('fail', data['status'])
 
     def test_get_single_job(self):

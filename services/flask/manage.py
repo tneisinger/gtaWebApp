@@ -40,7 +40,7 @@ def test():
 @cli.command()
 def test_narrow():
     """ Runs the tests without code coverage"""
-    PATTERN = 'test_admin_calendar.py'
+    PATTERN = 'test_admin_jobs.py'
     click.echo('Running only the subset of tests that match this pattern:')
     click.echo(f'PATTERN: {PATTERN}')
     click.echo('To change the pattern, edit the manage.py file.')

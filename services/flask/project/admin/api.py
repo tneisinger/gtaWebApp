@@ -25,6 +25,7 @@ def ping():
 
 
 @admin_blueprint.route('/jobs', methods=['POST'])
+@users_only()
 def add_job():
     """Add a job to the database"""
     response_object = {
