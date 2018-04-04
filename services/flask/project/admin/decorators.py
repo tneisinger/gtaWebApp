@@ -30,6 +30,7 @@ class users_only(object):
 
                 # If the token is invalid, deny access
                 if not isinstance(resp, int):
+                    response_object['message'] = 'Auth token invalid.'
                     return jsonify(response_object), 401
 
                 # If the token is valid, allow access
@@ -39,7 +40,7 @@ class users_only(object):
                 else:
                     return route_function()
 
-            # If the user is not signed in, deny access
+            # If no auth_header was provided, return an error
             return jsonify(response_object), 401
 
         return wrapper
