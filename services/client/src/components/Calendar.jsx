@@ -33,11 +33,11 @@ class Calendar extends Component {
   }
 
   getEvents() {
-    const [startDate, endDate] = this.getDateRange();
+    const [start_date, end_date] = this.getDateRange();
     axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
       params: {
-        startDate,
-        endDate,
+        start_date,
+        end_date,
       },
       headers: {
         Authorization: `Bearer ${window.localStorage.getItem('authToken')}`,
