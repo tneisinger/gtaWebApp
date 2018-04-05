@@ -51,6 +51,12 @@ class Calendar extends Component {
     });
   }
 
+  setEventProps(event, start, end, isSelected) {
+    return {
+      className: 'custom-class-name other-class-name',
+    }
+  }
+
   getDateRange(inputDate) {
     const date = inputDate || this.props.defaultDate;
     const startDate = moment(dates.firstVisibleDay(date)).format('YYYY-MM-DD');
@@ -74,6 +80,7 @@ class Calendar extends Component {
         selectable={true} // eslint-disable-line react/jsx-boolean-value
         views={['month']}
         onSelectSlot={this.props.onSelectSlot}
+        eventPropGetter={this.setEventProps}
       />
     );
   }
