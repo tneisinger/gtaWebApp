@@ -8,6 +8,7 @@ import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css';
 
 import CalendarToolbar from './CalendarToolbar';
 import '../css/calendar.css';
+import { datestringToDate } from '../utils';
 
 
 // select moment as the localizer for BigCalendar
@@ -43,7 +44,8 @@ class Calendar extends Component {
         Authorization: `Bearer ${window.localStorage.getItem('authToken')}`,
       },
     }).then((res) => {
-      // TODO:
+      const bcEvents = convertEventsToBCEvents(res.data.data);
+      this.props.setCalendarEvents(bcEvents);
     }).catch((err) => {
       // TODO: [err.response.data, err.response.status];
     });
@@ -76,6 +78,36 @@ class Calendar extends Component {
     );
   }
 }
+
+
+// Convert an object of jobs and oneTimeExpenses (as they are received from the
+// '/admin/events' api route) into a list of js objects that are in a form that
+// is compatible with React Big Calendar
+function convertEventsToBCEvents(events) {
+  let result = [];
+  events.jobs.forEach(job => {
+    let bcEvent = {
+      id: job.id,
+      title: job.client,
+      start: datestringToDate(job.start_date),
+      end: datestringToDate(job.end_date),
+      allDay: true,
+    }
+    result.push(bcEvent);
+  });
+  events.expenses.forEach(expense => {
+    let bcEvent = {
+      id: expense.id,
+      title: expense.merchant,
+      start: datestringToDate(expense.date),
+      end: datestringToDate(expense.date),
+      allDay: true,
+    }
+    result.push(bcEvent);
+  });
+  return result;
+}
+
 
 Calendar.propTypes = {
   onSelectSlot: PropTypes.func.isRequired,
