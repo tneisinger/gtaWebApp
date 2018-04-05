@@ -15,3 +15,140 @@ label {
   display: inline-block;
   font-weight: bold;
 }
+
+
+/**************************************************/
+/***********  FROM CHROMEBOX CSS FILE   ***********/
+/**************************************************/
+
+.fc-title {
+    color: white;
+    float: left;
+}
+
+.fc-event {
+    border-width: 2px;
+    border-style: solid;
+}
+
+/* Fixes a bug with fullcalendar. Event elements that aren't the end of the
+ * event do not contain a resizer div.  This causes them to be narrower than
+ * all other event divs.  Adding a little padding to the bottom of all
+ * .fc-not-end elements fixes this problem */
+.fc-not-end {
+    padding-bottom: 5px;
+}
+
+.fc-event-x-btn {
+    color: white;
+	display: inline-block;
+	float: right;
+	padding-right: 7px;
+	padding-left: 10px;
+	font-size: 1.3em;
+	font-weight: bold;
+	padding-bottom: 1px;
+	border-radius: 10px;
+	z-index: 5;
+}
+
+.fc-event-x-btn:hover {
+	color: red;
+}
+
+/* variables for the colors of the various kinds of calendar events */
+:root {
+    /* General colors for job events in full calendar */
+    --job-notpaid-border-color: #ff3333; /* red */
+    --job-pencilledin-color: #a2a2a2; /* gray */
+
+    /* Colors for job events worked by Tyler */
+    --job-color-tyler: #3a87ad; /* blue */
+    --job-highlight-color-tyler: #75abc6; /* light blue */
+
+    /* Colors for job events worked by Meghan */
+    --job-color-meghan: #23bc72; /* green */
+    --job-highlight-color-meghan: #2ed584; /* light green */
+
+    /* Colors for job events worked by Tyler and Meghan together */
+    --job-color-tyler-and-meghan: #b13eb1; /* purple */
+    --job-highlight-color-tyler-and-meghan: #d891d8; /* light purple */
+
+    /* colors for expense events */
+    --expense-color: #d43f3a; /* red */
+    --expense-highlight-color: #e45763; /* light red */
+}
+
+.workedby-tyler {
+    background-color: var(--job-color-tyler);
+    border-color: var(--job-color-tyler);
+}
+
+.workedby-tyler.fc-event-hovered {
+	background-color: var(--job-highlight-color-tyler);
+    border-color: var(--job-highlight-color-tyler);
+}
+
+/* When a pencilled-in Tyler job is hovered, change the background
+ * color for that job to Tyler's default color */
+.workedby-tyler.pencilled-in.fc-event-hovered {
+    background-color: var(--job-color-tyler);
+    border-color: var(--job-color-tyler);
+}
+
+.workedby-meghan {
+    background-color: var(--job-color-meghan);
+    border-color: var(--job-color-meghan);
+}
+
+.workedby-meghan.fc-event-hovered {
+    background-color: var(--job-highlight-color-meghan);
+    border-color: var(--job-highlight-color-meghan);
+}
+
+/* When a pencilled-in Meghan job is hovered, change the background
+ * color for that job to Meghan's default color*/
+.workedby-meghan.pencilled-in.fc-event-hovered {
+    background-color: var(--job-color-meghan);
+    border-color: var(--job-color-meghan);
+}
+
+.workedby-tyler-and-meghan {
+    background-color: var(--job-color-tyler-and-meghan);
+    border-color: var(--job-color-tyler-and-meghan);
+}
+
+.workedby-tyler-and-meghan.fc-event-hovered {
+	background-color: var(--job-highlight-color-tyler-and-meghan);
+    border-color: var(--job-highlight-color-tyler-and-meghan);
+}
+
+/* When a pencilled-in TylerAndMeghan job is hovered, change the background
+ * color for that job to the default color for TylerAndMeghan jobs */
+.workedby-tyler-and-meghan.pencilled-in.fc-event-hovered {
+    background-color: var(--job-color-tyler-and-meghan);
+    border-color: var(--job-color-tyler-and-meghan);
+}
+
+.pencilled-in {
+    background-color: var(--job-pencilledin-color);
+    border-color: var(--job-pencilledin-color);
+}
+
+.has-not-paid,
+.has-not-paid.fc-event-hovered,
+.has-not-paid.pencilled-in.fc-event-hovered {
+    border-color: var(--job-notpaid-border-color);
+}
+
+/**** EXPENSE EVENTS ****/
+
+.expense-event {
+    background-color: var(--expense-color);
+    border-color: var(--expense-color);
+}
+
+.expense-event.fc-event-hovered {
+    background-color: var(--expense-highlight-color);
+    border-color: var(--expense-highlight-color);
+}
