@@ -178,9 +178,6 @@ class App extends Component {
   }
 
   requestCreateJob() {
-    // We need to refer to 'this' in an axios request, so get a ref to it
-    const self = this;
-
     // Prepare the form data
     const data = this.state.formData[formTypes.job];
 
@@ -306,7 +303,7 @@ class App extends Component {
                   componentProps={{
                     defaultDate: new Date(),
                     events: this.state.calendarEvents,
-                    setEvents: this.setCalendarEvents,
+                    setCalendarEvents: this.setCalendarEvents,
                     onSelectSlot: this.onCalendarDatesSelect,
                   }}
                 />
