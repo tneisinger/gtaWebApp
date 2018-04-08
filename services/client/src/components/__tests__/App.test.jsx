@@ -150,8 +150,8 @@ describe('The main App component', () => {
       expect(appInstance().state.userLoggedIn).toBe(false);
     });
 
-    it('should have a username state value of null', () => {
-      expect(appInstance().state.username).toBe(null);
+    it('should have a username state value of the empty string', () => {
+      expect(appInstance().state.username).toBe('');
     });
   });
 
