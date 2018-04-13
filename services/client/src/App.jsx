@@ -259,7 +259,6 @@ class App extends Component {
         },
       })
         .then((response) => {
-          console.log(response);
           this.setState({
             userLoggedIn: true,
             username: response.data.data.username,
