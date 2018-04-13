@@ -7,7 +7,8 @@ from flask import url_for
 
 from project.tests.base import BaseTestCase
 from project.admin.models import Job, OneTimeExpense
-from project.tests.utils import (add_user, add_job, add_one_time_expense)
+from project.tests.utils import (add_user, add_job, add_one_time_expense,
+                                 underscore_keys)
 
 
 class TestAdminCalendarRoutes(BaseTestCase):
@@ -102,10 +103,10 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # get the user's auth token
             token = json.loads(resp_login.data.decode())['auth_token']
 
-            # request the events that occurred between start_date and end_date
+            # request the events that occurred between startDate and endDate
             request_data = {
-                     'start_date': self.FIRST_DAY.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': self.FIRST_DAY.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data),
@@ -129,17 +130,19 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # end_date value and check that it matches the
             # start_date value that we sent in self.VALID_JOB_DICT1
             self.assertEqual(self.VALID_JOB_DICT1['start_date'],
-                             data['data']['jobs'][0].pop('end_date'))
+                             data['data']['jobs'][0].pop('endDate'))
 
-            # Now that we have removed the id and the end_date,
-            # the sent job and the returned job should be identical.
-            self.assertEqual(self.VALID_JOB_DICT1, data['data']['jobs'][0])
+            # Now that we have removed the id and the endDate,
+            # the sent job and the returned job should contain the same data.
+            # Convert the returned dict keys to underscore before comparing.
+            response_job_dict1 = underscore_keys(data['data']['jobs'][0])
+            self.assertEqual(self.VALID_JOB_DICT1, response_job_dict1)
 
             # Similar to above, we must pop the id key from the returned
             # expense before we can compare it to the sent expense.
             self.assertEqual(1, data['data']['expenses'][0].pop('id'))
-            self.assertEqual(self.VALID_EXPENSE_DICT1,
-                             data['data']['expenses'][0])
+            response_expense = underscore_keys(data['data']['expenses'][0])
+            self.assertEqual(self.VALID_EXPENSE_DICT1, response_expense)
 
             # Check that the user data is included and correct
             self.assertEqual(data['data']['user']['username'],
@@ -164,8 +167,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # request the events
             request_data = {
-                     'start_date': self.FIRST_DAY.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': self.FIRST_DAY.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data)
@@ -202,8 +205,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # request the events
             request_data = {
-                     'start_date': self.FIRST_DAY.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': self.FIRST_DAY.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data),
@@ -214,7 +217,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # Assert that it failed
             self.assertEqual(response.status_code, 401)
             self.assertEqual(data['status'], 'fail')
-            self.assertEqual(data['message'], 'Provide a valid auth token.')
+            self.assertEqual(data['message'], 'Auth token invalid.')
 
     def test_get_events_empty_auth_header(self):
         """
@@ -241,8 +244,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # request the events
             request_data = {
-                     'start_date': self.FIRST_DAY.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': self.FIRST_DAY.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data),
@@ -280,8 +283,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # request the events
             request_data = {
-                     'start_date': self.FIRST_DAY.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': self.FIRST_DAY.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data)
@@ -303,7 +306,7 @@ class TestAdminCalendarRoutes(BaseTestCase):
         add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
-        add_job(**self.VALID_JOB_DICT1)  # start_date and end_date is the 6th
+        add_job(**self.VALID_JOB_DICT1)  # startDate and endDate is the 6th
         add_one_time_expense(**self.VALID_EXPENSE_DICT1)  # date is the 4th
 
         with self.client:
@@ -327,8 +330,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # request the events
             request_data = {
-                     'start_date': start_date.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': start_date.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data),
@@ -363,8 +366,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
         add_user(**self.VALID_USER_DICT1)
 
         # Add a job and an expense to the database
-        add_job(**self.VALID_JOB_DICT1)  # start_date and end_date is the 6th
-        add_job(**self.VALID_JOB_DICT2)  # start_date and end_date is the 26th
+        add_job(**self.VALID_JOB_DICT1)  # startDate and endDate is the 6th
+        add_job(**self.VALID_JOB_DICT2)  # startDate and endDate is the 26th
         add_one_time_expense(**self.VALID_EXPENSE_DICT1)  # date is the 4th
         add_one_time_expense(**self.VALID_EXPENSE_DICT2)  # date is the 16th
 
@@ -389,8 +392,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # request the events
             request_data = {
-                     'start_date': start_date.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': start_date.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data),
@@ -420,17 +423,19 @@ class TestAdminCalendarRoutes(BaseTestCase):
             # end_date value and check that it matches the
             # start_date value that we sent in self.VALID_JOB_DICT1
             self.assertEqual(self.VALID_JOB_DICT2['start_date'],
-                             data['data']['jobs'][0].pop('end_date'))
+                             data['data']['jobs'][0].pop('endDate'))
 
-            # Now that we have removed the id and the end_date,
-            # the sent job and the returned job should be identical.
-            self.assertEqual(self.VALID_JOB_DICT2, data['data']['jobs'][0])
+            # Now that we have removed the id and the endDate,
+            # the sent job and the returned job should contain the same data.
+            # Convert the returned dict keys to underscore before comparing.
+            response_job_dict2 = underscore_keys(data['data']['jobs'][0])
+            self.assertEqual(self.VALID_JOB_DICT2, response_job_dict2)
 
             # Similar to above, we must pop the id key from the returned
             # expense before we can compare it to the sent expense.
             self.assertEqual(2, data['data']['expenses'][0].pop('id'))
-            self.assertEqual(self.VALID_EXPENSE_DICT2,
-                             data['data']['expenses'][0])
+            response_expense = underscore_keys(data['data']['expenses'][0])
+            self.assertEqual(self.VALID_EXPENSE_DICT2, response_expense)
 
             # Check that the user data is included and correct
             self.assertEqual(data['data']['user']['username'],
@@ -478,8 +483,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # request the events
             request_data = {
-                     'start_date': self.FIRST_DAY.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': self.FIRST_DAY.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data),
@@ -533,8 +538,8 @@ class TestAdminCalendarRoutes(BaseTestCase):
 
             # request the events
             request_data = {
-                     'start_date': self.FIRST_DAY.isoformat(),
-                     'end_date': self.LAST_DAY.isoformat()
+                     'startDate': self.FIRST_DAY.isoformat(),
+                     'endDate': self.LAST_DAY.isoformat()
             }
             response = self.client.get(
                 url_for('admin.get_events', **request_data),

@@ -39,13 +39,13 @@ def add_job():
         job = Job(
                    client=post_data.get('client'),
                    description=post_data.get('description'),
-                   amount_paid=post_data.get('amount_paid'),
-                   paid_to=post_data.get('paid_to'),
-                   worked_by=post_data.get('worked_by'),
+                   amount_paid=post_data.get('amountPaid'),
+                   paid_to=post_data.get('paidTo'),
+                   worked_by=post_data.get('workedBy'),
                    confirmation=post_data.get('confirmation'),
-                   has_paid=post_data.get('has_paid'),
-                   start_date=post_data.get('start_date'),
-                   end_date=post_data.get('end_date'),
+                   has_paid=post_data.get('hasPaid'),
+                   start_date=post_data.get('startDate'),
+                   end_date=post_data.get('endDate'),
         )
         db.session.add(job)
         db.session.commit()
@@ -57,25 +57,25 @@ def add_job():
     except exc.IntegrityError as e:
         db.session.rollback()
         if job.start_date > job.end_date:
-            msg = 'end_date must be equal to or later than start_date'
+            msg = 'endDate must be equal to or later than startDate'
             response_object['message'] = msg
         return jsonify(response_object), 400
     except exc.DataError as e:
         db.session.rollback()
         err_msg = str(e)
         if 'invalid input syntax for type double precision' in err_msg:
-            response_object['message'] = "'amount_paid' must be a number."
+            response_object['message'] = "'amountPaid' must be a number."
         return jsonify(response_object), 400
     except ValueError as e:
         db.session.rollback()
         err_msg = str(e)
         if 'is not a valid PaidTo' in err_msg:
-            err_msg = ("Invalid 'paid_to' value. " +
-                       "The valid values for 'paid_to' are: " +
+            err_msg = ("Invalid 'paidTo' value. " +
+                       "The valid values for 'paidTo' are: " +
                        ', '.join([f"'{t.value}'" for t in Job.PaidTo]))
         elif 'is not a valid WorkedBy' in err_msg:
-            err_msg = ("Invalid 'worked_by' value. " +
-                       "The valid values for 'worked_by' are: " +
+            err_msg = ("Invalid 'workedBy' value. " +
+                       "The valid values for 'workedBy' are: " +
                        ', '.join([f"'{t.value}'" for t in Job.WorkedBy]))
         elif 'is not a valid Confirmation' in err_msg:
             err_msg = ("Invalid 'confirmation' value. " +
@@ -137,10 +137,10 @@ def add_one_time_expense():
         expense = OneTimeExpense(
                               merchant=post_data.get('merchant'),
                               description=post_data.get('description'),
-                              amount_spent=post_data.get('amount_spent'),
+                              amount_spent=post_data.get('amountSpent'),
                               date=post_data.get('date'),
-                              paid_by=post_data.get('paid_by'),
-                              tax_deductible=post_data.get('tax_deductible'),
+                              paid_by=post_data.get('paidBy'),
+                              tax_deductible=post_data.get('taxDeductible'),
                               category=post_data.get('category')
         )
         db.session.add(expense)
@@ -157,7 +157,7 @@ def add_one_time_expense():
         db.session.rollback()
         err_msg = str(e)
         if 'invalid input syntax for type double precision' in err_msg:
-            response_object['message'] = "'amount_spent' must be a number."
+            response_object['message'] = "'amountSpent' must be a number."
         return jsonify(response_object), 400
     except ValueError as e:
         db.session.rollback()
@@ -168,8 +168,8 @@ def add_one_time_expense():
                        ', '.join([f"'{t.value}'"
                                   for t in OneTimeExpense.Category]))
         if 'is not a valid PaidBy' in err_msg:
-            err_msg = ("Invalid 'paid_by' value. " +
-                       "The valid values for 'paid_by' are: " +
+            err_msg = ("Invalid 'paidBy' value. " +
+                       "The valid values for 'paidBy' are: " +
                        ', '.join([f"'{t.value}'"
                                   for t in OneTimeExpense.PaidBy]))
         response_object['message'] = err_msg
@@ -230,12 +230,12 @@ def add_recurring_expense():
                                 merchant=post_data.get('merchant'),
                                 description=post_data.get('description'),
                                 amount=post_data.get('amount'),
-                                tax_deductible=post_data.get('tax_deductible'),
+                                tax_deductible=post_data.get('taxDeductible'),
                                 category=post_data.get('category'),
                                 recurrence=post_data.get('recurrence'),
-                                paid_by=post_data.get('paid_by'),
-                                start_date=post_data.get('start_date'),
-                                end_date=post_data.get('end_date')
+                                paid_by=post_data.get('paidBy'),
+                                start_date=post_data.get('startDate'),
+                                end_date=post_data.get('endDate')
         )
         db.session.add(expense)
         db.session.commit()
@@ -259,8 +259,8 @@ def add_recurring_expense():
                        ', '.join([f"'{t.value}'"
                                   for t in RecurringExpense.Recurrence]))
         if 'is not a valid PaidBy' in err_msg:
-            err_msg = ("Invalid 'paid_by' value. " +
-                       "The valid values for 'paid_by' are: " +
+            err_msg = ("Invalid 'paidBy' value. " +
+                       "The valid values for 'paidBy' are: " +
                        ', '.join([f"'{t.value}'"
                                   for t in RecurringExpense.PaidBy]))
         if 'is not a valid Category' in err_msg:
@@ -390,7 +390,7 @@ def register_user():
     username = post_data.get('username')
     email = post_data.get('email')
     password = post_data.get('password')
-    is_private_device = post_data.get('is_private_device')
+    is_private_device = post_data.get('isPrivateDevice')
     try:
         # check for existing user
         user = User.query.filter(
@@ -432,7 +432,7 @@ def login_user():
         return jsonify(response_object), 400
     username = post_data.get('username')
     password = post_data.get('password')
-    is_private_device = post_data.get('is_private_device')
+    is_private_device = post_data.get('isPrivateDevice')
     try:
         # fetch the user data
         user = User.query.filter_by(username=username).first()
@@ -508,8 +508,8 @@ def get_user_status():
 @users_only(pass_user=True)
 def get_events(user):
     """Get jobs and one time expenses from within a date range"""
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
+    start_date = request.args.get('startDate')
+    end_date = request.args.get('endDate')
     jobs = Job.query.filter(
             Job.end_date >= start_date,
             Job.start_date <= end_date).all()

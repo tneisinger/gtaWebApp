@@ -6,7 +6,8 @@ from datetime import date, timedelta
 
 from project.tests.base import BaseTestCase
 from project.admin.models import OneTimeExpense, RecurringExpense
-from project.tests.utils import add_one_time_expense, add_recurring_expense
+from project.tests.utils import (add_one_time_expense, add_recurring_expense,
+                                 underscore_keys)
 
 
 class TestAdminApiExpenses(BaseTestCase):
@@ -19,10 +20,10 @@ class TestAdminApiExpenses(BaseTestCase):
     VALID_ONE_TIME_EXPENSE_DICT = {
         'merchant': 'Test Merchant',
         'description': 'Test Description',
-        'amount_spent': 666.01,
+        'amountSpent': 666.01,
         'date': today,
-        'paid_by': next(e.value for e in OneTimeExpense.PaidBy),
-        'tax_deductible': True,
+        'paidBy': next(e.value for e in OneTimeExpense.PaidBy),
+        'taxDeductible': True,
         'category': next(e.value for e in OneTimeExpense.Category),
     }
 
@@ -30,11 +31,11 @@ class TestAdminApiExpenses(BaseTestCase):
         'merchant': 'Test Merchant',
         'description': 'Test Description',
         'amount': 666.01,
-        'tax_deductible': True,
+        'taxDeductible': True,
         'category': next(e.value for e in RecurringExpense.Category),
         'recurrence': next(e.value for e in RecurringExpense.Recurrence),
-        'paid_by': next(e.value for e in RecurringExpense.PaidBy),
-        'start_date': today
+        'paidBy': next(e.value for e in RecurringExpense.PaidBy),
+        'startDate': today
     }
 
     # ======================
@@ -85,7 +86,7 @@ class TestAdminApiExpenses(BaseTestCase):
     def test_add_one_time_expense_amount_spent_not_a_number(self):
         """Ensure error thrown if amount_spent is non-numeric"""
         invalid_expense_dict = self.VALID_ONE_TIME_EXPENSE_DICT.copy()
-        invalid_expense_dict['amount_spent'] = 'INVALID NON-NUMERIC!'
+        invalid_expense_dict['amountSpent'] = 'INVALID NON-NUMERIC!'
         with self.client:
             response = self.client.post(
                 '/admin/one-time-expenses',
@@ -94,7 +95,7 @@ class TestAdminApiExpenses(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertIn("'amount_spent' must be a number.", data['message'])
+            self.assertIn("'amountSpent' must be a number.", data['message'])
             self.assertIn('fail', data['status'])
 
     def test_add_one_time_expenses_with_valid_category_vals(self):
@@ -140,15 +141,14 @@ class TestAdminApiExpenses(BaseTestCase):
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
-    def test_add_one_time_expenses_with_valid_paid_by_vals(self):
+    def test_add_one_time_expenses_with_valid_paidBy_vals(self):
         """
-        Ensure one time expenses with valid paid_by values can be
+        Ensure one time expenses with valid paidBy values can be
         added to the db
         """
         valid_expense_dict = self.VALID_ONE_TIME_EXPENSE_DICT.copy()
-        for valid_paid_by_val in [t.value
-                                  for t in OneTimeExpense.PaidBy]:
-            valid_expense_dict['paid_by'] = valid_paid_by_val
+        for valid_paidBy_val in [t.value for t in OneTimeExpense.PaidBy]:
+            valid_expense_dict['paidBy'] = valid_paidBy_val
             with self.client:
                 response = self.client.post(
                     '/admin/one-time-expenses',
@@ -161,13 +161,13 @@ class TestAdminApiExpenses(BaseTestCase):
                               data['message'])
                 self.assertIn('success', data['status'])
 
-    def test_add_one_time_expense_with_invalid_paid_by_val(self):
+    def test_add_one_time_expense_with_invalid_paidBy_val(self):
         """
-        Ensure that a one time expense with an invalid paid_by value
+        Ensure that a one time expense with an invalid paidBy value
         cannot be added to the database.
         """
         invalid_expense_dict = self.VALID_ONE_TIME_EXPENSE_DICT.copy()
-        invalid_expense_dict['paid_by'] = 'INVALID!!!'
+        invalid_expense_dict['paidBy'] = 'INVALID!!!'
         with self.client:
             response = self.client.post(
                 '/admin/one-time-expenses',
@@ -176,8 +176,8 @@ class TestAdminApiExpenses(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            err_msg = ("Invalid 'paid_by' value. " +
-                       "The valid values for 'paid_by' are: " +
+            err_msg = ("Invalid 'paidBy' value. " +
+                       "The valid values for 'paidBy' are: " +
                        ', '.join([f"'{t.value}'"
                                   for t in OneTimeExpense.PaidBy]))
             self.assertEqual(err_msg, data['message'])
@@ -185,7 +185,8 @@ class TestAdminApiExpenses(BaseTestCase):
 
     def test_get_single_one_time_expense(self):
         """Ensure get single OneTimeExpense behaves correctly."""
-        expense = add_one_time_expense(**self.VALID_ONE_TIME_EXPENSE_DICT)
+        valid_data = underscore_keys(self.VALID_ONE_TIME_EXPENSE_DICT)
+        expense = add_one_time_expense(**valid_data)
         with self.client:
             url = f'/admin/one-time-expenses/{expense.id}'
             response = self.client.get(url)
@@ -220,19 +221,21 @@ class TestAdminApiExpenses(BaseTestCase):
         valid_expense_dict1 = self.VALID_ONE_TIME_EXPENSE_DICT.copy()
         valid_expense_dict1['merchant'] = 'Merchant 1'
         valid_expense_dict1['description'] = 'Description 1'
-        valid_expense_dict1['amount_spent'] = 111.11
-        valid_expense_dict1['tax_deductible'] = False
+        valid_expense_dict1['amountSpent'] = 111.11
+        valid_expense_dict1['taxDeductible'] = False
         valid_expense_dict1['date'] = self.yesterday
+        valid_expense_data1 = underscore_keys(valid_expense_dict1)
 
         # Create the second expense
         valid_expense_dict2 = self.VALID_ONE_TIME_EXPENSE_DICT.copy()
         valid_expense_dict2['merchant'] = 'Merchant 2'
         valid_expense_dict2['description'] = 'Description 2'
-        valid_expense_dict2['amount_spent'] = 222.22
+        valid_expense_dict2['amountSpent'] = 222.22
+        valid_expense_data2 = underscore_keys(valid_expense_dict2)
 
         # Add them to the db
-        add_one_time_expense(**valid_expense_dict1)
-        add_one_time_expense(**valid_expense_dict2)
+        add_one_time_expense(**valid_expense_data1)
+        add_one_time_expense(**valid_expense_data2)
 
         with self.client:
             response = self.client.get('/admin/one-time-expenses')
@@ -333,10 +336,10 @@ class TestAdminApiExpenses(BaseTestCase):
                               data['message'])
                 self.assertIn('success', data['status'])
 
-    def test_add_recurring_expense_invalid_paid_by_value(self):
-        """Ensure error is thrown if an invalid paid_by value given"""
+    def test_add_recurring_expense_invalid_paidBy_value(self):
+        """Ensure error is thrown if an invalid paidBy value given"""
         invalid_expense_dict = self.VALID_RECURRING_EXPENSE_DICT.copy()
-        invalid_expense_dict['paid_by'] = 'INVALID!!!'
+        invalid_expense_dict['paidBy'] = 'INVALID!!!'
         with self.client:
             response = self.client.post(
                     '/admin/recurring-expenses',
@@ -345,8 +348,8 @@ class TestAdminApiExpenses(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            err_msg = ("Invalid 'paid_by' value. " +
-                       "The valid values for 'paid_by' are: " +
+            err_msg = ("Invalid 'paidBy' value. " +
+                       "The valid values for 'paidBy' are: " +
                        ', '.join([f"'{t.value}'"
                                   for t in RecurringExpense.PaidBy]))
             self.assertEqual(err_msg, data['message'])
@@ -354,11 +357,11 @@ class TestAdminApiExpenses(BaseTestCase):
 
     def test_add_recurring_expenses_with_valid_paidby_values(self):
         """
-        Ensure recurring_expenses with valid paid_by values can be added
+        Ensure recurring_expenses with valid paidBy values can be added
         """
         valid_expense_dict = self.VALID_RECURRING_EXPENSE_DICT.copy()
-        for valid_paid_by_val in [t.value for t in RecurringExpense.PaidBy]:
-            valid_expense_dict['paid_by'] = valid_paid_by_val
+        for valid_paidBy_val in [t.value for t in RecurringExpense.PaidBy]:
+            valid_expense_dict['paidBy'] = valid_paidBy_val
             with self.client:
                 response = self.client.post(
                         '/admin/recurring-expenses',
@@ -415,8 +418,8 @@ class TestAdminApiExpenses(BaseTestCase):
         than the start_date is given
         """
         invalid_expense_dict = self.VALID_RECURRING_EXPENSE_DICT.copy()
-        invalid_expense_dict['start_date'] = self.today
-        invalid_expense_dict['end_date'] = self.yesterday
+        invalid_expense_dict['startDate'] = self.today
+        invalid_expense_dict['endDate'] = self.yesterday
         with self.client:
             response = self.client.post(
                     '/admin/recurring-expenses',
@@ -431,7 +434,8 @@ class TestAdminApiExpenses(BaseTestCase):
 
     def test_get_single_recurring_expense(self):
         """Ensure get single RecurringExpense behaves correctly."""
-        expense = add_recurring_expense(**self.VALID_RECURRING_EXPENSE_DICT)
+        valid_expense_data = underscore_keys(self.VALID_RECURRING_EXPENSE_DICT)
+        expense = add_recurring_expense(**valid_expense_data)
         with self.client:
             url = f'/admin/recurring-expenses/{expense.id}'
             response = self.client.get(url)
@@ -444,9 +448,10 @@ class TestAdminApiExpenses(BaseTestCase):
     def test_get_single_recurring_expense_with_end_date(self):
         """Ensure get single RecurringExpense behaves correctly."""
         valid_expense_dict = self.VALID_RECURRING_EXPENSE_DICT.copy()
-        valid_expense_dict['start_date'] = self.yesterday
-        valid_expense_dict['end_date'] = self.today
-        expense = add_recurring_expense(**valid_expense_dict)
+        valid_expense_dict['startDate'] = self.yesterday
+        valid_expense_dict['endDate'] = self.today
+        valid_expense_data = underscore_keys(valid_expense_dict)
+        expense = add_recurring_expense(**valid_expense_data)
         with self.client:
             url = f'/admin/recurring-expenses/{expense.id}'
             response = self.client.get(url)
@@ -458,7 +463,8 @@ class TestAdminApiExpenses(BaseTestCase):
 
     def test_get_single_recurring_expense_no_id(self):
         """Ensure error thrown if no id provided"""
-        add_recurring_expense(**self.VALID_RECURRING_EXPENSE_DICT)
+        valid_expense_data = underscore_keys(self.VALID_RECURRING_EXPENSE_DICT)
+        add_recurring_expense(**valid_expense_data)
         with self.client:
             url = f'/admin/recurring-expenses/blah'
             response = self.client.get(url)
@@ -469,7 +475,8 @@ class TestAdminApiExpenses(BaseTestCase):
 
     def test_get_single_recurring_expense_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
-        add_recurring_expense(**self.VALID_RECURRING_EXPENSE_DICT)
+        valid_expense_data = underscore_keys(self.VALID_RECURRING_EXPENSE_DICT)
+        add_recurring_expense(**valid_expense_data)
         with self.client:
             response = self.client.get('/admin/recurring-expenses/9999')
             data = json.loads(response.data.decode())
@@ -485,19 +492,21 @@ class TestAdminApiExpenses(BaseTestCase):
         valid_expense_dict1['merchant'] = 'Merchant 1'
         valid_expense_dict1['description'] = 'Description 1'
         valid_expense_dict1['amount'] = 111.11
-        valid_expense_dict1['tax_deductible'] = False
-        valid_expense_dict1['start_date'] = self.yesterday
-        valid_expense_dict1['end_date'] = self.today
+        valid_expense_dict1['taxDeductible'] = False
+        valid_expense_dict1['startDate'] = self.yesterday
+        valid_expense_dict1['endDate'] = self.today
+        valid_expense_data1 = underscore_keys(valid_expense_dict1)
 
         # Create the second expense
         valid_expense_dict2 = self.VALID_RECURRING_EXPENSE_DICT.copy()
         valid_expense_dict2['merchant'] = 'Merchant 2'
         valid_expense_dict2['description'] = 'Description 2'
         valid_expense_dict2['amount'] = 222.22
+        valid_expense_data2 = underscore_keys(valid_expense_dict2)
 
         # Add them to the db
-        add_recurring_expense(**valid_expense_dict1)
-        add_recurring_expense(**valid_expense_dict2)
+        add_recurring_expense(**valid_expense_data1)
+        add_recurring_expense(**valid_expense_data2)
 
         with self.client:
             response = self.client.get('/admin/recurring-expenses')

@@ -81,8 +81,8 @@ class App extends Component {
 
     // prepare the forms
     const { formData } = this.state;
-    formData[formTypes.job].start_date = startDate;
-    formData[formTypes.job].end_date = endDate;
+    formData[formTypes.job].startDate = startDate;
+    formData[formTypes.job].endDate = endDate;
     formData[formTypes.oneTimeExpense].date = startDate;
 
     // If the user selects multiple days, just open the job form modal.

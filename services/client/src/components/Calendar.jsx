@@ -34,11 +34,11 @@ class Calendar extends Component {
   }
 
   getEvents() {
-    const [start_date, end_date] = this.getDateRange();
+    const [startDate, endDate] = this.getDateRange();
     axios.get(`${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`, {
       params: {
-        start_date,
-        end_date,
+        startDate,
+        endDate,
       },
       headers: {
         Authorization: `Bearer ${window.localStorage.getItem('authToken')}`,
@@ -99,8 +99,8 @@ function createBigCalendarEvents(events) {
       eventType: 'job',
       id: job.id,
       title: job.client,
-      start: datestringToDate(job.start_date),
-      end: datestringToDate(job.end_date),
+      start: datestringToDate(job.startDate),
+      end: datestringToDate(job.endDate),
       allDay: true,
     }
 
@@ -136,7 +136,7 @@ function getClassNamesForEvent(event) {
     classNames.push('expense-' + event.id);
   } else if (event.eventType === 'job') {
     classNames.push('job-event');
-    classNames.push('workedby-' + event.worked_by.toLowerCase());
+    classNames.push('workedby-' + event.workedBy.toLowerCase());
     classNames.push('job-' + event.id);
     if (!event.has_paid && event.end < new Date()) {
       classNames.push('has-not-paid');

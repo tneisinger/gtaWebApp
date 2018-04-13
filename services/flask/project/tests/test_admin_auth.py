@@ -19,7 +19,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                     'username': 'justatest',
                     'email': 'test@test.com',
                     'password': '123456',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json'
             )
@@ -39,7 +39,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                     'username': 'michael',
                     'email': 'test@test.com',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json',
             )
@@ -58,7 +58,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                     'username': 'test',
                     'email': 'test@test.com2',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json',
             )
@@ -87,7 +87,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'email': 'test@test.com',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json',
             )
@@ -103,7 +103,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'justatest',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json',
             )
@@ -119,7 +119,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'justatest',
                     'email': 'test@test.com',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json',
             )
@@ -136,7 +136,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json'
             )
@@ -156,7 +156,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json'
             )
@@ -175,7 +175,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json'
             )
@@ -199,7 +199,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json'
             )
@@ -234,7 +234,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json'
             )
@@ -271,7 +271,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json'
             )
@@ -290,7 +290,7 @@ class TestAdminAuthRoutes(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
 
         # The LONG TOKEN_EXPIRE constants should be used when the user logs in
-        # with is_private_device set to true, so if we set the SHORT constants
+        # with isPrivateDevice set to true, so if we set the SHORT constants
         # to an invalid value, we should still get a good status response.
         current_app.config['TOKEN_EXPIRE_SECONDS_SHORT'] = -1
         current_app.config['TOKEN_EXPIRE_DAYS_SHORT'] = -1
@@ -300,7 +300,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'password': 'test',
-                    'is_private_device': True
+                    'isPrivateDevice': True
                 }),
                 content_type='application/json'
             )
@@ -320,7 +320,7 @@ class TestAdminAuthRoutes(BaseTestCase):
         add_user('test', 'test@test.com', 'test')
 
         # The SHORT TOKEN_EXPIRE constants should be used when the user logs in
-        # with is_private_device set to false, so if we set the LONG constants
+        # with isPrivateDevice set to false, so if we set the LONG constants
         # to an invalid value, we should still get a good status response.
         current_app.config['TOKEN_EXPIRE_SECONDS_LONG'] = -1
         current_app.config['TOKEN_EXPIRE_DAYS_LONG'] = -1
@@ -330,7 +330,7 @@ class TestAdminAuthRoutes(BaseTestCase):
                 data=json.dumps({
                     'username': 'test',
                     'password': 'test',
-                    'is_private_device': False
+                    'isPrivateDevice': False
                 }),
                 content_type='application/json'
             )

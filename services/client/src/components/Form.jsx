@@ -22,23 +22,23 @@ export const UnknownFormTypeException = message => {
 const emptyJobFormData = {
   client: '',
   description: '',
-  amount_paid: '',
-  paid_to: 'Gladtime Audio',
-  worked_by: 'Meghan',
+  amountPaid: '',
+  paidTo: 'Gladtime Audio',
+  workedBy: 'Meghan',
   confirmation: 'Confirmed',
-  has_paid: false,
-  start_date: '',
-  end_date: '',
+  hasPaid: false,
+  startDate: '',
+  endDate: '',
 };
 
 // Define the appropriate default values for an empty oneTimeExpense form
 const emptyOneTimeExpenseFormData = {
   merchant: '',
   description: '',
-  amount_spent: '',
+  amountSpent: '',
   date: '',
-  paid_by: 'Gladtime Audio',
-  tax_deductible: false,
+  paidBy: 'Gladtime Audio',
+  taxDeductible: false,
   category: 'Business Equipment',
 };
 
@@ -46,7 +46,7 @@ const emptyOneTimeExpenseFormData = {
 const emptyLoginFormData = {
   username: '',
   password: '',
-  private_device: false,
+  isPrivateDevice: false,
 };
 
 // Define a defaultFormData object.  This is used as the default formData
@@ -95,26 +95,26 @@ const Form = (props) => {
 
           <div className="form-group">
             <input
-              name="amount_paid"
+              name="amountPaid"
               className="form-control input-lg"
               type="number"
               placeholder="Amount Paid"
               required
-              value={data.amount_paid}
+              value={data.amountPaid}
               onChange={props.onFormChange}
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="paid_to">
+            <label htmlFor="paidTo">
               Paid To
               <select
-                id="paid_to"
-                name="paid_to"
+                id="paidTo"
+                name="paidTo"
                 className="form-control input-lg"
                 placeholder="Paid To"
                 required
-                value={data.paid_to}
+                value={data.paidTo}
                 onChange={props.onFormChange}
               >
                 <option value="Gladtime Audio">Gladtime Audio</option>
@@ -128,14 +128,14 @@ const Form = (props) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="worked_by">
+            <label htmlFor="workedBy">
               Worked By
               <select
-                id="worked_by"
-                name="worked_by"
+                id="workedBy"
+                name="workedBy"
                 className="form-control input-lg"
                 required
-                value={data.worked_by}
+                value={data.workedBy}
                 onChange={props.onFormChange}
               >
                 <option value="Meghan">Meghan</option>
@@ -163,44 +163,44 @@ const Form = (props) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="has_paid">
+            <label htmlFor="hasPaid">
               Has Paid
               <input
-                id="has_paid"
-                name="has_paid"
+                id="hasPaid"
+                name="hasPaid"
                 className="form-check-input checkbox-lg"
                 type="checkbox"
-                value={data.has_paid}
+                value={data.hasPaid}
                 onChange={props.onFormChange}
               />
             </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="start_date">
+            <label htmlFor="startDate">
               Start Date
               <input
-                id="start_date"
-                name="start_date"
+                id="startDate"
+                name="startDate"
                 className="form-control input-lg"
                 type="date"
                 required
-                value={data.start_date}
+                value={data.startDate}
                 onChange={props.onFormChange}
               />
             </label>
           </div>
 
           <div className="form-group">
-            <label htmlFor="end_date">
+            <label htmlFor="endDate">
               End Date
               <input
-                id="end_date"
-                name="end_date"
+                id="endDate"
+                name="endDate"
                 className="form-control input-lg"
                 type="date"
                 required
-                value={data.end_date}
+                value={data.endDate}
                 onChange={props.onFormChange}
               />
             </label>
@@ -238,12 +238,12 @@ const Form = (props) => {
 
           <div className="form-group">
             <input
-              name="amount_spent"
+              name="amountSpent"
               className="form-control input-lg"
               type="number"
               placeholder="Amount Spent"
               required
-              value={data.amount_spent}
+              value={data.amountSpent}
               onChange={props.onFormChange}
             />
           </div>
@@ -264,14 +264,14 @@ const Form = (props) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="paid_by">
+            <label htmlFor="paidBy">
               Paid By
               <select
-                id="paid_by"
-                name="paid_by"
+                id="paidBy"
+                name="paidBy"
                 className="form-control input-lg"
                 required
-                value={data.paid_by}
+                value={data.paidBy}
                 onChange={props.onFormChange}
               >
                 <option value="Gladtime Audio">Gladtime Audio</option>
@@ -285,14 +285,14 @@ const Form = (props) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="tax_deductible">
+            <label htmlFor="taxDeductible">
               Tax Deductible
               <input
-                id="tax_deductible"
-                name="tax_deductible"
+                id="taxDeductible"
+                name="taxDeductible"
                 className="form-check-input checkbox-lg"
                 type="checkbox"
-                value={data.tax_deductible}
+                value={data.taxDeductible}
                 onChange={props.onFormChange}
               />
             </label>
@@ -349,13 +349,13 @@ const Form = (props) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="private_device">
+            <label htmlFor="isPrivateDevice">
               <input
-                id="private_device"
-                name="private_device"
+                id="isPrivateDevice"
+                name="isPrivateDevice"
                 className="form-check-input checkbox-lg"
                 type="checkbox"
-                value={data.private_device}
+                value={data.isPrivateDevice}
                 onChange={props.onFormChange}
               />
               Keep me logged in. This is a private device.
@@ -373,27 +373,27 @@ const formDataShape = {
   jobForm: PropTypes.shape({
     client: PropTypes.string,
     description: PropTypes.string,
-    amount_paid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    paid_to: PropTypes.string,
-    worked_by: PropTypes.string,
+    amountPaid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    paidTo: PropTypes.string,
+    workedBy: PropTypes.string,
     confirmation: PropTypes.string,
-    has_paid: PropTypes.bool,
-    start_date: PropTypes.string,
-    end_date: PropTypes.string,
+    hasPaid: PropTypes.bool,
+    startDate: PropTypes.string,
+    endDate: PropTypes.string,
   }),
   oneTimeExpenseForm: PropTypes.shape({
     merchant: PropTypes.string,
     description: PropTypes.string,
-    amount_spent: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    amountSpent: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     date: PropTypes.string,
-    paid_by: PropTypes.string,
-    tax_deductible: PropTypes.bool,
+    paidBy: PropTypes.string,
+    taxDeductible: PropTypes.bool,
     category: PropTypes.string,
   }),
   loginForm: PropTypes.shape({
     username: PropTypes.string,
     password: PropTypes.string,
-    private_device: PropTypes.bool,
+    isPrivateDevice: PropTypes.bool,
   }),
 };
 

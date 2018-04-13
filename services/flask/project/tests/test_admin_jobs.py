@@ -57,13 +57,13 @@ class TestAdminApiJobs(BaseTestCase):
                 data=json.dumps({
                     'client': 'Test Client',
                     'description': 'Test Description',
-                    'amount_paid': 666.01,
-                    'paid_to': self.VALID_PAID_TO,
-                    'worked_by': self.VALID_WORKED_BY,
+                    'amountPaid': 666.01,
+                    'paidTo': self.VALID_PAID_TO,
+                    'workedBy': self.VALID_WORKED_BY,
                     'confirmation': self.VALID_CONFIRMATION,
-                    'has_paid': False,
-                    'start_date': self.today,
-                    'end_date': self.today
+                    'hasPaid': False,
+                    'startDate': self.today,
+                    'endDate': self.today
                 }),
                 headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
@@ -73,12 +73,12 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertIn('Test Client job was added!', data['message'])
             self.assertIn('success', data['status'])
 
-    def test_add_jobs_with_valid_paid_to_vals(self):
-        """Ensure jobs with valid paid_to values can be added to the db"""
+    def test_add_jobs_with_valid_paidTo_vals(self):
+        """Ensure jobs with valid paidTo values can be added to the db"""
         # Add a user to the db
         add_user(**self.VALID_USER_DICT1)
 
-        for valid_paid_to_val in [t.value for t in Job.PaidTo]:
+        for valid_paidTo_val in [t.value for t in Job.PaidTo]:
             with self.client:
 
                 # login as user
@@ -97,27 +97,27 @@ class TestAdminApiJobs(BaseTestCase):
                 add_job_response = self.client.post(
                     '/admin/jobs',
                     data=json.dumps({
-                        'client': valid_paid_to_val,
+                        'client': valid_paidTo_val,
                         'description': 'Test Description',
-                        'amount_paid': 666.01,
-                        'paid_to': valid_paid_to_val,
-                        'worked_by': self.VALID_WORKED_BY,
+                        'amountPaid': 666.01,
+                        'paidTo': valid_paidTo_val,
+                        'workedBy': self.VALID_WORKED_BY,
                         'confirmation': self.VALID_CONFIRMATION,
-                        'has_paid': True,
-                        'start_date': self.today,
-                        'end_date': self.today
+                        'hasPaid': True,
+                        'startDate': self.today,
+                        'endDate': self.today
                     }),
                     headers={'Authorization': f'Bearer {token}'},
                     content_type='application/json',
                 )
                 data = json.loads(add_job_response.data.decode())
                 self.assertEqual(add_job_response.status_code, 201)
-                self.assertIn(valid_paid_to_val + ' job was added!',
+                self.assertIn(valid_paidTo_val + ' job was added!',
                               data['message'])
                 self.assertIn('success', data['status'])
 
-    def test_add_job_with_invalid_paid_to_val(self):
-        """Ensure a job with an invalid paid_to value cannot be added."""
+    def test_add_job_with_invalid_paidTo_val(self):
+        """Ensure a job with an invalid paidTo value cannot be added."""
         # Add a user to the db
         add_user(**self.VALID_USER_DICT1)
 
@@ -140,31 +140,31 @@ class TestAdminApiJobs(BaseTestCase):
                 data=json.dumps({
                     'client': 'Test Client',
                     'description': 'Test Description',
-                    'amount_paid': 666.01,
-                    'paid_to': 'INVALID!!!!',
-                    'worked_by': self.VALID_WORKED_BY,
+                    'amountPaid': 666.01,
+                    'paidTo': 'INVALID!!!!',
+                    'workedBy': self.VALID_WORKED_BY,
                     'confirmation': self.VALID_CONFIRMATION,
-                    'has_paid': False,
-                    'start_date': self.today,
-                    'end_date': self.today
+                    'hasPaid': False,
+                    'startDate': self.today,
+                    'endDate': self.today
                 }),
                 headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
             data = json.loads(add_job_response.data.decode())
             self.assertEqual(add_job_response.status_code, 400)
-            err_msg = ("Invalid 'paid_to' value. " +
-                       "The valid values for 'paid_to' are: " +
+            err_msg = ("Invalid 'paidTo' value. " +
+                       "The valid values for 'paidTo' are: " +
                        ', '.join([f"'{t.value}'" for t in Job.PaidTo]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
 
-    def test_add_jobs_with_valid_worked_by_vals(self):
-        """Ensure jobs with valid worked_by values can be added to the db"""
+    def test_add_jobs_with_valid_workedBy_vals(self):
+        """Ensure jobs with valid workedBy values can be added to the db"""
         # Add a user to the db
         add_user(**self.VALID_USER_DICT1)
 
-        for valid_worked_by_val in [t.value for t in Job.WorkedBy]:
+        for valid_workedBy_val in [t.value for t in Job.WorkedBy]:
             with self.client:
                 # login as user
                 login_response = self.client.post(
@@ -182,26 +182,26 @@ class TestAdminApiJobs(BaseTestCase):
                 add_job_response = self.client.post(
                     '/admin/jobs',
                     data=json.dumps({
-                        'client': valid_worked_by_val,
+                        'client': valid_workedBy_val,
                         'description': 'Test Description',
-                        'amount_paid': 666.01,
-                        'paid_to': self.VALID_PAID_TO,
-                        'worked_by': valid_worked_by_val,
+                        'amountPaid': 666.01,
+                        'paidTo': self.VALID_PAID_TO,
+                        'workedBy': valid_workedBy_val,
                         'confirmation': self.VALID_CONFIRMATION,
-                        'has_paid': False,
-                        'start_date': self.today,
-                        'end_date': self.today
+                        'hasPaid': False,
+                        'startDate': self.today,
+                        'endDate': self.today
                     }),
                     headers={'Authorization': f'Bearer {token}'},
                     content_type='application/json',
                 )
                 data = json.loads(add_job_response.data.decode())
                 self.assertEqual(add_job_response.status_code, 201)
-                self.assertIn(valid_worked_by_val + ' job was added!',
+                self.assertIn(valid_workedBy_val + ' job was added!',
                               data['message'])
                 self.assertIn('success', data['status'])
 
-    def test_add_job_with_invalid_worked_by_val(self):
+    def test_add_job_with_invalid_workedBy_val(self):
         """Ensure a job with an invalid confirmation cannot be added."""
         # Add a user to the db
         add_user(**self.VALID_USER_DICT1)
@@ -225,21 +225,21 @@ class TestAdminApiJobs(BaseTestCase):
                 data=json.dumps({
                     'client': 'Test Client',
                     'description': 'Test Description',
-                    'amount_paid': 666.01,
-                    'paid_to': self.VALID_PAID_TO,
-                    'worked_by': 'INVALID!!!',
+                    'amountPaid': 666.01,
+                    'paidTo': self.VALID_PAID_TO,
+                    'workedBy': 'INVALID!!!',
                     'confirmation': self.VALID_CONFIRMATION,
-                    'has_paid': False,
-                    'start_date': self.today,
-                    'end_date': self.today
+                    'hasPaid': False,
+                    'startDate': self.today,
+                    'endDate': self.today
                 }),
                 headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
             data = json.loads(add_job_response.data.decode())
             self.assertEqual(add_job_response.status_code, 400)
-            err_msg = ("Invalid 'worked_by' value. " +
-                       "The valid values for 'worked_by' are: " +
+            err_msg = ("Invalid 'workedBy' value. " +
+                       "The valid values for 'workedBy' are: " +
                        ', '.join([f"'{t.value}'" for t in Job.WorkedBy]))
             self.assertEqual(err_msg, data['message'])
             self.assertIn('fail', data['status'])
@@ -269,13 +269,13 @@ class TestAdminApiJobs(BaseTestCase):
                     data=json.dumps({
                         'client': 'Client ' + valid_confirmation_val,
                         'description': 'Test Description',
-                        'amount_paid': 666.01,
-                        'paid_to': self.VALID_PAID_TO,
-                        'worked_by': self.VALID_WORKED_BY,
+                        'amountPaid': 666.01,
+                        'paidTo': self.VALID_PAID_TO,
+                        'workedBy': self.VALID_WORKED_BY,
                         'confirmation': valid_confirmation_val,
-                        'has_paid': False,
-                        'start_date': self.today,
-                        'end_date': self.today
+                        'hasPaid': False,
+                        'startDate': self.today,
+                        'endDate': self.today
                     }),
                     headers={'Authorization': f'Bearer {token}'},
                     content_type='application/json',
@@ -310,13 +310,13 @@ class TestAdminApiJobs(BaseTestCase):
                 data=json.dumps({
                     'client': 'Test Client',
                     'description': 'Test Description',
-                    'amount_paid': 666.01,
-                    'paid_to': self.VALID_PAID_TO,
-                    'worked_by': self.VALID_WORKED_BY,
+                    'amountPaid': 666.01,
+                    'paidTo': self.VALID_PAID_TO,
+                    'workedBy': self.VALID_WORKED_BY,
                     'confirmation': 'INVALID!!!!',
-                    'has_paid': False,
-                    'start_date': self.today,
-                    'end_date': self.today
+                    'hasPaid': False,
+                    'startDate': self.today,
+                    'endDate': self.today
                 }),
                 headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
@@ -384,13 +384,13 @@ class TestAdminApiJobs(BaseTestCase):
                 '/admin/jobs',
                 data=json.dumps({
                     'description': 'Test Description',
-                    'amount_paid': 666.01,
-                    'paid_to': self.VALID_PAID_TO,
-                    'worked_by': self.VALID_WORKED_BY,
+                    'amountPaid': 666.01,
+                    'paidTo': self.VALID_PAID_TO,
+                    'workedBy': self.VALID_WORKED_BY,
                     'confirmation': self.VALID_CONFIRMATION,
-                    'has_paid': False,
-                    'start_date': self.today,
-                    'end_date': self.today
+                    'hasPaid': False,
+                    'startDate': self.today,
+                    'endDate': self.today
                 }),
                 headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
@@ -400,8 +400,8 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertIn('Invalid payload.', data['message'])
             self.assertIn('fail', data['status'])
 
-    def test_add_job_amount_paid_not_a_number(self):
-        """Ensure error thrown if amount_paid is a non-numeric string"""
+    def test_add_job_amountPaid_not_a_number(self):
+        """Ensure error thrown if amountPaid is a non-numeric string"""
         # Add a user to the db
         add_user(**self.VALID_USER_DICT1)
 
@@ -424,24 +424,24 @@ class TestAdminApiJobs(BaseTestCase):
                 data=json.dumps({
                     'client': 'Test Client',
                     'description': 'Test Description',
-                    'amount_paid': 'error!',
-                    'paid_to': self.VALID_PAID_TO,
-                    'worked_by': self.VALID_WORKED_BY,
+                    'amountPaid': 'error!',
+                    'paidTo': self.VALID_PAID_TO,
+                    'workedBy': self.VALID_WORKED_BY,
                     'confirmation': self.VALID_CONFIRMATION,
-                    'has_paid': False,
-                    'start_date': self.today,
-                    'end_date': self.today
+                    'hasPaid': False,
+                    'startDate': self.today,
+                    'endDate': self.today
                 }),
                 headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
             data = json.loads(add_job_response.data.decode())
             self.assertEqual(add_job_response.status_code, 400)
-            self.assertIn("'amount_paid' must be a number.", data['message'])
+            self.assertIn("'amountPaid' must be a number.", data['message'])
             self.assertIn('fail', data['status'])
 
-    def test_add_job_start_date_later_than_end_date(self):
-        """Ensure error is thrown if start_date later than end_date."""
+    def test_add_job_startDate_later_than_endDate(self):
+        """Ensure error is thrown if startDate later than endDate."""
         # Add a user to the db
         add_user(**self.VALID_USER_DICT1)
 
@@ -464,20 +464,20 @@ class TestAdminApiJobs(BaseTestCase):
                 data=json.dumps({
                     'client': 'Test Client',
                     'description': 'Test Description',
-                    'amount_paid': 666.01,
-                    'paid_to': self.VALID_PAID_TO,
-                    'worked_by': self.VALID_WORKED_BY,
+                    'amountPaid': 666.01,
+                    'paidTo': self.VALID_PAID_TO,
+                    'workedBy': self.VALID_WORKED_BY,
                     'confirmation': self.VALID_CONFIRMATION,
-                    'has_paid': False,
-                    'start_date': self.today,
-                    'end_date': self.yesterday
+                    'hasPaid': False,
+                    'startDate': self.today,
+                    'endDate': self.yesterday
                 }),
                 headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
             data = json.loads(add_job_response.data.decode())
             self.assertEqual(add_job_response.status_code, 400)
-            self.assertIn('end_date must be equal to', data['message'])
+            self.assertIn('endDate must be equal to', data['message'])
             self.assertIn('fail', data['status'])
 
     def test_add_job_no_auth_token(self):
@@ -492,13 +492,13 @@ class TestAdminApiJobs(BaseTestCase):
                 data=json.dumps({
                     'client': 'Test Client',
                     'description': 'Test Description',
-                    'amount_paid': 666.01,
-                    'paid_to': self.VALID_PAID_TO,
-                    'worked_by': self.VALID_WORKED_BY,
+                    'amountPaid': 666.01,
+                    'paidTo': self.VALID_PAID_TO,
+                    'workedBy': self.VALID_WORKED_BY,
                     'confirmation': self.VALID_CONFIRMATION,
-                    'has_paid': False,
-                    'start_date': self.today,
-                    'end_date': self.today
+                    'hasPaid': False,
+                    'startDate': self.today,
+                    'endDate': self.today
                 }),
                 content_type='application/json',
             )
@@ -525,14 +525,14 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn('Test Client', data['data']['client'])
             self.assertIn('Test Description', data['data']['description'])
-            self.assertEqual(666.01, data['data']['amount_paid'])
-            self.assertEqual(self.VALID_PAID_TO, data['data']['paid_to'])
-            self.assertEqual(self.VALID_WORKED_BY, data['data']['worked_by'])
+            self.assertEqual(666.01, data['data']['amountPaid'])
+            self.assertEqual(self.VALID_PAID_TO, data['data']['paidTo'])
+            self.assertEqual(self.VALID_WORKED_BY, data['data']['workedBy'])
             self.assertEqual(self.VALID_CONFIRMATION,
                              data['data']['confirmation'])
-            self.assertFalse(data['data']['has_paid'])
-            self.assertIn(self.today, data['data']['start_date'])
-            self.assertIn(self.today, data['data']['end_date'])
+            self.assertFalse(data['data']['hasPaid'])
+            self.assertIn(self.today, data['data']['startDate'])
+            self.assertIn(self.today, data['data']['endDate'])
             self.assertIn('success', data['status'])
 
     def test_get_single_job_no_id(self):
@@ -586,23 +586,23 @@ class TestAdminApiJobs(BaseTestCase):
             # Assertions for job 1
             self.assertIn('Client 1', jobs[0]['client'])
             self.assertIn('Description 1', jobs[0]['description'])
-            self.assertEqual(111.11, jobs[0]['amount_paid'])
-            self.assertEqual(self.VALID_PAID_TO, jobs[0]['paid_to'])
-            self.assertEqual(self.VALID_WORKED_BY, jobs[0]['worked_by'])
+            self.assertEqual(111.11, jobs[0]['amountPaid'])
+            self.assertEqual(self.VALID_PAID_TO, jobs[0]['paidTo'])
+            self.assertEqual(self.VALID_WORKED_BY, jobs[0]['workedBy'])
             self.assertEqual(self.VALID_CONFIRMATION, jobs[0]['confirmation'])
-            self.assertFalse(jobs[0]['has_paid'])
-            self.assertEqual(self.yesterday, jobs[0]['start_date'])
-            self.assertEqual(self.yesterday, jobs[0]['end_date'])
+            self.assertFalse(jobs[0]['hasPaid'])
+            self.assertEqual(self.yesterday, jobs[0]['startDate'])
+            self.assertEqual(self.yesterday, jobs[0]['endDate'])
             # Assertions for job 2
             self.assertIn('Client 2', jobs[1]['client'])
             self.assertIn('Description 2', jobs[1]['description'])
-            self.assertEqual(222.22, jobs[1]['amount_paid'])
-            self.assertEqual(self.VALID_PAID_TO, jobs[1]['paid_to'])
-            self.assertEqual(self.VALID_WORKED_BY, jobs[1]['worked_by'])
+            self.assertEqual(222.22, jobs[1]['amountPaid'])
+            self.assertEqual(self.VALID_PAID_TO, jobs[1]['paidTo'])
+            self.assertEqual(self.VALID_WORKED_BY, jobs[1]['workedBy'])
             self.assertEqual(self.VALID_CONFIRMATION, jobs[1]['confirmation'])
-            self.assertTrue(jobs[1]['has_paid'])
-            self.assertEqual(self.yesterday, jobs[1]['start_date'])
-            self.assertEqual(self.today, jobs[1]['end_date'])
+            self.assertTrue(jobs[1]['hasPaid'])
+            self.assertEqual(self.yesterday, jobs[1]['startDate'])
+            self.assertEqual(self.today, jobs[1]['endDate'])
 
 
 if __name__ == '__main__':

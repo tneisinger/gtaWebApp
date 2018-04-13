@@ -124,13 +124,13 @@ class Job(db.Model):
             'id': self.id,
             'client': self.client,
             'description': self.description,
-            'amount_paid': self.amount_paid,
-            'paid_to': self.paid_to.value,
-            'worked_by': self.worked_by.value,
+            'amountPaid': self.amount_paid,
+            'paidTo': self.paid_to.value,
+            'workedBy': self.worked_by.value,
             'confirmation': self.confirmation.value,
-            'has_paid': self.has_paid,
-            'start_date': self.start_date.isoformat(),
-            'end_date': self.end_date.isoformat()
+            'hasPaid': self.has_paid,
+            'startDate': self.start_date.isoformat(),
+            'endDate': self.end_date.isoformat()
         }
 
 
@@ -177,10 +177,10 @@ class OneTimeExpense(db.Model):
             'id': self.id,
             'merchant': self.merchant,
             'description': self.description,
-            'amount_spent': self.amount_spent,
+            'amountSpent': self.amount_spent,
             'date': self.date.isoformat(),
-            'paid_by': self.paid_by.value,
-            'tax_deductible': self.tax_deductible,
+            'paidBy': self.paid_by.value,
+            'taxDeductible': self.tax_deductible,
             'category': self.category.value,
         }
 
@@ -240,12 +240,12 @@ class RecurringExpense(db.Model):
             'merchant': self.merchant,
             'description': self.description,
             'amount': self.amount,
-            'tax_deductible': self.tax_deductible,
+            'taxDeductible': self.tax_deductible,
             'category': self.category.value,
             'recurrence': self.recurrence.value,
-            'paid_by': self.paid_by.value,
-            'start_date': self.start_date.isoformat(),
+            'paidBy': self.paid_by.value,
+            'startDate': self.start_date.isoformat(),
         }
         if self.end_date:
-            json_object['end_date'] = self.end_date.isoformat()
+            json_object['endDate'] = self.end_date.isoformat()
         return json_object

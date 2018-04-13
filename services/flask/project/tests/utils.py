@@ -1,5 +1,5 @@
 # services/flask/project/tests/utils.py
-
+import re
 
 from project import db
 from project.admin.models import User, Job, OneTimeExpense, RecurringExpense
@@ -39,3 +39,17 @@ def add_recurring_expense(merchant, description, amount, tax_deductible,
     db.session.add(expense)
     db.session.commit()
     return expense
+
+
+# Given a dictionary, return an identical dictionary, but with all camelCased
+# keys changed to underscored keys
+def underscore_keys(inputDict):
+    outputDict = {}
+    for key, value in inputDict.items():
+        outputDict[camelcase_to_underscore(key)] = value
+    return outputDict
+
+
+def camelcase_to_underscore(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
