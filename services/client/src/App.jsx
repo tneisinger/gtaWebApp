@@ -55,7 +55,6 @@ class App extends Component {
   }
 
   logout() {
-    console.log('running logout method');
     window.localStorage.clear();
     this.setState({
       userLoggedIn: false,
@@ -63,13 +62,13 @@ class App extends Component {
     });
   }
 
-  setLogoutTimer(minutes, overwriteOldTimer) {
-    let logoutTime = window.localStorage.getItem('logoutTime');
-    if (!logoutTime || overwriteOldTimer) {
-      logoutTime = moment(new Date()).add(minutes, 'm').toDate();
-      window.localStorage.setItem('logoutTime', logoutTime);
+  // Set a timer to automatically logout at the given logoutTime
+  setLogoutTimer(logoutTime) {
+    const timeFromNow = logoutTime.getTime() - (new Date()).getTime();
+    // If the logout time is less than an hour away, set the logout timer
+    if (timeFromNow < 3600000) {
+      runCallbackAt(logoutTime, this.logout);
     }
-    runCallbackAt(logoutTime, this.logout);
   }
 
   onAuthBtnClick() {
@@ -182,7 +181,9 @@ class App extends Component {
 
         // If this is a public device, set a timer to logout after 10 minutes
         if (!data.isPrivateDevice) {
-          this.setLogoutTimer(10, true);
+          const authExpireTime = new Date(response.data.expiration);
+          console.log(response);
+          this.setLogoutTimer(authExpireTime);
         }
 
         // Save the authToken and declare the user logged in
@@ -280,6 +281,11 @@ class App extends Component {
         },
       })
         .then((response) => {
+          // Automatically log out when the token expires
+          const authExpireTime = new Date(response.data.expiration);
+          this.setLogoutTimer(authExpireTime);
+
+          // Declare the user Logged in
           this.setState({
             userLoggedIn: true,
             username: response.data.data.username,

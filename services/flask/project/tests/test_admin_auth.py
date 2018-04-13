@@ -2,6 +2,8 @@
 
 import json
 import unittest
+import datetime
+from dateutil import parser
 
 from flask import current_app
 
@@ -27,6 +29,8 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Successfully registered.')
             self.assertTrue(data['auth_token'])
+            exp_datetime = parser.parse(data['expiration'])
+            self.assertTrue(isinstance(exp_datetime, datetime.datetime))
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
 
@@ -144,6 +148,8 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertEqual(data['status'], 'success')
             self.assertEqual(data['message'], 'Successfully logged in.')
             self.assertTrue(data['auth_token'])
+            exp_datetime = parser.parse(data['expiration'])
+            self.assertTrue(isinstance(exp_datetime, datetime.datetime))
             self.assertTrue(response.content_type == 'application/json')
             self.assertTrue(data['user'])
             self.assertEqual(data['user']['username'], 'test')
@@ -248,6 +254,8 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertTrue(data['data'] is not None)
             self.assertTrue(data['data']['username'] == 'test')
             self.assertTrue(data['data']['email'] == 'test@test.com')
+            exp_datetime = parser.parse(data['expiration'])
+            self.assertTrue(isinstance(exp_datetime, datetime.datetime))
             self.assertEqual(response.status_code, 200)
 
     def test_invalid_status(self):
@@ -344,6 +352,8 @@ class TestAdminAuthRoutes(BaseTestCase):
             self.assertTrue(data['data'] is not None)
             self.assertTrue(data['data']['username'] == 'test')
             self.assertTrue(data['data']['email'] == 'test@test.com')
+            exp_datetime = parser.parse(data['expiration'])
+            self.assertTrue(isinstance(exp_datetime, datetime.datetime))
             self.assertEqual(response.status_code, 200)
 
 

@@ -49,11 +49,11 @@ class User(db.Model):
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
-            return jwt.encode(
-                payload,
-                current_app.config.get('SECRET_KEY'),
-                algorithm='HS256'
-            )
+
+            auth_token = jwt.encode(payload,
+                                    current_app.config.get('SECRET_KEY'),
+                                    algorithm='HS256')
+            return (auth_token, exp)
         except Exception as e:
             return e
 
@@ -65,11 +65,12 @@ class User(db.Model):
         try:
             payload = jwt.decode(
                 auth_token, current_app.config.get('SECRET_KEY'))
-            return payload['sub']
+            expire_time = datetime.datetime.fromtimestamp(payload['exp'])
+            return (payload['sub'], expire_time)
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
+            return ('Signature expired. Please log in again.', None)
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.'
+            return ('Invalid token. Please log in again.', None)
 
 
 class Job(db.Model):

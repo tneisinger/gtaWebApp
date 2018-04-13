@@ -1,6 +1,7 @@
 # services/flask/project/tests/test_admin_model.py
 
 import unittest
+import datetime
 
 from sqlalchemy.exc import IntegrityError
 
@@ -49,19 +50,22 @@ class TestUserModel(BaseTestCase):
 
     def test_encode_auth_token_private_device(self):
         user = add_user('justatest', 'test@test.com', 'test')
-        auth_token = user.encode_auth_token(user.id, is_private_device=True)
-        self.assertTrue(isinstance(auth_token, bytes))
+        token, exp = user.encode_auth_token(user.id, is_private_device=True)
+        self.assertTrue(isinstance(token, bytes))
+        self.assertTrue(isinstance(exp, datetime.datetime))
 
     def test_encode_auth_token_public_device(self):
         user = add_user('justatest', 'test@test.com', 'test')
-        auth_token = user.encode_auth_token(user.id, is_private_device=False)
-        self.assertTrue(isinstance(auth_token, bytes))
+        token, exp = user.encode_auth_token(user.id, is_private_device=False)
+        self.assertTrue(isinstance(token, bytes))
+        self.assertTrue(isinstance(exp, datetime.datetime))
 
     def test_decode_auth_token(self):
         user = add_user('justatest', 'test@test.com', 'test')
-        auth_token = user.encode_auth_token(user.id, is_private_device=True)
-        self.assertTrue(isinstance(auth_token, bytes))
-        self.assertEqual(User.decode_auth_token(auth_token), user.id)
+        token, exp = user.encode_auth_token(user.id, is_private_device=True)
+        self.assertTrue(isinstance(token, bytes))
+        self.assertEqual(User.decode_auth_token(token)[0], user.id)
+        self.assertTrue(isinstance(exp, datetime.datetime))
 
 
 if __name__ == '__main__':

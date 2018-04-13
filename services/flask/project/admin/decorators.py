@@ -26,15 +26,15 @@ class users_only(object):
             auth_header = request.headers.get('Authorization')
             if auth_header:
                 auth_token = auth_header.split(' ')[1]
-                resp = User.decode_auth_token(auth_token)
+                decode_response, _ = User.decode_auth_token(auth_token)
 
                 # If the token is invalid, deny access
-                if not isinstance(resp, int):
+                if not isinstance(decode_response, int):
                     response_object['message'] = 'Auth token invalid.'
                     return jsonify(response_object), 401
 
                 # If the token is valid, allow access
-                user = User.query.filter_by(id=resp).first()
+                user = User.query.filter_by(id=decode_response).first()
                 if self.pass_user:
                     return route_function(user)
                 else:

@@ -405,10 +405,11 @@ def register_user():
             db.session.add(new_user)
             db.session.commit()
             # generate auth token
-            auth_token = new_user.encode_auth_token(new_user.id,
-                                                    is_private_device)
+            (auth_token, exp) = new_user.encode_auth_token(new_user.id,
+                                                           is_private_device)
             response_object['status'] = 'success'
             response_object['message'] = 'Successfully registered.'
+            response_object['expiration'] = exp
             response_object['auth_token'] = auth_token.decode()
             return jsonify(response_object), 201
         else:
@@ -437,13 +438,15 @@ def login_user():
         # fetch the user data
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
-            auth_token = user.encode_auth_token(user.id, is_private_device)
+            (auth_token, exp) = user.encode_auth_token(user.id,
+                                                       is_private_device)
             if auth_token:
                 response_object['user'] = {
                         'username': user.username
                 }
                 response_object['status'] = 'success'
                 response_object['message'] = 'Successfully logged in.'
+                response_object['expiration'] = exp
                 response_object['auth_token'] = auth_token.decode()
                 return jsonify(response_object), 200
         else:
@@ -464,13 +467,13 @@ def logout_user():
     }
     if auth_header:
         auth_token = auth_header.split(' ')[1]
-        resp = User.decode_auth_token(auth_token)
-        if not isinstance(resp, str):
+        decode_response, _ = User.decode_auth_token(auth_token)
+        if not isinstance(decode_response, str):
             response_object['status'] = 'success'
             response_object['message'] = 'Successfully logged out.'
             return jsonify(response_object), 200
         else:
-            response_object['message'] = resp
+            response_object['message'] = decode_response
             return jsonify(response_object), 401
     else:
         return jsonify(response_object), 403
@@ -486,14 +489,15 @@ def get_user_status():
     }
     if auth_header:
         auth_token = auth_header.split(' ')[1]
-        resp = User.decode_auth_token(auth_token)
-        if not isinstance(resp, str):
-            user = User.query.filter_by(id=resp).first()
+        decode_response, exp = User.decode_auth_token(auth_token)
+        if not isinstance(decode_response, str):
+            user = User.query.filter_by(id=decode_response).first()
             response_object['status'] = 'success'
             response_object['message'] = 'Success.'
+            response_object['expiration'] = exp
             response_object['data'] = user.to_json()
             return jsonify(response_object), 200
-        response_object['message'] = resp
+        response_object['message'] = decode_response
         return jsonify(response_object), 401
     else:
         return jsonify(response_object), 401
