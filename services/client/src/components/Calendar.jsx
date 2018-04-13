@@ -73,11 +73,12 @@ class Calendar extends Component {
   render() {
     return (
       <BigCalendar
+        selectable
+        onSelectEvent={event => console.log(event)}
         defaultDate={this.props.defaultDate}
         onNavigate={this.onNavigate}
         events={this.props.events}
         components={{ toolbar: CalendarToolbar }}
-        selectable={true} // eslint-disable-line react/jsx-boolean-value
         views={['month']}
         onSelectSlot={this.props.onSelectSlot}
         eventPropGetter={this.setEventProps}
