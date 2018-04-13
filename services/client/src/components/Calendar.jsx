@@ -53,7 +53,7 @@ class Calendar extends Component {
 
   setEventProps(event, start, end, isSelected) {
     return {
-      className: 'custom-class-name other-class-name',
+      className: getClassNamesForEvent(event),
     }
   }
 
@@ -125,6 +125,24 @@ function createBigCalendarEvents(events) {
   });
 
   return result;
+}
+
+// Given a Big Calendar event, return a string of space separated css class
+// names that help in styling the events appropriately.
+function getClassNamesForEvent(event) {
+  let classNames = [];
+  if (event.eventType === 'oneTimeExpense') {
+    classNames.push('expense-event');
+    classNames.push('expense-' + event.id);
+  } else if (event.eventType === 'job') {
+    classNames.push('job-event');
+    classNames.push('workedby-' + event.worked_by.toLowerCase());
+    classNames.push('job-' + event.id);
+    if (!event.has_paid && event.end < new Date()) {
+      classNames.push('has-not-paid');
+    }
+  }
+  return classNames.join(' ');
 }
 
 
