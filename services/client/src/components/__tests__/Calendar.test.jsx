@@ -103,16 +103,16 @@ describe('The Calendar component', () => {
           data: {
             expenses: [],
             jobs: [{
-              amount_paid: 350,
+              amountPaid: 350,
               client: "test client",
               confirmation: "Confirmed",
               description: "some description",
-              end_date: "2018-03-06",
-              start_date: "2018-03-08",
-              has_paid: false,
+              endDate: "2018-03-06",
+              startDate: "2018-03-08",
+              hasPaid: false,
               id: 1,
-              paid_to: "Gladtime Audio",
-              worked_by: "Meghan",
+              paidTo: "Gladtime Audio",
+              workedBy: "Meghan",
             }],
             user: {
               email: 'fake@email.com',
@@ -126,7 +126,7 @@ describe('The Calendar component', () => {
     let url = `${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`;
     let requestData = {
       "headers": { "Authorization": "Bearer fakeAuthToken"},
-      "params": {"end_date": "2018-03-31", "start_date": "2018-02-25"}
+      "params": {"endDate": "2018-03-31", "startDate": "2018-02-25"}
     };
     expect(mockAxios.get).toHaveBeenCalledWith(url, requestData);
 

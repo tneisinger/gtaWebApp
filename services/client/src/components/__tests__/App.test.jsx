@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { MemoryRouter } from 'react-router';
 import { spy } from 'sinon';
-import moxios from 'moxios';
+import mockAxios from 'jest-mock-axios';
 
 import App from '../../App';
 import NavBar from '../NavBar';
@@ -101,13 +101,18 @@ describe('The main App component', () => {
 
   describe('when a valid authToken is saved in localStorage', () => {
     beforeEach(() => {
-      moxios.install();
+      // This is needed for setTimeouts to work in tests
+      jest.useFakeTimers();
+
       global.localStorage = new LocalStorageMock();
       window.localStorage.setItem('authToken', 'valid token wink wink');
     });
 
     afterEach(() => {
-      moxios.uninstall();
+      // This is needed for setTimeouts to work in tests
+      jest.runAllTimers();
+
+      mockAxios.reset();
     });
 
     const goodResponse = {
@@ -123,24 +128,25 @@ describe('The main App component', () => {
 
     it('should set the userLoggedIn state value to true', () => {
       wrappedApp();
-      moxios.wait(() => {
-        const request = moxios.requests.mostRecent();
-        request.respondWith(goodResponse).then(() => {
-          expect(appInstance().state.userLoggedIn).toBe(true);
-        });
-      });
+
+      mockAxios.mockResponse(goodResponse);
+
+      setTimeout(() => {
+        expect(appInstance().state.userLoggedIn).toBe(true);
+      }, 0);
     });
 
     it('should set the username state value correctly', () => {
       wrappedApp();
-      moxios.wait(() => {
-        const request = moxios.requests.mostRecent();
-        request.respondWith(goodResponse).then(() => {
-          expect(appInstance().state.userLoggedIn).toBe(
-            goodResponse.data.data.username,
-          );
-        });
-      });
+
+      mockAxios.mockResponse(goodResponse);
+
+      setTimeout(() => {
+        expect(appInstance().state.username).toBe(
+          goodResponse.data.data.username,
+        );
+      }, 0);
+
     });
   });
 

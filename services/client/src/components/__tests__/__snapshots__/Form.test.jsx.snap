@@ -37,7 +37,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
     >
       <input
         className="form-control input-lg"
-        name="amount_paid"
+        name="amountPaid"
         onChange={[Function]}
         placeholder="Amount Paid"
         required={true}
@@ -49,13 +49,13 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <label
-        htmlFor="paid_to"
+        htmlFor="paidTo"
       >
         Paid To
         <select
           className="form-control input-lg"
-          id="paid_to"
-          name="paid_to"
+          id="paidTo"
+          name="paidTo"
           onChange={[Function]}
           placeholder="Paid To"
           required={true}
@@ -88,13 +88,13 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <label
-        htmlFor="worked_by"
+        htmlFor="workedBy"
       >
         Worked By
         <select
           className="form-control input-lg"
-          id="worked_by"
-          name="worked_by"
+          id="workedBy"
+          name="workedBy"
           onChange={[Function]}
           required={true}
           value="Meghan"
@@ -149,13 +149,13 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <label
-        htmlFor="has_paid"
+        htmlFor="hasPaid"
       >
         Has Paid
         <input
           className="form-check-input checkbox-lg"
-          id="has_paid"
-          name="has_paid"
+          id="hasPaid"
+          name="hasPaid"
           onChange={[Function]}
           type="checkbox"
           value={false}
@@ -166,13 +166,13 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <label
-        htmlFor="start_date"
+        htmlFor="startDate"
       >
         Start Date
         <input
           className="form-control input-lg"
-          id="start_date"
-          name="start_date"
+          id="startDate"
+          name="startDate"
           onChange={[Function]}
           required={true}
           type="date"
@@ -184,13 +184,13 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <label
-        htmlFor="end_date"
+        htmlFor="endDate"
       >
         End Date
         <input
           className="form-control input-lg"
-          id="end_date"
-          name="end_date"
+          id="endDate"
+          name="endDate"
           onChange={[Function]}
           required={true}
           type="date"
@@ -238,12 +238,12 @@ exports[`loginForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <label
-        htmlFor="private_device"
+        htmlFor="isPrivateDevice"
       >
         <input
           className="form-check-input checkbox-lg"
-          id="private_device"
-          name="private_device"
+          id="isPrivateDevice"
+          name="isPrivateDevice"
           onChange={[Function]}
           type="checkbox"
           value={false}
@@ -292,7 +292,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
     >
       <input
         className="form-control input-lg"
-        name="amount_spent"
+        name="amountSpent"
         onChange={[Function]}
         placeholder="Amount Spent"
         required={true}
@@ -322,13 +322,13 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <label
-        htmlFor="paid_by"
+        htmlFor="paidBy"
       >
         Paid By
         <select
           className="form-control input-lg"
-          id="paid_by"
-          name="paid_by"
+          id="paidBy"
+          name="paidBy"
           onChange={[Function]}
           required={true}
           value="Gladtime Audio"
@@ -360,13 +360,13 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <label
-        htmlFor="tax_deductible"
+        htmlFor="taxDeductible"
       >
         Tax Deductible
         <input
           className="form-check-input checkbox-lg"
-          id="tax_deductible"
-          name="tax_deductible"
+          id="taxDeductible"
+          name="taxDeductible"
           onChange={[Function]}
           type="checkbox"
           value={false}
