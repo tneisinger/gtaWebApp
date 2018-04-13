@@ -12,7 +12,7 @@ import Form, { formTypes, defaultFormData, UnknownFormTypeException }
 import FormModal from './components/FormModal';
 import ChoiceModal from './components/ChoiceModal';
 import NavBar from './components/NavBar';
-import { copy, deepcopy } from './utils';
+import { copy, deepcopy, runCallbackAt } from './utils';
 
 
 class App extends Component {
@@ -46,6 +46,7 @@ class App extends Component {
       'onFormSubmit',
       'onAuthBtnClick',
       'closeFormModal',
+      'logout',
     ]);
   }
 
@@ -53,15 +54,28 @@ class App extends Component {
     this.checkUserStatus();
   }
 
+  logout() {
+    console.log('running logout method');
+    window.localStorage.clear();
+    this.setState({
+      userLoggedIn: false,
+      username: null,
+    });
+  }
+
+  setLogoutTimer(minutes, overwriteOldTimer) {
+    let logoutTime = window.localStorage.getItem('logoutTime');
+    if (!logoutTime || overwriteOldTimer) {
+      logoutTime = moment(new Date()).add(minutes, 'm').toDate();
+      window.localStorage.setItem('logoutTime', logoutTime);
+    }
+    runCallbackAt(logoutTime, this.logout);
+  }
+
   onAuthBtnClick() {
     // If the user is currently logged in...
     if (this.state.userLoggedIn) {
-      // Logout the user
-      window.localStorage.clear();
-      this.setState({
-        userLoggedIn: false,
-        username: null,
-      });
+      this.logout();
 
     // If the user isn't currently logged in
     } else {
@@ -165,6 +179,13 @@ class App extends Component {
     // Make the login request
     axios.post(`${this.FLASK_URL_ROOT}/admin/login`, data)
       .then((response) => {
+
+        // If this is a public device, set a timer to logout after 10 minutes
+        if (!data.isPrivateDevice) {
+          this.setLogoutTimer(10, true);
+        }
+
+        // Save the authToken and declare the user logged in
         window.localStorage.setItem('authToken', response.data.auth_token);
         self.setState({
           userLoggedIn: true,
@@ -250,7 +271,7 @@ class App extends Component {
   checkUserStatus() {
     const authToken = window.localStorage.getItem('authToken');
     if (!authToken) {
-      // If there is no auth token, the user is not logged in
+      // If there is no auth token, declare that the user is not logged in
       this.setState({ username: '', userLoggedIn: false });
     } else {
       axios.get(`${this.FLASK_URL_ROOT}/admin/status`, {

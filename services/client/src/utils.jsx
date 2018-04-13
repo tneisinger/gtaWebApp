@@ -13,3 +13,12 @@ export const datestringToDate = datestring => {
   const day = parseInt(datestring.slice(8,10), 10);
   return new Date(year, month, day);
 };
+
+// Run the fn function at the given futureDate time.
+export const runCallbackAt = (futureTime, callback) => {
+  const now = new Date();
+  const timeDif = futureTime.getTime() - now.getTime();
+  if (now < futureTime) {
+    setTimeout(() => { callback(); }, timeDif);
+  }
+};
