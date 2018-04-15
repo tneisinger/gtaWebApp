@@ -56,7 +56,7 @@ describe('The main App component', () => {
     expect(divs.length).toBeGreaterThan(0);
   });
 
-  it('there is an outer div that contains everything', () => {
+  it('has an outer div that contains everything', () => {
     expect(wrappedApp().children().length).toEqual(1);
   });
 
