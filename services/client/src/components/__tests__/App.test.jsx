@@ -7,33 +7,10 @@ import mockAxios from 'jest-mock-axios';
 import App from '../../App';
 import NavBar from '../NavBar';
 import FormModal from '../FormModal';
+import { LocalStorageMock } from './testUtils';
 
-
-// create a class to mock localStorage
-class LocalStorageMock {
-  constructor() {
-    this.store = {};
-  }
-
-  clear() {
-    this.store = {};
-  }
-
-  getItem(key) {
-    return this.store[key] || null;
-  }
-
-  setItem(key, value) {
-    this.store[key] = value.toString();
-  }
-
-  removeItem(key) {
-    delete this.store[key];
-  }
-}
 
 global.localStorage = new LocalStorageMock();
-
 
 test('App renders without crashing', () => {
   const wrapper = shallow(<App />);
