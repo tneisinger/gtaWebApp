@@ -292,7 +292,7 @@ class App extends Component {
           // Declare in app state that the user is logged in
           this.setState({
             userLoggedIn: true,
-            username: response.data.data.username,
+            username: response.data.user.username,
           });
         })
         .catch((err) => {

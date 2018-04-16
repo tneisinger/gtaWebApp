@@ -95,7 +95,7 @@ describe('The main App component', () => {
     const goodResponse = {
       status: 200,
       data: {
-        data: {
+        user: {
           email: 'fake@fake.com',
           id: 13,
           username: 'Fred',
@@ -120,7 +120,7 @@ describe('The main App component', () => {
 
       setTimeout(() => {
         expect(appInstance().state.username).toBe(
-          goodResponse.data.data.username,
+          goodResponse.data.user.username,
         );
       }, 0);
 

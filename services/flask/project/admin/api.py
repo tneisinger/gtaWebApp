@@ -495,7 +495,7 @@ def get_user_status():
             response_object['status'] = 'success'
             response_object['message'] = 'Success.'
             response_object['expiration'] = exp
-            response_object['data'] = user.to_json()
+            response_object['user'] = user.to_json()
             return jsonify(response_object), 200
         response_object['message'] = decode_response
         return jsonify(response_object), 401
