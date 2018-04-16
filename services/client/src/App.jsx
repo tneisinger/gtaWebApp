@@ -58,7 +58,7 @@ class App extends Component {
     window.localStorage.clear();
     this.setState({
       userLoggedIn: false,
-      username: null,
+      username: '',
     });
   }
 

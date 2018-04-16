@@ -75,6 +75,8 @@ describe('The main App component', () => {
     componentDidMountSpy.restore();
   });
 
+  // Instantiate the goodResponse var in a wider scope
+  let goodResponse;
 
   describe('when a valid authToken is saved in localStorage', () => {
     beforeEach(() => {
@@ -83,6 +85,26 @@ describe('The main App component', () => {
 
       global.localStorage = new LocalStorageMock();
       window.localStorage.setItem('authToken', 'valid token wink wink');
+
+      // Create a date string that is five seconds in the future to mock the
+      // authToken expire time that would be returned from the server.
+      let t = new Date();
+      t.setSeconds(t.getSeconds() + 5);
+      let expireTime = t.toString();
+
+      // Create a mock of a good response object from the server
+      goodResponse = {
+        status: 200,
+        data: {
+          user: {
+            email: 'fake@fake.com',
+            id: 13,
+            username: 'Fred',
+          },
+          expiration: expireTime,
+        },
+      };
+
     });
 
     afterEach(() => {
@@ -91,17 +113,6 @@ describe('The main App component', () => {
 
       mockAxios.reset();
     });
-
-    const goodResponse = {
-      status: 200,
-      data: {
-        user: {
-          email: 'fake@fake.com',
-          id: 13,
-          username: 'Fred',
-        },
-      },
-    };
 
     it('should set the userLoggedIn state value to true', () => {
       wrappedApp();
@@ -124,6 +135,38 @@ describe('The main App component', () => {
         );
       }, 0);
 
+    });
+
+    it('should automatically logout after expiration time has passed', () => {
+      // Create a date string that is a few milliseconds in the future.  By the
+      // time that we test if the user is still logged in, this time should be
+      // in the passed and the user should be automatically logged out.
+      let t = new Date();
+      t.setMilliseconds(t.getMilliseconds() + 1);
+      let expireTime = t.toString();
+
+      goodResponse.expiration = expireTime;
+
+      wrappedApp();
+
+      mockAxios.mockResponse(goodResponse);
+
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+      expect(setTimeout).toHaveBeenLastCalledWith(
+        expect.any(Function), expect.any(Number)
+      );
+
+      setTimeout(() => {
+        expect(appInstance().state.userLoggedIn).toBe(true);
+        expect(appInstance().state.username).toBe(
+          goodResponse.data.user.username,
+        );
+      }, 0);
+
+      jest.runAllTimers();
+
+      expect(appInstance().state.userLoggedIn).toBe(false);
+      expect(appInstance().state.username).toBe('');
     });
   });
 
