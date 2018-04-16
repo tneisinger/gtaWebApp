@@ -36,7 +36,7 @@ class App extends Component {
     // Bind `this` to all the methods named below.  This must be done because
     // these methods get passed into other components, so in order for the
     // `this` keyword to mean this App component instance, we must bind `this`
-    // to the method.
+    // to each of these methods.
     this.bindScopes([
       'setCalendarEvents',
       'onCalendarDatesSelect',
@@ -169,17 +169,21 @@ class App extends Component {
   }
 
   requestLogin() {
-    // We need to refer to 'this' in an axios request, so get a ref to it
+    // We need to refer to 'this' (the current App component instance) in an
+    // axios callback below. Because the 'this' variable in the axios callbacks
+    // will refer to something else, we need to store a reference to the
+    // current 'this' in a variable.
     const self = this;
 
-    // Prepare form data
+    // Get the form data from the login form
     const data = this.state.formData[formTypes.login];
 
     // Make the login request
     axios.post(`${this.FLASK_URL_ROOT}/admin/login`, data)
       .then((response) => {
 
-        // If this is a public device, set a timer to logout after 10 minutes
+        // If client is not using a private device, set a timer to
+        // automatically logout the user when the authToken expires.
         if (!data.isPrivateDevice) {
           const authExpireTime = new Date(response.data.expiration);
           console.log(response);
@@ -200,10 +204,10 @@ class App extends Component {
   }
 
   requestCreateJob() {
-    // Prepare the form data
+    // Get the form data from the job form
     const data = this.state.formData[formTypes.job];
 
-    // Get the current authToken
+    // Try to get the current authToken
     const authToken = window.localStorage.getItem('authToken');
 
     // If no authToken, redirect to the homepage and, if necessary, change
@@ -245,7 +249,7 @@ class App extends Component {
   }
 
   showJobFormModal() {
-    // Hide the choice modal (if it is shown) and show the job form modal
+    // Hide the choice modal (if shown) and show the job form modal
     this.setState({
       showChoiceModal: false,
       showFormModal: true,
@@ -281,11 +285,11 @@ class App extends Component {
         },
       })
         .then((response) => {
-          // Automatically log out when the token expires
+          // Set a timer to automatically log out when the authToken expires
           const authExpireTime = new Date(response.data.expiration);
           this.setLogoutTimer(authExpireTime);
 
-          // Declare the user Logged in
+          // Declare in app state that the user is logged in
           this.setState({
             userLoggedIn: true,
             username: response.data.data.username,
