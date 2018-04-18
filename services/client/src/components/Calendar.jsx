@@ -119,7 +119,7 @@ function createBigCalendarEvents(events) {
       end: datestringToDate(expense.date),
       allDay: true,
     }
-    // Add all the attributes from the job to the bcEvent
+    // Add all the attributes from the expense to the bcEvent
     for (var attrname in expense) { bcEvent[attrname] = expense[attrname]; }
     result.push(bcEvent);
   });
