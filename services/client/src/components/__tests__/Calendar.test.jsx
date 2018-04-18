@@ -92,7 +92,7 @@ describe('The Calendar component', () => {
     expect(divs.length).toBeGreaterThan(0);
   });
 
-  it('should render job calendar events', () => {
+  it('should render a job calendar event successfully', () => {
     // Instantiate the calendar app for this test.
     calendar();
 
@@ -138,6 +138,10 @@ describe('The Calendar component', () => {
       expect(eventElems.length).toBe(1);
       const eventText = eventElems.find('.rbc-event-content').text();
       expect(eventText).toMatch('test client');
+      expect(eventElems.hasClass('job-1')).toBe(true);
+      expect(eventElems.hasClass('job-event')).toBe(true);
+      expect(eventElems.hasClass('workedby-meghan')).toBe(true);
+      expect(eventElems.hasClass('has-not-paid')).toBe(true);
     }, 0);
   });
 });
