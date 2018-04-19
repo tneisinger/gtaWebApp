@@ -6,6 +6,7 @@ import { MemoryRouter } from 'react-router';
 
 import PrivateRoute from '../PrivateRoute';
 import Calendar from '../Calendar';
+import CheckingUserStatus from '../CheckingUserStatus';
 
 jest.mock('../Calendar');
 Calendar.mockImplementation(() => 'Calendar');
@@ -90,6 +91,17 @@ describe('The PrivateRoute component', () => {
 
     it('should render properly', () => {
       expect(tree()).toMatchSnapshot();
+    });
+  });
+
+  describe('when userLoggedIn is null', () => {
+    beforeEach(() => {
+      routerHistory = ['/somepath'];
+      props.userLoggedIn = null;
+    });
+
+    it('should render the CheckingUserStatus component', () => {
+      expect(mounted().find(CheckingUserStatus).length).toBe(1);
     });
   });
 
