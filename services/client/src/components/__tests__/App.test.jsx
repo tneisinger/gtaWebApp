@@ -1,10 +1,12 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { MemoryRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { spy } from 'sinon';
 import mockAxios from 'jest-mock-axios';
 
 import App from '../../App';
+import Calendar from '../Calendar';
 import NavBar from '../NavBar';
 import FormModal from '../FormModal';
 import { LocalStorageMock } from './testUtils';
@@ -31,9 +33,14 @@ describe('The main App component', () => {
   // will create it before returning it.
   const wrappedApp = () => {
     if (!memRoutedApp) {
+
+      // Use withRouter so that url path information gets passed into App props
+      // This will allow us to check the current url of the App
+      const AppWithRouter = withRouter(App);
+
       memRoutedApp = mount(
         <MemoryRouter initialEntries={routerHistory}>
-          <App />
+          <AppWithRouter />
         </MemoryRouter>,
       );
     }
@@ -75,8 +82,8 @@ describe('The main App component', () => {
     componentDidMountSpy.restore();
   });
 
-  // Instantiate the goodResponse var in a wider scope
-  let goodResponse;
+  // Instantiate the goodUserStatusResponse var in a wider scope
+  let goodUserStatusResponse;
 
   describe('when a valid authToken is saved in localStorage', () => {
     beforeEach(() => {
@@ -93,7 +100,7 @@ describe('The main App component', () => {
       let expireTime = t.toString();
 
       // Create a mock of a good response object from the server
-      goodResponse = {
+      goodUserStatusResponse = {
         status: 200,
         data: {
           user: {
@@ -117,7 +124,7 @@ describe('The main App component', () => {
     it('should set the userLoggedIn state value to true', () => {
       wrappedApp();
 
-      mockAxios.mockResponse(goodResponse);
+      mockAxios.mockResponse(goodUserStatusResponse);
 
       setTimeout(() => {
         expect(appInstance().state.userLoggedIn).toBe(true);
@@ -127,11 +134,11 @@ describe('The main App component', () => {
     it('should set the username state value correctly', () => {
       wrappedApp();
 
-      mockAxios.mockResponse(goodResponse);
+      mockAxios.mockResponse(goodUserStatusResponse);
 
       setTimeout(() => {
         expect(appInstance().state.username).toBe(
-          goodResponse.data.user.username,
+          goodUserStatusResponse.data.user.username,
         );
       }, 0);
 
@@ -145,11 +152,11 @@ describe('The main App component', () => {
       t.setMilliseconds(t.getMilliseconds() + 1);
       let expireTime = t.toString();
 
-      goodResponse.expiration = expireTime;
+      goodUserStatusResponse.expiration = expireTime;
 
       wrappedApp();
 
-      mockAxios.mockResponse(goodResponse);
+      mockAxios.mockResponse(goodUserStatusResponse);
 
       expect(setTimeout).toHaveBeenCalledTimes(1);
       expect(setTimeout).toHaveBeenLastCalledWith(
@@ -159,7 +166,7 @@ describe('The main App component', () => {
       setTimeout(() => {
         expect(appInstance().state.userLoggedIn).toBe(true);
         expect(appInstance().state.username).toBe(
-          goodResponse.data.user.username,
+          goodUserStatusResponse.data.user.username,
         );
       }, 0);
 
@@ -168,8 +175,95 @@ describe('The main App component', () => {
       expect(appInstance().state.userLoggedIn).toBe(false);
       expect(appInstance().state.username).toBe('');
     });
+
+    describe('when starting from the calendar page', () => {
+      beforeEach(() => {
+        routerHistory = ['/calendar'];
+      });
+
+      it('should not redirect to homepage if user is logged in', () => {
+        wrappedApp();
+
+        mockAxios.mockResponse(goodUserStatusResponse);
+
+        setTimeout(() => {
+          expect(appInstance().state.username).toBe(
+            goodUserStatusResponse.data.user.username,
+          );
+          expect(appInstance().props.location.pathname).toBe('/calendar')
+        }, 0);
+      });
+
+
+    });
   });
 
+  describe('when an invalid authToken is saved in localStorage', () => {
+    beforeEach(() => {
+      // This is needed for setTimeouts to work in tests
+      jest.useFakeTimers();
+
+      global.localStorage = new LocalStorageMock();
+      window.localStorage.setItem('authToken', 'invalid token wink wink');
+
+      // Create a date string that is five seconds in the future to mock the
+      // authToken expire time that would be returned from the server.
+      let t = new Date();
+      t.setSeconds(t.getSeconds() + 5);
+      let expireTime = t.toString();
+
+    });
+
+    afterEach(() => {
+      // This is needed for setTimeouts to work in tests
+      jest.runAllTimers();
+
+      mockAxios.reset();
+    });
+
+    const badUserStatusResponse = {
+      status: 401,
+      data: {
+        status: 'fail',
+        message: 'Provide a valid auth token',
+      },
+    };
+
+    it('should set the userLoggedIn state value to false', () => {
+      wrappedApp();
+
+      mockAxios.mockError(badUserStatusResponse);
+
+      setTimeout(() => {
+        expect(appInstance().state.userLoggedIn).toBe(false);
+      }, 0);
+    });
+
+    it('should set the username state value to null', () => {
+      wrappedApp();
+
+      mockAxios.mockError(badUserStatusResponse);
+
+      setTimeout(() => {
+        expect(appInstance().state.username).toBe(null);
+      }, 0);
+
+    });
+
+    describe('and starting from the calendar page', () => {
+
+      it('should redirect to homepage because user not signed in', () => {
+        wrappedApp();
+
+        mockAxios.mockError(badUserStatusResponse);
+
+        setTimeout(() => {
+          expect(appInstance().props.location.pathname).toBe('/')
+        }, 0);
+      });
+
+    });
+  });
 
   describe('when no authToken is saved in localStorage', () => {
     it('should set the userLoggedIn state value to false', () => {
@@ -179,14 +273,5 @@ describe('The main App component', () => {
     it('should have a username state value of the empty string', () => {
       expect(appInstance().state.username).toBe('');
     });
-  });
-
-
-  describe('when on the calendar page', () => {
-    beforeEach(() => {
-      routerHistory = ['/calendar'];
-    });
-
-    // Tests for the calendar page go here
   });
 });
