@@ -92,7 +92,7 @@ describe('The Calendar component', () => {
     expect(divs.length).toBeGreaterThan(0);
   });
 
-  it('should render a job calendar event successfully', () => {
+  it('should render a job event successfully', () => {
     // Instantiate the calendar app for this test.
     calendar();
 
@@ -142,6 +142,55 @@ describe('The Calendar component', () => {
       expect(eventElems.hasClass('job-event')).toBe(true);
       expect(eventElems.hasClass('workedby-meghan')).toBe(true);
       expect(eventElems.hasClass('has-not-paid')).toBe(true);
+    }, 0);
+  });
+
+  it('should render an expense event successfully', () => {
+    // Instantiate the calendar app for this test.
+    calendar();
+
+    // Mock a server response
+    mockAxios.mockResponse({
+        status: 200,
+        data: {
+          data: {
+            expenses: [{
+              id: 1,
+              merchant: 'test merchant',
+              description: 'test description',
+              amountSpent: 303.33,
+              date: '2018-03-15',
+              paidBy: 'Tyler',
+              taxDeductible: false,
+              category: 'Business Equipment',
+            }],
+            jobs: [],
+            user: {
+              email: 'fake@email.com',
+              id: 1,
+              username: 'Fred',
+            }
+          }
+        }
+      });
+
+    let url = `${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`;
+    let requestData = {
+      "headers": { "Authorization": "Bearer fakeAuthToken"},
+      "params": {"endDate": "2018-03-31", "startDate": "2018-02-25"}
+    };
+    expect(mockAxios.get).toHaveBeenCalledWith(url, requestData);
+
+    // Put expects in a setTimeout so that they run after everything has
+    // rendered
+    setTimeout(() => {
+      expect(mockSetCalendarEvents.mock.calls.length).toBe(1);
+      const eventElems = calendar().find('.rbc-event');
+      expect(eventElems.length).toBe(1);
+      const eventText = eventElems.find('.rbc-event-content').text();
+      expect(eventText).toMatch('test merchant');
+      expect(eventElems.hasClass('expense-1')).toBe(true);
+      expect(eventElems.hasClass('expense-event')).toBe(true);
     }, 0);
   });
 });
