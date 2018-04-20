@@ -9,7 +9,7 @@ import App from '../../App';
 import Calendar from '../Calendar';
 import NavBar from '../NavBar';
 import FormModal from '../FormModal';
-import { LocalStorageMock } from './testUtils';
+import { LocalStorageMock } from '../../testUtils';
 
 
 global.localStorage = new LocalStorageMock();
@@ -34,8 +34,8 @@ describe('The main App component', () => {
   const wrappedApp = () => {
     if (!memRoutedApp) {
 
-      // Use withRouter so that url path information gets passed into App props
-      // This will allow us to check the current url of the App
+      // Use withRouter so that url info gets passed into App props.
+      // This will allow us to check the current url of the App in our tests.
       const AppWithRouter = withRouter(App);
 
       memRoutedApp = mount(
