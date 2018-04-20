@@ -4,11 +4,15 @@ import { MemoryRouter } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import { spy } from 'sinon';
 import mockAxios from 'jest-mock-axios';
+import moment from 'moment';
 
 import App from '../../App';
 import Calendar from '../Calendar';
 import NavBar from '../NavBar';
+import PrivateRoute from '../PrivateRoute';
+import CheckingUserStatus from '../CheckingUserStatus';
 import FormModal from '../FormModal';
+import { formTypes } from '../Form';
 import { LocalStorageMock } from '../../testUtils';
 
 
@@ -51,11 +55,21 @@ describe('The main App component', () => {
   // when you want check the state of the App component.
   const appInstance = () => wrappedApp().find(App).instance();
 
-  // Before each test, reset the routerHistory and memRoutedApp to undefined
+  // Before each test...
   beforeEach(() => {
+    // Reset the routerHistory and memRoutedApp to undefined
     routerHistory = undefined;
     memRoutedApp = undefined;
+    // Reset the mocked localStorage to empty
     global.localStorage = new LocalStorageMock();
+
+    // This is needed for setTimeouts to work in tests
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    // This is needed for setTimeouts to work in tests
+    jest.runAllTimers();
   });
 
   it('always renders a div', () => {
@@ -87,10 +101,6 @@ describe('The main App component', () => {
 
   describe('when a valid authToken is saved in localStorage', () => {
     beforeEach(() => {
-      // This is needed for setTimeouts to work in tests
-      jest.useFakeTimers();
-
-      global.localStorage = new LocalStorageMock();
       window.localStorage.setItem('authToken', 'valid token wink wink');
 
       // Create a date string that is five seconds in the future to mock the
@@ -115,8 +125,6 @@ describe('The main App component', () => {
     });
 
     afterEach(() => {
-      // This is needed for setTimeouts to work in tests
-      jest.runAllTimers();
 
       mockAxios.reset();
     });
@@ -170,6 +178,7 @@ describe('The main App component', () => {
         );
       }, 0);
 
+      // Run the timers so we can check state after some time has passed
       jest.runAllTimers();
 
       expect(appInstance().state.userLoggedIn).toBe(false);
@@ -187,6 +196,7 @@ describe('The main App component', () => {
         mockAxios.mockResponse(goodUserStatusResponse);
 
         setTimeout(() => {
+          expect(appInstance().state.userLoggedIn).toBe(true);
           expect(appInstance().state.username).toBe(
             goodUserStatusResponse.data.user.username,
           );
@@ -194,15 +204,73 @@ describe('The main App component', () => {
         }, 0);
       });
 
+      it('clicking one day of the calendar should open choiceModal', () => {
+        wrappedApp();
+
+        mockAxios.mockResponse(goodUserStatusResponse);
+
+        setTimeout(() => {
+          // Make sure the Calendar gets rendered with update()
+          wrappedApp().update();
+
+          // Fake a calendar click by directly running the Calendar's
+          // onSelectSlot method.
+          let clickedDate = new Date();
+          clickedDate.setDate(15);  // The 15th of the current month
+          const slotInfo = { start: clickedDate, end: clickedDate };
+          wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+          wrappedApp().update();
+
+          // The choiceModal should now be shown.
+          // Click the 'New Job' button
+          expect(appInstance().state.showChoiceModal).toBe(true);
+        }, 0);
+      });
+
+      it('Clicking "New Job" in choiceModal shows job formModal', () => {
+        wrappedApp();
+
+        mockAxios.mockResponse(goodUserStatusResponse);
+
+        setTimeout(() => {
+          // Make sure the Calendar gets rendered with update()
+          wrappedApp().update();
+
+          // Fake a calendar click by directly running the Calendar's
+          // onSelectSlot method.
+          let clickedDate = new Date();
+          clickedDate.setDate(15);  // The 15th of the current month
+          const slotInfo = { start: clickedDate, end: clickedDate };
+          wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+          wrappedApp().update();
+
+          // The choiceModal should now be shown.
+          // Click the 'New Job' button
+          const newJobBtn = wrappedApp()
+              .find('.modal-body').find('.btn-primary');
+          newJobBtn.simulate('click');
+          wrappedApp().update();
+
+          // The formModal should now be shown, showing the job form
+          expect(appInstance().state.showFormModal).toBe(true);
+          expect(appInstance().state.formType).toBe(formTypes.job);
+
+          // The start and end date inputs should be populated with
+          // a date that matches the clickedDate we defined above.
+          expect(wrappedApp().find('#startDate').props().value).toBe(
+            moment(clickedDate).format('YYYY-MM-DD')
+          );
+          expect(wrappedApp().find('#endDate').props().value).toBe(
+            moment(clickedDate).format('YYYY-MM-DD')
+          );
+        }, 0);
+      });
 
     });
   });
 
   describe('when an invalid authToken is saved in localStorage', () => {
     beforeEach(() => {
-      // This is needed for setTimeouts to work in tests
-      jest.useFakeTimers();
-
       global.localStorage = new LocalStorageMock();
       window.localStorage.setItem('authToken', 'invalid token wink wink');
 
@@ -211,13 +279,9 @@ describe('The main App component', () => {
       let t = new Date();
       t.setSeconds(t.getSeconds() + 5);
       let expireTime = t.toString();
-
     });
 
     afterEach(() => {
-      // This is needed for setTimeouts to work in tests
-      jest.runAllTimers();
-
       mockAxios.reset();
     });
 
@@ -239,7 +303,7 @@ describe('The main App component', () => {
       }, 0);
     });
 
-    it('should set the username state value to null', () => {
+    it('should set the username state value to the empty string', () => {
       wrappedApp();
 
       mockAxios.mockError(badUserStatusResponse);
