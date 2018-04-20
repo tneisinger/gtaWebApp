@@ -40,6 +40,7 @@ class App extends Component {
     this.bindScopes([
       'setCalendarEvents',
       'onCalendarDatesSelect',
+      'onCalendarEventSelect',
       'showJobFormModal',
       'showOneTimeExpenseFormModal',
       'onFormChange',
@@ -116,6 +117,11 @@ class App extends Component {
         showChoiceModal: true,
       });
     }
+  }
+
+  onCalendarEventSelect(event) {
+    console.log('Running onCalendarEventSelect');
+    console.log(event);
   }
 
   onFormChange(event) {
@@ -334,6 +340,7 @@ class App extends Component {
                     events: this.state.calendarEvents,
                     setCalendarEvents: this.setCalendarEvents,
                     onSelectSlot: this.onCalendarDatesSelect,
+                    onSelectEvent: this.onCalendarEventSelect,
                   }}
                 />
                 <Route

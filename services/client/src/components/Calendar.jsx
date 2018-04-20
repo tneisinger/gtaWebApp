@@ -74,7 +74,7 @@ class Calendar extends Component {
     return (
       <BigCalendar
         selectable
-        onSelectEvent={event => console.log(event)}
+        onSelectEvent={this.props.onSelectEvent}
         defaultDate={this.props.defaultDate}
         onNavigate={this.onNavigate}
         events={this.props.events}
@@ -147,6 +147,7 @@ function getClassNamesForEvent(event) {
 
 
 Calendar.propTypes = {
+  onSelectEvent: PropTypes.func.isRequired,
   onSelectSlot: PropTypes.func.isRequired,
   events: PropTypes.arrayOf(PropTypes.object).isRequired,
   defaultDate: PropTypes.instanceOf(Date).isRequired,

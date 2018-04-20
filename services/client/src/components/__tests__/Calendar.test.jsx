@@ -43,6 +43,9 @@ describe('The Calendar component', () => {
   // mock the onSelectSlot function
   const mockOnSelectSlot = jest.fn();
 
+  // mock the onSelectEvent function
+  const mockOnSelectEvent = jest.fn();
+
   // mock the setCalendarEvents function
   const mockSetCalendarEvents = jest.fn(events => {
     calendar().setProps({ events: events });
@@ -65,14 +68,18 @@ describe('The Calendar component', () => {
     // This is needed for setTimeouts to work in tests
     jest.useFakeTimers();
 
+    // Reset the mocked functions
     mockSetCalendarEvents.mockClear();
     mockOnSelectSlot.mockClear();
+    mockOnSelectEvent.mockClear();
+
     // Reset the prop values for each test
     props = {
       defaultDate: idesOfMarch,
       events: [],
       setCalendarEvents: mockSetCalendarEvents,
       onSelectSlot: mockOnSelectSlot,
+      onSelectEvent: mockOnSelectEvent,
     };
 
     // throw away the old mountedCalendar
@@ -107,8 +114,8 @@ describe('The Calendar component', () => {
               client: "test client",
               confirmation: "Confirmed",
               description: "some description",
-              endDate: "2018-03-06",
-              startDate: "2018-03-08",
+              startDate: "2018-03-06",
+              endDate: "2018-03-08",
               hasPaid: false,
               id: 1,
               paidTo: "Gladtime Audio",
@@ -126,7 +133,7 @@ describe('The Calendar component', () => {
     let url = `${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`;
     let requestData = {
       "headers": { "Authorization": "Bearer fakeAuthToken"},
-      "params": {"endDate": "2018-03-31", "startDate": "2018-02-25"}
+      "params": {"startDate": "2018-02-25", "endDate": "2018-03-31"}
     };
     expect(mockAxios.get).toHaveBeenCalledWith(url, requestData);
 
@@ -177,7 +184,7 @@ describe('The Calendar component', () => {
     let url = `${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`;
     let requestData = {
       "headers": { "Authorization": "Bearer fakeAuthToken"},
-      "params": {"endDate": "2018-03-31", "startDate": "2018-02-25"}
+      "params": {"startDate": "2018-02-25", "endDate": "2018-03-31"}
     };
     expect(mockAxios.get).toHaveBeenCalledWith(url, requestData);
 
@@ -191,6 +198,61 @@ describe('The Calendar component', () => {
       expect(eventText).toMatch('test merchant');
       expect(eventElems.hasClass('expense-1')).toBe(true);
       expect(eventElems.hasClass('expense-event')).toBe(true);
+    }, 0);
+  });
+
+  it('should run onSelectEvent when a job event is clicked', () => {
+    // Instantiate the calendar app for this test.
+    calendar();
+
+    const job = {
+      amountPaid: 350,
+      client: "test client",
+      confirmation: "Confirmed",
+      description: "some description",
+      startDate: "2018-03-06",
+      endDate: "2018-03-08",
+      hasPaid: false,
+      id: 1,
+      paidTo: "Gladtime Audio",
+      workedBy: "Meghan",
+    };
+
+    // Mock a server response
+    mockAxios.mockResponse({
+        status: 200,
+        data: {
+          data: {
+            expenses: [],
+            jobs: [job],
+            user: {
+              email: 'fake@email.com',
+              id: 1,
+              username: 'Fred',
+            }
+          }
+        }
+      });
+
+    let url = `${process.env.REACT_APP_FLASK_SERVICE_URL}/admin/events`;
+    let requestData = {
+      "headers": { "Authorization": "Bearer fakeAuthToken"},
+      "params": {"startDate": "2018-02-25", "endDate": "2018-03-31"}
+    };
+    expect(mockAxios.get).toHaveBeenCalledWith(url, requestData);
+
+    // Put expects in a setTimeout so that they run after the axios request
+    // has been completed and everything has been rendered.
+    setTimeout(() => {
+      expect(mockSetCalendarEvents.mock.calls.length).toBe(1);
+      const eventElems = calendar().find('.rbc-event');
+      expect(eventElems.length).toBe(1);
+      eventElems.first().simulate('click');
+      calendar().update();
+      expect(mockOnSelectEvent.mock.calls.length).toBe(1);
+      const event = mockOnSelectEvent.mock.calls[0][0];
+      expect(event.title).toBe(job.client);
+      expect(event.eventType).toBe('job');
     }, 0);
   });
 });
