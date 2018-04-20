@@ -299,7 +299,7 @@ class App extends Component {
           console.log(err);
           this.setState({
             userLoggedIn: false,
-            username: null,
+            username: '',
           });
         });
     }

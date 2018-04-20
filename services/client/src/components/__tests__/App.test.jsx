@@ -245,7 +245,7 @@ describe('The main App component', () => {
       mockAxios.mockError(badUserStatusResponse);
 
       setTimeout(() => {
-        expect(appInstance().state.username).toBe(null);
+        expect(appInstance().state.username).toBe('');
       }, 0);
 
     });
