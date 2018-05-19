@@ -68,11 +68,6 @@ describe('The main App component', () => {
     jest.useFakeTimers();
   });
 
-  afterEach(() => {
-    // This is needed for setTimeouts to work in tests
-    jest.runAllTimers();
-  });
-
   it('always renders a div', () => {
     const divs = wrappedApp().find('div');
     expect(divs.length).toBeGreaterThan(0);
@@ -135,9 +130,7 @@ describe('The main App component', () => {
 
       mockAxios.mockResponse(goodUserStatusResponse);
 
-      setTimeout(() => {
-        expect(appInstance().state.userLoggedIn).toBe(true);
-      }, 0);
+      expect(appInstance().state.userLoggedIn).toBe(true);
     });
 
     it('should set the username state value correctly', () => {
@@ -145,12 +138,9 @@ describe('The main App component', () => {
 
       mockAxios.mockResponse(goodUserStatusResponse);
 
-      setTimeout(() => {
-        expect(appInstance().state.username).toBe(
-          goodUserStatusResponse.data.user.username,
-        );
-      }, 0);
-
+      expect(appInstance().state.username).toBe(
+        goodUserStatusResponse.data.user.username,
+      );
     });
 
     it('should automatically logout after expiration time has passed', () => {
@@ -172,12 +162,10 @@ describe('The main App component', () => {
         expect.any(Function), expect.any(Number)
       );
 
-      setTimeout(() => {
-        expect(appInstance().state.userLoggedIn).toBe(true);
-        expect(appInstance().state.username).toBe(
-          goodUserStatusResponse.data.user.username,
-        );
-      }, 0);
+      expect(appInstance().state.userLoggedIn).toBe(true);
+      expect(appInstance().state.username).toBe(
+        goodUserStatusResponse.data.user.username,
+      );
 
       // Run the timers so we can check state after some time has passed
       jest.runAllTimers();
@@ -196,13 +184,11 @@ describe('The main App component', () => {
 
         mockAxios.mockResponse(goodUserStatusResponse);
 
-        setTimeout(() => {
-          expect(appInstance().state.userLoggedIn).toBe(true);
-          expect(appInstance().state.username).toBe(
-            goodUserStatusResponse.data.user.username,
-          );
-          expect(appInstance().props.location.pathname).toBe('/calendar')
-        }, 0);
+        expect(appInstance().state.userLoggedIn).toBe(true);
+        expect(appInstance().state.username).toBe(
+          goodUserStatusResponse.data.user.username,
+        );
+        expect(appInstance().props.location.pathname).toBe('/calendar')
       });
 
       it('clicking one day of the calendar should open choiceModal', () => {
@@ -210,22 +196,20 @@ describe('The main App component', () => {
 
         mockAxios.mockResponse(goodUserStatusResponse);
 
-        setTimeout(() => {
-          // Make sure the Calendar gets rendered with update()
-          wrappedApp().update();
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
 
-          // Fake a calendar click by directly running the Calendar's
-          // onSelectSlot method.
-          let clickedDate = new Date();
-          clickedDate.setDate(15);  // The 15th of the current month
-          const slotInfo = { start: clickedDate, end: clickedDate };
-          wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-          wrappedApp().update();
+        // Fake a calendar click by directly running the Calendar's
+        // onSelectSlot method.
+        let clickedDate = new Date();
+        clickedDate.setDate(15);  // The 15th of the current month
+        const slotInfo = { start: clickedDate, end: clickedDate };
+        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+        wrappedApp().update();
 
-          // The choiceModal should now be shown.
-          // Click the 'New Job' button
-          expect(appInstance().state.showChoiceModal).toBe(true);
-        }, 0);
+        // The choiceModal should now be shown.
+        // Click the 'New Job' button
+        expect(appInstance().state.showChoiceModal).toBe(true);
       });
 
       it('Clicking "New Job" in choiceModal shows job formModal', () => {
@@ -233,38 +217,36 @@ describe('The main App component', () => {
 
         mockAxios.mockResponse(goodUserStatusResponse);
 
-        setTimeout(() => {
-          // Make sure the Calendar gets rendered with update()
-          wrappedApp().update();
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
 
-          // Fake a calendar click by directly running the Calendar's
-          // onSelectSlot method.
-          let clickedDate = new Date();
-          clickedDate.setDate(15);  // The 15th of the current month
-          const slotInfo = { start: clickedDate, end: clickedDate };
-          wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-          wrappedApp().update();
+        // Fake a calendar click by directly running the Calendar's
+        // onSelectSlot method.
+        let clickedDate = new Date();
+        clickedDate.setDate(15);  // The 15th of the current month
+        const slotInfo = { start: clickedDate, end: clickedDate };
+        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+        wrappedApp().update();
 
-          // The choiceModal should now be shown.
-          // Click the 'New Job' button
-          const newJobBtn = wrappedApp()
-              .find('.modal-body').find('.btn-primary');
-          newJobBtn.simulate('click');
-          wrappedApp().update();
+        // The choiceModal should now be shown.
+        // Click the 'New Job' button
+        const newJobBtn = wrappedApp()
+            .find('.modal-body').find('.btn-primary');
+        newJobBtn.simulate('click');
+        wrappedApp().update();
 
-          // The formModal should now be shown, showing the job form
-          expect(appInstance().state.showFormModal).toBe(true);
-          expect(appInstance().state.formType).toBe(formTypes.job);
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.job);
 
-          // The start and end date inputs should be populated with
-          // a date that matches the clickedDate we defined above.
-          expect(wrappedApp().find('#startDate').props().value).toBe(
-            moment(clickedDate).format('YYYY-MM-DD')
-          );
-          expect(wrappedApp().find('#endDate').props().value).toBe(
-            moment(clickedDate).format('YYYY-MM-DD')
-          );
-        }, 0);
+        // The start and end date inputs should be populated with
+        // a date that matches the clickedDate we defined above.
+        expect(wrappedApp().find('#startDate').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
+        expect(wrappedApp().find('#endDate').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
       });
 
       it('A new job event should be rendered after creating a new job', () => {
@@ -367,9 +349,7 @@ describe('The main App component', () => {
 
       mockAxios.mockError(badUserStatusResponse);
 
-      setTimeout(() => {
-        expect(appInstance().state.userLoggedIn).toBe(false);
-      }, 0);
+      expect(appInstance().state.userLoggedIn).toBe(false);
     });
 
     it('should set the username state value to the empty string', () => {
@@ -377,10 +357,7 @@ describe('The main App component', () => {
 
       mockAxios.mockError(badUserStatusResponse);
 
-      setTimeout(() => {
-        expect(appInstance().state.username).toBe('');
-      }, 0);
-
+      expect(appInstance().state.username).toBe('');
     });
 
     describe('and starting from the calendar page', () => {
@@ -390,9 +367,7 @@ describe('The main App component', () => {
 
         mockAxios.mockError(badUserStatusResponse);
 
-        setTimeout(() => {
-          expect(appInstance().props.location.pathname).toBe('/')
-        }, 0);
+        expect(appInstance().props.location.pathname).toBe('/')
       });
 
     });
