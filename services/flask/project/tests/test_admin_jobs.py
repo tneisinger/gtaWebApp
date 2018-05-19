@@ -3,6 +3,7 @@
 import json
 import unittest
 from datetime import date, timedelta
+import sys
 
 from project.tests.base import BaseTestCase
 from project.admin.models import Job
@@ -51,20 +52,23 @@ class TestAdminApiJobs(BaseTestCase):
             # get the user's auth token
             token = json.loads(login_response.data.decode())['auth_token']
 
+            # a dictionary that represents the job to be added
+            job = {
+                'client': 'Test Client',
+                'description': 'Test Description',
+                'amountPaid': 666.01,
+                'paidTo': self.VALID_PAID_TO,
+                'workedBy': self.VALID_WORKED_BY,
+                'confirmation': self.VALID_CONFIRMATION,
+                'hasPaid': False,
+                'startDate': self.today,
+                'endDate': self.today
+            }
+
             # Attempt to add a job to the database
             add_job_response = self.client.post(
                 '/admin/jobs',
-                data=json.dumps({
-                    'client': 'Test Client',
-                    'description': 'Test Description',
-                    'amountPaid': 666.01,
-                    'paidTo': self.VALID_PAID_TO,
-                    'workedBy': self.VALID_WORKED_BY,
-                    'confirmation': self.VALID_CONFIRMATION,
-                    'hasPaid': False,
-                    'startDate': self.today,
-                    'endDate': self.today
-                }),
+                data=json.dumps(job),
                 headers={'Authorization': f'Bearer {token}'},
                 content_type='application/json',
             )
@@ -72,6 +76,13 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertEqual(add_job_response.status_code, 201)
             self.assertIn('Test Client job was added!', data['message'])
             self.assertIn('success', data['status'])
+
+            # Before comparing the returned job to the job we sent in the
+            # request, we need to pop the id off of the returned job.
+            self.assertEqual(1, data['job'].pop('id'))
+
+            # The returned job and the input job should now match.
+            self.assertEqual(data['job'], job)
 
     def test_add_jobs_with_valid_paidTo_vals(self):
         """Ensure jobs with valid paidTo values can be added to the db"""
