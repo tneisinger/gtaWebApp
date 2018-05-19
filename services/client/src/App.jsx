@@ -6,7 +6,8 @@ import { Button } from 'react-bootstrap';
 
 import PrivateRoute from './components/PrivateRoute';
 import Home from './components/Home';
-import Calendar from './components/Calendar';
+import Calendar, { makeBigCalendarJobEvent, makeBigCalendarExpenseEvent}
+  from './components/Calendar';
 import Form, { formTypes, defaultFormData, UnknownFormTypeException }
   from './components/Form';
 import FormModal from './components/FormModal';
@@ -174,6 +175,13 @@ class App extends Component {
     this.setState({ calendarEvents: events });
   }
 
+  addCalendarJobEvent(job) {
+    const jobEvent = makeBigCalendarJobEvent(job);
+    this.setState({
+      calendarEvents: this.state.calendarEvents.concat([jobEvent]),
+    });
+  }
+
   requestLogin() {
     // We need to refer to 'this' (the current App component instance) in an
     // axios callback below. Because the 'this' variable in the axios callbacks
@@ -231,11 +239,14 @@ class App extends Component {
         }
       })
         .then(response => {
-          console.log(response);
+          const newJob = response.data.job;
+          this.addCalendarJobEvent(newJob)
         })
         .catch(error => {
           console.log(error);
-          console.log(error.response);
+          if (error.response) {
+            console.log(error.response);
+          }
         })
       ;
     }
