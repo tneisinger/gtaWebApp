@@ -14,6 +14,17 @@ export const datestringToDate = datestring => {
   return new Date(year, month, day);
 };
 
+// convert a Date object into a string of the form yyyy-mm-dd
+export const dateToDatestring = date => {
+  var mm = date.getMonth() + 1; // getMonth() is zero-based
+  var dd = date.getDate();
+
+  return [date.getFullYear(),
+          (mm>9 ? '' : '0') + mm,
+          (dd>9 ? '' : '0') + dd
+         ].join('-');
+};
+
 // Run the fn function at the given futureDate time.
 export const runCallbackAt = (futureTime, callback) => {
   const now = new Date();
