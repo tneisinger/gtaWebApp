@@ -51,7 +51,8 @@ def add_job():
         db.session.commit()
         response_object = {
             'status': 'success',
-            'message': f'{job.client} job was added!'
+            'message': f'{job.client} job was added!',
+            'job': job.to_json()
         }
         return jsonify(response_object), 201
     except exc.IntegrityError as e:
