@@ -3,7 +3,6 @@
 import json
 import unittest
 from datetime import date, timedelta
-import sys
 
 from project.tests.base import BaseTestCase
 from project.admin.models import Job
