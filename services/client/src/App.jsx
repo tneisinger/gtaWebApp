@@ -6,14 +6,14 @@ import { Button } from 'react-bootstrap';
 
 import PrivateRoute from './components/PrivateRoute';
 import Home from './components/Home';
-import Calendar, { makeBigCalendarJobEvent, makeBigCalendarExpenseEvent}
-  from './components/Calendar';
+import Calendar, { makeBigCalendarJobEvent, makeBigCalendarExpenseEvent,
+  UnknownEventTypeException} from './components/Calendar';
 import Form, { formTypes, defaultFormData, UnknownFormTypeException }
   from './components/Form';
 import FormModal from './components/FormModal';
 import ChoiceModal from './components/ChoiceModal';
 import NavBar from './components/NavBar';
-import { copy, deepcopy, runCallbackAt } from './utils';
+import { copy, deepcopy, runCallbackAt, fillObjectWith } from './utils';
 
 
 class App extends Component {
@@ -121,8 +121,29 @@ class App extends Component {
   }
 
   onCalendarEventSelect(event) {
-    console.log('Running onCalendarEventSelect');
-    console.log(event);
+    let formType;
+    switch (event.eventType) {
+      case 'job':
+        formType = formTypes.job;
+        break;
+      case 'expense':
+        formType = formTypes.oneTimeExpense;
+        break;
+      default:
+        throw new UnknownEventTypeException('Unknown calendar event type');
+    }
+
+    // Update the form data before showing the form modal
+    const newFormData = this.state.formData;
+    newFormData[formType] = fillObjectWith(newFormData[formType], event);
+
+    // Set the new form data and show the job form
+    this.setState({
+      formData: newFormData,
+      showFormModal: true,
+      formType: formTypes.job,
+      formModalHeading: 'Edit Job',
+    });
   }
 
   onFormChange(event) {
