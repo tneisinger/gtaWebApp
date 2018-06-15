@@ -157,6 +157,13 @@ function getClassNamesForEvent(event) {
 }
 
 
+// Define an exception for when an unkown event type is discovered
+export const UnknownEventTypeException = message => {
+  this.message = message;
+  this.name = 'UnknownEventTypeException';
+};
+
+
 Calendar.propTypes = {
   onSelectEvent: PropTypes.func.isRequired,
   onSelectSlot: PropTypes.func.isRequired,
