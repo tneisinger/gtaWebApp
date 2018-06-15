@@ -14,7 +14,7 @@ export const formTypes = {
 
 // Define an exception for when an unknown formType is discovered
 export const UnknownFormTypeException = message => {
-  this.message = message
+  this.message = message;
   this.name = 'UnknownFormTypeException';
 };
 
@@ -72,7 +72,7 @@ const Form = (props) => {
             <input
               autoFocus
               name="client"
-              className="form-control input-lg"
+              className="form-control input-lg input-client"
               type="text"
               placeholder="Client Name"
               required
@@ -84,7 +84,7 @@ const Form = (props) => {
           <div className="form-group">
             <input
               name="description"
-              className="form-control input-lg"
+              className="form-control input-lg input-description"
               type="text"
               placeholder="Description"
               required
@@ -96,7 +96,7 @@ const Form = (props) => {
           <div className="form-group">
             <input
               name="amountPaid"
-              className="form-control input-lg"
+              className="form-control input-lg input-amountPaid"
               type="number"
               placeholder="Amount Paid"
               required
@@ -111,7 +111,7 @@ const Form = (props) => {
               <select
                 id="paidTo"
                 name="paidTo"
-                className="form-control input-lg"
+                className="form-control input-lg input-paidTo"
                 placeholder="Paid To"
                 required
                 value={data.paidTo}
@@ -133,7 +133,7 @@ const Form = (props) => {
               <select
                 id="workedBy"
                 name="workedBy"
-                className="form-control input-lg"
+                className="form-control input-lg input-workedBy"
                 required
                 value={data.workedBy}
                 onChange={props.onFormChange}
@@ -151,7 +151,7 @@ const Form = (props) => {
               <select
                 id="confirmation"
                 name="confirmation"
-                className="form-control input-lg"
+                className="form-control input-lg input-confirmation"
                 required
                 value={data.confirmation}
                 onChange={props.onFormChange}
@@ -168,7 +168,7 @@ const Form = (props) => {
               <input
                 id="hasPaid"
                 name="hasPaid"
-                className="form-check-input checkbox-lg"
+                className="form-check-input checkbox-lg input-hasPaid"
                 type="checkbox"
                 value={data.hasPaid}
                 onChange={props.onFormChange}
@@ -182,7 +182,7 @@ const Form = (props) => {
               <input
                 id="startDate"
                 name="startDate"
-                className="form-control input-lg"
+                className="form-control input-lg input-startDate"
                 type="date"
                 required
                 value={data.startDate}
@@ -197,7 +197,7 @@ const Form = (props) => {
               <input
                 id="endDate"
                 name="endDate"
-                className="form-control input-lg"
+                className="form-control input-lg input-endDate"
                 type="date"
                 required
                 value={data.endDate}
@@ -215,7 +215,7 @@ const Form = (props) => {
             <input
               autoFocus
               name="merchant"
-              className="form-control input-lg"
+              className="form-control input-lg input-merchant"
               type="text"
               placeholder="Bought From"
               required
@@ -227,7 +227,7 @@ const Form = (props) => {
           <div className="form-group">
             <input
               name="description"
-              className="form-control input-lg"
+              className="form-control input-lg input-description"
               type="text"
               placeholder="Description"
               required
@@ -239,7 +239,7 @@ const Form = (props) => {
           <div className="form-group">
             <input
               name="amountSpent"
-              className="form-control input-lg"
+              className="form-control input-lg input-amountSpent"
               type="number"
               placeholder="Amount Spent"
               required
@@ -254,7 +254,7 @@ const Form = (props) => {
               <input
                 id="date"
                 name="date"
-                className="form-control input-lg"
+                className="form-control input-lg input-date"
                 type="date"
                 required
                 value={data.date}
@@ -269,7 +269,7 @@ const Form = (props) => {
               <select
                 id="paidBy"
                 name="paidBy"
-                className="form-control input-lg"
+                className="form-control input-lg input-paidBy"
                 required
                 value={data.paidBy}
                 onChange={props.onFormChange}
@@ -290,7 +290,7 @@ const Form = (props) => {
               <input
                 id="taxDeductible"
                 name="taxDeductible"
-                className="form-check-input checkbox-lg"
+                className="form-check-input checkbox-lg input-taxDeductible"
                 type="checkbox"
                 value={data.taxDeductible}
                 onChange={props.onFormChange}
@@ -304,7 +304,7 @@ const Form = (props) => {
               <select
                 id="category"
                 name="category"
-                className="form-control input-lg"
+                className="form-control input-lg input-category"
                 required
                 value={data.category}
                 onChange={props.onFormChange}
