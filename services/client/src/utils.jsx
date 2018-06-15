@@ -33,3 +33,43 @@ export const runCallbackAt = (futureTime, callback) => {
     setTimeout(() => { callback(); }, timeDif);
   }
 };
+
+// Assume that the dataObject has all the keys that the modelObject has, but
+// the dataObject also has other key-value pairs.  This function will create a
+// new object that has only the keys of the modelObject, and fill those keys
+// with the corresponding data from the dataObject.
+//
+// Example:
+//
+//   modelObject = {
+//     first: '',
+//     second: '',
+//     third: ''
+//   }
+//
+//   dataObject = {
+//     zeroth: 'zero!!!',
+//     first: 'first!!!',
+//     second: 'second!!!',
+//     third: 'third!!!',
+//     fourth: 'fourth!!!'
+//   }
+//
+//   fillObjectWith(modelObject, dataObject)
+//
+//   RESULT:
+//   >>>    {
+//   >>>      first: 'first!!!',
+//   >>>      second: 'second!!!',
+//   >>>      third: 'third!!!',
+//   >>>    }
+//
+// This function does not check that all the keys in modelObject are also in
+// dataObject.  This function will blow up if that is not the case.
+export const fillObjectWith = (modelObject, dataObject) => {
+  let result = {};
+  Object.keys(modelObject).forEach(key => {
+    result[key] = dataObject[key];
+  })
+  return result;
+}
