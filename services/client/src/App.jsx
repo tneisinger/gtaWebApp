@@ -94,8 +94,10 @@ class App extends Component {
     const startDate = moment(slotInfo.start).format('YYYY-MM-DD');
     const endDate = moment(slotInfo.end).format('YYYY-MM-DD');
 
-    // prepare the forms
-    const { formData } = this.state;
+    // Reset the form inputs to their default values
+    const formData = deepcopy(defaultFormData);
+
+    // Enter the selected dates into the forms
     formData[formTypes.job].startDate = startDate;
     formData[formTypes.job].endDate = endDate;
     formData[formTypes.oneTimeExpense].date = startDate;
