@@ -25,6 +25,17 @@ export const dateToDatestring = date => {
          ].join('-');
 };
 
+Date.prototype.yyyymmdd = function(delimiter) {
+  const d = delimiter ? delimiter : '';
+  const mm = this.getMonth() + 1; // getMonth() is zero-based
+  const dd = this.getDate();
+
+  return [this.getFullYear(),
+          (mm>9 ? '' : '0') + mm,
+          (dd>9 ? '' : '0') + dd
+         ].join(d);
+};
+
 // Run the fn function at the given futureDate time.
 export const runCallbackAt = (futureTime, callback) => {
   const now = new Date();
