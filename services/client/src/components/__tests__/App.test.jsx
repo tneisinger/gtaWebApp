@@ -14,7 +14,7 @@ import CheckingUserStatus from '../CheckingUserStatus';
 import FormModal from '../FormModal';
 import { defaultFormData, formTypes } from '../Form';
 import { LocalStorageMock } from '../../testUtils';
-import { copy, deepcopy, dateToDatestring} from '../../utils';
+import { copy, deepcopy} from '../../utils';
 
 
 global.localStorage = new LocalStorageMock();
@@ -302,8 +302,8 @@ describe('The main App component', () => {
               workedBy: 'Tyler',
               confirmation: 'Confirmed',
               hasPaid: false,
-              startDate: dateToDatestring(new Date()),
-              endDate: dateToDatestring(new Date()),
+              startDate: (new Date()).yyyymmdd('-'),
+              endDate: (new Date()).yyyymmdd('-'),
             }
           }
         }, addJobRequestInfo);
@@ -359,8 +359,8 @@ describe('The main App component', () => {
           workedBy: 'Tyler',
           confirmation: 'Confirmed',
           hasPaid: false,
-          startDate: dateToDatestring(clickedDate),
-          endDate: dateToDatestring(clickedDate),
+          startDate: clickedDate.yyyymmdd('-'),
+          endDate: clickedDate.yyyymmdd('-'),
         };
 
         mockAxios.mockResponse({
@@ -455,8 +455,8 @@ describe('The main App component', () => {
           workedBy: 'Tyler',
           confirmation: 'Confirmed',
           hasPaid: false,
-          startDate: dateToDatestring(clickedDate),
-          endDate: dateToDatestring(clickedDate),
+          startDate: clickedDate.yyyymmdd('-'),
+          endDate: clickedDate.yyyymmdd('-'),
         };
 
         mockAxios.mockResponse({
