@@ -14,17 +14,8 @@ export const datestringToDate = datestring => {
   return new Date(year, month, day);
 };
 
-// convert a Date object into a string of the form yyyy-mm-dd
-export const dateToDatestring = date => {
-  var mm = date.getMonth() + 1; // getMonth() is zero-based
-  var dd = date.getDate();
-
-  return [date.getFullYear(),
-          (mm>9 ? '' : '0') + mm,
-          (dd>9 ? '' : '0') + dd
-         ].join('-');
-};
-
+// convert a Date object into a string of the form yyyymmdd
+// with an optional delimiter
 Date.prototype.yyyymmdd = function(delimiter) {
   const d = delimiter ? delimiter : '';
   const mm = this.getMonth() + 1; // getMonth() is zero-based
