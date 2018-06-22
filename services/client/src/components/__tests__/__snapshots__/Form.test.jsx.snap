@@ -10,7 +10,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
     >
       <input
         autoFocus={true}
-        className="form-control input-lg"
+        className="form-control input-lg input-client"
         name="client"
         onChange={[Function]}
         placeholder="Client Name"
@@ -23,7 +23,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <input
-        className="form-control input-lg"
+        className="form-control input-lg input-description"
         name="description"
         onChange={[Function]}
         placeholder="Description"
@@ -36,7 +36,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <input
-        className="form-control input-lg"
+        className="form-control input-lg input-amountPaid"
         name="amountPaid"
         onChange={[Function]}
         placeholder="Amount Paid"
@@ -53,7 +53,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       >
         Paid To
         <select
-          className="form-control input-lg"
+          className="form-control input-lg input-paidTo"
           id="paidTo"
           name="paidTo"
           onChange={[Function]}
@@ -92,7 +92,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       >
         Worked By
         <select
-          className="form-control input-lg"
+          className="form-control input-lg input-workedBy"
           id="workedBy"
           name="workedBy"
           onChange={[Function]}
@@ -125,7 +125,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       >
         Confirmation
         <select
-          className="form-control input-lg"
+          className="form-control input-lg input-confirmation"
           id="confirmation"
           name="confirmation"
           onChange={[Function]}
@@ -153,7 +153,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       >
         Has Paid
         <input
-          className="form-check-input checkbox-lg"
+          className="form-check-input checkbox-lg input-hasPaid"
           id="hasPaid"
           name="hasPaid"
           onChange={[Function]}
@@ -170,7 +170,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       >
         Start Date
         <input
-          className="form-control input-lg"
+          className="form-control input-lg input-startDate"
           id="startDate"
           name="startDate"
           onChange={[Function]}
@@ -188,7 +188,7 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       >
         End Date
         <input
-          className="form-control input-lg"
+          className="form-control input-lg input-endDate"
           id="endDate"
           name="endDate"
           onChange={[Function]}
@@ -265,7 +265,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
     >
       <input
         autoFocus={true}
-        className="form-control input-lg"
+        className="form-control input-lg input-merchant"
         name="merchant"
         onChange={[Function]}
         placeholder="Bought From"
@@ -278,7 +278,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <input
-        className="form-control input-lg"
+        className="form-control input-lg input-description"
         name="description"
         onChange={[Function]}
         placeholder="Description"
@@ -291,7 +291,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       className="form-group"
     >
       <input
-        className="form-control input-lg"
+        className="form-control input-lg input-amountSpent"
         name="amountSpent"
         onChange={[Function]}
         placeholder="Amount Spent"
@@ -308,7 +308,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       >
         Date
         <input
-          className="form-control input-lg"
+          className="form-control input-lg input-date"
           id="date"
           name="date"
           onChange={[Function]}
@@ -326,7 +326,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       >
         Paid By
         <select
-          className="form-control input-lg"
+          className="form-control input-lg input-paidBy"
           id="paidBy"
           name="paidBy"
           onChange={[Function]}
@@ -364,7 +364,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       >
         Tax Deductible
         <input
-          className="form-check-input checkbox-lg"
+          className="form-check-input checkbox-lg input-taxDeductible"
           id="taxDeductible"
           name="taxDeductible"
           onChange={[Function]}
@@ -381,7 +381,7 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       >
         Category
         <select
-          className="form-control input-lg"
+          className="form-control input-lg input-category"
           id="category"
           name="category"
           onChange={[Function]}
