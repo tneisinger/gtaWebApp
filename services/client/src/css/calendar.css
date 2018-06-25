@@ -16,7 +16,6 @@ label {
   font-weight: bold;
 }
 
-
 /**************************************************/
 /***********  FROM CHROMEBOX CSS FILE   ***********/
 /**************************************************/
@@ -141,9 +140,27 @@ label {
     border-color: var(--job-notpaid-border-color);
 }
 
+/**** JOB EVENTS ****/
+
+.job-event.workedby-tyler, .job-event.workedby-tyler.rbc-selected {
+    background-color: var(--job-color-tyler);
+    border-color: var(--job-color-tyler);
+}
+
+.job-event.workedby-meghan, .job-event.workedby-meghan.rbc-selected {
+    background-color: var(--job-color-meghan);
+    border-color: var(--job-color-meghan);
+}
+
+.job-event.workedby-tyler-and-meghan,
+.job-event.workedby-tyler-and-meghan.rbc-selected {
+    background-color: var(--job-color-tyler-and-meghan);
+    border-color: var(--job-color-tyler-and-meghan);
+}
+
 /**** EXPENSE EVENTS ****/
 
-.expense-event {
+.expense-event, .expense-event.rbc-selected {
     background-color: var(--expense-color);
     border-color: var(--expense-color);
 }
