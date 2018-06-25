@@ -205,6 +205,13 @@ class App extends Component {
     });
   }
 
+  addCalendarExpenseEvent(expense) {
+    const expenseEvent = makeBigCalendarExpenseEvent(expense);
+    this.setState({
+      calendarEvents: this.state.calendarEvents.concat([expenseEvent]),
+    });
+  }
+
   requestLogin() {
     // We need to refer to 'this' (the current App component instance) in an
     // axios callback below. Because the 'this' variable in the axios callbacks
@@ -275,8 +282,40 @@ class App extends Component {
     }
   }
 
-  // requestCreateOneTimeExpense() {
-  // }
+  requestCreateOneTimeExpense() {
+    // Get the form data from the oneTimeExpense form
+    const data = this.state.formData[formTypes.oneTimeExpense];
+
+    // Try to get the current authToken
+    const authToken = window.localStorage.getItem('authToken');
+
+    // If no authToken, redirect to the homepage and, if necessary, change
+    // state to reflect that the user is not logged in.
+    if (!authToken) {
+      this.props.history.push('/');
+      if (this.state.username || this.state.userLoggedIn) {
+        this.setState({ username: '', userLoggedIn: false });
+      }
+    } else {
+      // Attempt to add the expense to the db
+      axios.post(`${this.FLASK_URL_ROOT}/admin/one-time-expenses`, data, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        }
+      })
+        .then(response => {
+          const newExpense = response.data.expense;
+          this.addCalendarExpenseEvent(newExpense)
+        })
+        .catch(error => {
+          console.log(error);
+          if (error.response) {
+            console.log(error.response);
+          }
+        })
+      ;
+    }
+  }
 
   showOneTimeExpenseFormModal() {
     // Hide the choice modal (if shown) and show the oneTimeExpense form modal
