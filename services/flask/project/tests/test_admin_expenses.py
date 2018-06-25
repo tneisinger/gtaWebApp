@@ -55,6 +55,15 @@ class TestAdminApiExpenses(BaseTestCase):
             self.assertIn('Test Merchant expense was added!', data['message'])
             self.assertIn('success', data['status'])
 
+            # Before comparing the returned expense to the expense we sent in
+            # the request, we need to pop the id off of the returned expense.
+            # While we're at it, let's check that it has the value we expect.
+            self.assertEqual(1, data['expense'].pop('id'))
+
+            # The returned job and the input job should now match.
+            self.assertEqual(data['expense'],
+                    self.VALID_ONE_TIME_EXPENSE_DICT)
+
     def test_add_one_time_expense_empty_json(self):
         """Ensure an error is thrown if the JSON object is empty."""
         with self.client:
