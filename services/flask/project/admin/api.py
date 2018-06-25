@@ -147,8 +147,9 @@ def add_one_time_expense():
         db.session.add(expense)
         db.session.commit()
         response_object = {
-                'status': 'success',
-                'message': f'{post_data.get("merchant")} expense was added!'
+            'status': 'success',
+            'message': f'{post_data.get("merchant")} expense was added!',
+            'expense': expense.to_json()
         }
         return jsonify(response_object), 201
     except exc.IntegrityError as e:
