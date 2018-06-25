@@ -138,6 +138,7 @@ class Job(db.Model):
 class OneTimeExpense(db.Model):
 
     class PaidBy(enum.Enum):
+        GLADTIME_AUDIO = 'Gladtime Audio'
         TYLER_AND_MEGHAN = 'Tyler and Meghan'
         TYLER = 'Tyler'
         MEGHAN = 'Meghan'
