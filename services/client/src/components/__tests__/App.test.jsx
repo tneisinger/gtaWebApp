@@ -550,6 +550,68 @@ describe('The main App component', () => {
 
       });
 
+      it('Creating a new oneTimeExpense should render of BC event', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        // Fake a calendar click by directly running the Calendar's
+        // onSelectSlot method.
+        let clickedDate = new Date();
+        clickedDate.setDate(16);  // The 16th of the current month
+        const slotInfo = { start: clickedDate, end: clickedDate };
+        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+        wrappedApp().update();
+
+        // The choiceModal should now be shown.
+        // Click the 'New Job' button
+        const newExpenseBtn = wrappedApp()
+            .find('.modal-body').find('.btn-danger');
+        newExpenseBtn.simulate('click');
+        wrappedApp().update();
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
+
+        // The date input should be populated with a date that matches the
+        // clickedDate we defined above.
+        expect(wrappedApp().find('#date').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
+
+        const submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        let addExpenseRequestInfo = mockAxios.lastReqGet();
+
+        mockAxios.mockResponse({
+          data: {
+            expense: {
+              merchant: 'Trew Audio',
+              description: 'cables',
+              amountSpent: 300,
+              paidBy: 'Gladtime Audio',
+              taxDeductible: true,
+              category: 'Business Equipment',
+              date: clickedDate.yyyymmdd('-'),
+            }
+          }
+        }, addExpenseRequestInfo);
+
+        wrappedApp().update();
+
+        const calendarEvents = wrappedApp().find('.rbc-event');
+        expect(calendarEvents.length).toBe(1);
+
+        const eventTitle = calendarEvents.find('.rbc-event-content').text();
+        expect(eventTitle).toBe('Trew Audio');
+      });
     });
   });
 
