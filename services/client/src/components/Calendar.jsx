@@ -147,7 +147,8 @@ function getClassNamesForEvent(event) {
     classNames.push('expense-' + event.id);
   } else if (event.eventType === 'job') {
     classNames.push('job-event');
-    classNames.push('workedby-' + event.workedBy.toLowerCase());
+    classNames.push('workedby-' +
+      event.workedBy.toLowerCase().replace(/ /g,'-'));
     classNames.push('job-' + event.id);
     if (!event.has_paid && event.end < new Date()) {
       classNames.push('has-not-paid');
