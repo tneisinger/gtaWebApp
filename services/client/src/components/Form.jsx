@@ -277,8 +277,8 @@ const Form = (props) => {
                 <option value="Gladtime Audio">Gladtime Audio</option>
                 <option value="Meghan">Meghan</option>
                 <option value="Tyler">Tyler</option>
-                <option value="Tyler/Meghan Separately">
-                  Tyler/Meghan Separately
+                <option value="Tyler and Meghan">
+                  Tyler and Meghan
                 </option>
               </select>
             </label>
