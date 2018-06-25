@@ -568,7 +568,7 @@ describe('The main App component', () => {
         wrappedApp().update();
 
         // The choiceModal should now be shown.
-        // Click the 'New Job' button
+        // Click the 'New Expense' button
         const newExpenseBtn = wrappedApp()
             .find('.modal-body').find('.btn-danger');
         newExpenseBtn.simulate('click');
@@ -612,6 +612,104 @@ describe('The main App component', () => {
         const eventTitle = calendarEvents.find('.rbc-event-content').text();
         expect(eventTitle).toBe('Trew Audio');
       });
+
+      it('Clicking on a BC expense event should bring up form modal', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        // Fake a calendar click by directly running the Calendar's
+        // onSelectSlot method.
+        let clickedDate = new Date();
+        const currentYear = clickedDate.getFullYear();
+        const currentMonth = clickedDate.getMonth();
+        // Select the 16th of the current month as the clicked date
+        clickedDate = new Date(currentYear, currentMonth, 16);
+        const slotInfo = { start: clickedDate, end: clickedDate };
+        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+        wrappedApp().update();
+
+        // The choiceModal should now be shown.
+        // Click the 'New Expense' button
+        const newExpenseBtn = wrappedApp()
+            .find('.modal-body').find('.btn-danger');
+        newExpenseBtn.simulate('click');
+        wrappedApp().update();
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
+
+        // The date input should be populated with a date that matches the
+        // clickedDate we defined above.
+        expect(wrappedApp().find('#date').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
+
+        const submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        let addExpenseRequestInfo = mockAxios.lastReqGet();
+
+        const expenseData = {
+          merchant: 'Trew Audio',
+          description: 'cables',
+          amountSpent: 300,
+          paidBy: 'Gladtime Audio',
+          taxDeductible: true,
+          category: 'Business Equipment',
+          date: clickedDate.yyyymmdd('-'),
+        }
+
+        mockAxios.mockResponse({
+          data: {
+            expense: expenseData,
+          }
+        }, addExpenseRequestInfo);
+
+        wrappedApp().update();
+
+        // There should be one expense event on the calendar
+        const expenseEvents = wrappedApp().find('.expense-event');
+        expect(expenseEvents.length).toBe(1);
+
+        // Click on the one expense event
+        const expenseEventContent = expenseEvents.find('.rbc-event-content');
+        expenseEventContent.simulate('click');
+
+        // The formModal should now be shown, showing the expense form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
+
+        // Check that the form is populated with the expense data
+        expect(wrappedApp().find('.input-merchant').props().value).toBe(
+          expenseData.merchant
+        );
+        expect(wrappedApp().find('.input-description').props().value).toBe(
+          expenseData.description
+        );
+        expect(wrappedApp().find('.input-amountSpent').props().value).toBe(
+          expenseData.amountSpent
+        );
+        expect(wrappedApp().find('.input-paidBy').props().value).toBe(
+          expenseData.paidBy
+        );
+        expect(wrappedApp().find('.input-taxDeductible').props().value).toBe(
+          expenseData.taxDeductible
+        );
+        expect(wrappedApp().find('.input-category').props().value).toBe(
+          expenseData.category
+        );
+        expect(wrappedApp().find('.input-date').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
+      });
+
     });
   });
 
