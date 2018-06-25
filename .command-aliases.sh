@@ -13,17 +13,17 @@ alias devup="docker-compose -f docker-compose-dev.yml up -d --build"
 alias devdown="docker-compose -f docker-compose-dev.yml down -v"
 
 # Run all the tests for the flask backend
-alias testflask="docker-compose -f docker-compose-dev.yml run flask \
+alias testflask="docker-compose -f docker-compose-dev.yml run --rm flask \
   python manage.py test"
 
 # Run a narrow subset of the flask backend tests.  Define which test
 # files to run by modifying the /services/flask/manage.py file
-alias testflaskn="docker-compose -f docker-compose-dev.yml run flask \
+alias testflaskn="docker-compose -f docker-compose-dev.yml run --rm flask \
   python manage.py test_narrow"
 
 # Run the flake8 linter against the flask code
-alias lintflask="docker-compose -f docker-compose-dev.yml run flask \
+alias lintflask="docker-compose -f docker-compose-dev.yml run --rm flask \
   flake8 project"
 
 # Access the database via the postgresql command line tool
-alias psqlcli="docker exec -ti flask-db psql -U postgres -W"
+alias psqlcli="docker exec -ti --rm flask-db psql -U postgres -W"
