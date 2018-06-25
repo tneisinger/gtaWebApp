@@ -27,3 +27,14 @@ alias lintflask="docker-compose -f docker-compose-dev.yml run --rm flask \
 
 # Access the database via the postgresql command line tool
 alias psqlcli="docker exec -ti --rm flask-db psql -U postgres -W"
+
+# Recreate the postgresql database
+alias recreateDB="docker-compose -f docker-compose-dev.yml run --rm flask \
+  python manage.py recreate_db"
+
+flaskCli() {
+  # Perform one of the flask cli commands defined in `services/flask/manage.py`
+  # When using this function, provide one argument -> the cli command you want
+  # to run.
+  docker-compose -f docker-compose-dev.yml run --rm flask python manage.py $1
+}
