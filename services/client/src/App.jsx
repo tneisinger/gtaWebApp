@@ -124,12 +124,15 @@ class App extends Component {
 
   onCalendarEventSelect(event) {
     let formType;
+    let formModalHeading;
     switch (event.eventType) {
       case 'job':
         formType = formTypes.job;
+        formModalHeading = 'Edit Job';
         break;
-      case 'expense':
+      case 'oneTimeExpense':
         formType = formTypes.oneTimeExpense;
+        formModalHeading = 'Edit Expense';
         break;
       default:
         throw new UnknownEventTypeException('Unknown calendar event type');
@@ -143,8 +146,8 @@ class App extends Component {
     this.setState({
       formData: newFormData,
       showFormModal: true,
-      formType: formTypes.job,
-      formModalHeading: 'Edit Job',
+      formType: formType,
+      formModalHeading: formModalHeading,
     });
   }
 
