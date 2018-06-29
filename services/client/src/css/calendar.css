@@ -78,67 +78,6 @@ label {
     --expense-highlight-color: #e45763; /* light red */
 }
 
-.workedby-tyler {
-    background-color: var(--job-color-tyler);
-    border-color: var(--job-color-tyler);
-}
-
-.workedby-tyler.fc-event-hovered {
-	background-color: var(--job-highlight-color-tyler);
-    border-color: var(--job-highlight-color-tyler);
-}
-
-/* When a pencilled-in Tyler job is hovered, change the background
- * color for that job to Tyler's default color */
-.workedby-tyler.pencilled-in.fc-event-hovered {
-    background-color: var(--job-color-tyler);
-    border-color: var(--job-color-tyler);
-}
-
-.workedby-meghan {
-    background-color: var(--job-color-meghan);
-    border-color: var(--job-color-meghan);
-}
-
-.workedby-meghan.fc-event-hovered {
-    background-color: var(--job-highlight-color-meghan);
-    border-color: var(--job-highlight-color-meghan);
-}
-
-/* When a pencilled-in Meghan job is hovered, change the background
- * color for that job to Meghan's default color*/
-.workedby-meghan.pencilled-in.fc-event-hovered {
-    background-color: var(--job-color-meghan);
-    border-color: var(--job-color-meghan);
-}
-
-.workedby-tyler-and-meghan {
-    background-color: var(--job-color-tyler-and-meghan);
-    border-color: var(--job-color-tyler-and-meghan);
-}
-
-.workedby-tyler-and-meghan.fc-event-hovered {
-	background-color: var(--job-highlight-color-tyler-and-meghan);
-    border-color: var(--job-highlight-color-tyler-and-meghan);
-}
-
-/* When a pencilled-in TylerAndMeghan job is hovered, change the background
- * color for that job to the default color for TylerAndMeghan jobs */
-.workedby-tyler-and-meghan.pencilled-in.fc-event-hovered {
-    background-color: var(--job-color-tyler-and-meghan);
-    border-color: var(--job-color-tyler-and-meghan);
-}
-
-.pencilled-in {
-    background-color: var(--job-pencilledin-color);
-    border-color: var(--job-pencilledin-color);
-}
-
-.has-not-paid,
-.has-not-paid.fc-event-hovered,
-.has-not-paid.pencilled-in.fc-event-hovered {
-    border-color: var(--job-notpaid-border-color);
-}
 
 /**** JOB EVENTS ****/
 
@@ -172,6 +111,39 @@ label {
   background-color: var(--job-highlight-color-tyler-and-meghan);
   border-color: var(--job-highlight-color-tyler-and-meghan);
 }
+
+/* When a pencilled-in Tyler job is hovered, change the background
+ * color for that job to Tyler's default color*/
+.workedby-tyler.pencilled-in.fc-event-hovered {
+    background-color: var(--job-color-tyler);
+    border-color: var(--job-color-tyler);
+}
+
+/* When a pencilled-in Meghan job is hovered, change the background
+ * color for that job to Meghan's default color*/
+.workedby-meghan.pencilled-in.fc-event-hovered {
+    background-color: var(--job-color-meghan);
+    border-color: var(--job-color-meghan);
+}
+
+/* When a pencilled-in TylerAndMeghan job is hovered, change the background
+ * color for that job to the default color for TylerAndMeghan jobs */
+.workedby-tyler-and-meghan.pencilled-in.fc-event-hovered {
+    background-color: var(--job-color-tyler-and-meghan);
+    border-color: var(--job-color-tyler-and-meghan);
+}
+
+.pencilled-in {
+    background-color: var(--job-pencilledin-color);
+    border-color: var(--job-pencilledin-color);
+}
+
+.has-not-paid,
+.has-not-paid.fc-event-hovered,
+.has-not-paid.pencilled-in.fc-event-hovered {
+    border-color: var(--job-notpaid-border-color);
+}
+
 
 /**** EXPENSE EVENTS ****/
 
