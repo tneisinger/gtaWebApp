@@ -158,6 +158,21 @@ label {
     border-color: var(--job-color-tyler-and-meghan);
 }
 
+.job-event.workedby-tyler:hover {
+  background-color: var(--job-highlight-color-tyler);
+  border-color: var(--job-highlight-color-tyler);
+}
+
+.job-event.workedby-meghan:hover {
+  background-color: var(--job-highlight-color-meghan);
+  border-color: var(--job-highlight-color-meghan);
+}
+
+.job-event.workedby-tyler-and-meghan:hover {
+  background-color: var(--job-highlight-color-tyler-and-meghan);
+  border-color: var(--job-highlight-color-tyler-and-meghan);
+}
+
 /**** EXPENSE EVENTS ****/
 
 .expense-event, .expense-event.rbc-selected {
@@ -165,7 +180,7 @@ label {
     border-color: var(--expense-color);
 }
 
-.expense-event.fc-event-hovered {
+.expense-event:hover {
     background-color: var(--expense-highlight-color);
     border-color: var(--expense-highlight-color);
 }
