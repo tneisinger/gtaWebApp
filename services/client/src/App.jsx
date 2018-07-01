@@ -27,6 +27,7 @@ class App extends Component {
       username: '',
       userLoggedIn: null,
       calendarEvents: [],
+      selectedEvent: null,
       formData: deepcopy(defaultFormData),
       showChoiceModal: false,
       showFormModal: false,
@@ -111,6 +112,7 @@ class App extends Component {
         showFormModal: true,
         formType: formTypes.job,
         formModalHeading: 'Create a new Job',
+        selectedEvent: null,
         formData,
       });
     } else {
@@ -148,6 +150,7 @@ class App extends Component {
       showFormModal: true,
       formType: formType,
       formModalHeading: formModalHeading,
+      selectedEvent: event,
     });
   }
 
@@ -169,7 +172,11 @@ class App extends Component {
         this.requestLogin();
         break;
       case formTypes.job:
-        this.requestCreateJob();
+        if (this.state.selectedEvent) {
+          this.requestUpdateJob();
+        } else {
+          this.requestCreateJob();
+        }
         break;
       case formTypes.oneTimeExpense:
         this.requestCreateOneTimeExpense();
@@ -205,6 +212,24 @@ class App extends Component {
     const jobEvent = makeBigCalendarJobEvent(job);
     this.setState({
       calendarEvents: this.state.calendarEvents.concat([jobEvent]),
+    });
+  }
+
+  updateCalendarJobEvent(job) {
+    const newJobEvent = makeBigCalendarJobEvent(job);
+    const oldCalendarEvents = this.state.calendarEvents;
+    const newCalendarEvents = [];
+
+    oldCalendarEvents.forEach(event => {
+      if (event.eventType === 'job' && event.id === newJobEvent.id) {
+        newCalendarEvents.push(newJobEvent)
+      } else {
+        newCalendarEvents.push(event)
+      }
+    });
+
+    this.setState({
+      calendarEvents: newCalendarEvents,
     });
   }
 
@@ -274,6 +299,43 @@ class App extends Component {
         .then(response => {
           const newJob = response.data.job;
           this.addCalendarJobEvent(newJob)
+        })
+        .catch(error => {
+          console.log(error);
+          if (error.response) {
+            console.log(error.response);
+          }
+        })
+      ;
+    }
+  }
+
+  requestUpdateJob() {
+    // Get the form data from the job form
+    const data = this.state.formData[formTypes.job];
+
+    // Try to get the current authToken
+    const authToken = window.localStorage.getItem('authToken');
+
+    // If no authToken, redirect to the homepage and, if necessary, change
+    // state to reflect that the user is not logged in.
+    if (!authToken) {
+      this.props.history.push('/');
+      if (this.state.username || this.state.userLoggedIn) {
+        this.setState({ username: '', userLoggedIn: false });
+      }
+    } else {
+      // Get the id of the selected job
+      const jobId = this.state.selectedEvent.id
+      // Attempt to update the job's database entry
+      axios.post(`${this.FLASK_URL_ROOT}/admin/jobs/${jobId}`, data, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        }
+      })
+        .then(response => {
+          const newJob = response.data.job;
+          this.updateCalendarJobEvent(newJob)
         })
         .catch(error => {
           console.log(error);

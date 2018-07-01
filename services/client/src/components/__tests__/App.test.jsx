@@ -413,6 +413,177 @@ describe('The main App component', () => {
         );
       });
 
+      it('Submitting an "Edit Job" form should update the job', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        // Fake a calendar click by directly running the Calendar's
+        // onSelectSlot method.
+        let clickedDate = new Date();
+        const currentYear = clickedDate.getFullYear();
+        const currentMonth = clickedDate.getMonth();
+        // Select the 15th of the current month as the clicked date
+        clickedDate = new Date(currentYear, currentMonth, 15);
+        const slotInfo = { start: clickedDate, end: clickedDate };
+        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+        wrappedApp().update();
+
+        // The choiceModal should now be shown.
+        // Click the 'New Job' button
+        const newJobBtn = wrappedApp()
+            .find('.modal-body').find('.btn-primary');
+        newJobBtn.simulate('click');
+        wrappedApp().update();
+
+        // Submit the job form
+        let submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        let addJobRequestInfo = mockAxios.lastReqGet();
+
+        let jobData = {
+          client: 'test client value',
+          description: 'test description value',
+          amountPaid: 300,
+          paidTo: 'Gladtime Audio',
+          workedBy: 'Tyler',
+          confirmation: 'Confirmed',
+          hasPaid: false,
+          startDate: clickedDate.yyyymmdd('-'),
+          endDate: clickedDate.yyyymmdd('-'),
+        };
+
+        mockAxios.mockResponse({
+          data: {
+            job: jobData
+          }
+        }, addJobRequestInfo);
+
+        wrappedApp().update();
+
+        // There should be one job event on the calendar
+        let calendarEvents = wrappedApp().find('.rbc-event');
+        expect(calendarEvents.length).toBe(1);
+
+        // Click on the one job event
+        let jobEvent = calendarEvents.find('.rbc-event-content');
+        jobEvent.simulate('click');
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.job);
+
+        // Check that the form is populated with the job data
+        expect(wrappedApp().find('.input-client').props().value).toBe(
+          jobData.client
+        );
+        expect(wrappedApp().find('.input-description').props().value).toBe(
+          jobData.description
+        );
+        expect(wrappedApp().find('.input-amountPaid').props().value).toBe(
+          jobData.amountPaid
+        );
+        expect(wrappedApp().find('.input-paidTo').props().value).toBe(
+          jobData.paidTo
+        );
+        expect(wrappedApp().find('.input-workedBy').props().value).toBe(
+          jobData.workedBy
+        );
+        expect(wrappedApp().find('.input-confirmation').props().value).toBe(
+          jobData.confirmation
+        );
+        expect(wrappedApp().find('.input-hasPaid').props().value).toBe(
+          jobData.hasPaid
+        );
+        expect(wrappedApp().find('.input-startDate').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
+        expect(wrappedApp().find('.input-endDate').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
+
+        // Submit the job form
+        submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        addJobRequestInfo = mockAxios.lastReqGet();
+
+        jobData = {
+          client: 'new client value',
+          description: 'new description value',
+          amountPaid: 400,
+          paidTo: 'Gladtime Audio',
+          workedBy: 'Tyler',
+          confirmation: 'Confirmed',
+          hasPaid: false,
+          startDate: clickedDate.yyyymmdd('-'),
+          endDate: clickedDate.yyyymmdd('-'),
+        };
+
+        mockAxios.mockResponse({
+          data: {
+            job: jobData
+          }
+        }, addJobRequestInfo);
+
+        wrappedApp().update();
+
+        // There should be only one job event on the calendar
+        // because we should be editing the previously created job
+        calendarEvents = wrappedApp().find('.rbc-event');
+        expect(calendarEvents.length).toBe(1);
+
+        // The text on the event should be different now
+        expect(calendarEvents.find('.rbc-event-content').props().title).toBe(
+          'new client value'
+        );
+
+        // Click on the one job event
+        jobEvent = calendarEvents.find('.rbc-event-content');
+        jobEvent.simulate('click');
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.job);
+
+        // Check that the form is populated with the job data
+        expect(wrappedApp().find('.input-client').props().value).toBe(
+          jobData.client
+        );
+        expect(wrappedApp().find('.input-description').props().value).toBe(
+          jobData.description
+        );
+        expect(wrappedApp().find('.input-amountPaid').props().value).toBe(
+          jobData.amountPaid
+        );
+        expect(wrappedApp().find('.input-paidTo').props().value).toBe(
+          jobData.paidTo
+        );
+        expect(wrappedApp().find('.input-workedBy').props().value).toBe(
+          jobData.workedBy
+        );
+        expect(wrappedApp().find('.input-confirmation').props().value).toBe(
+          jobData.confirmation
+        );
+        expect(wrappedApp().find('.input-hasPaid').props().value).toBe(
+          jobData.hasPaid
+        );
+        expect(wrappedApp().find('.input-startDate').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
+        expect(wrappedApp().find('.input-endDate').props().value).toBe(
+          moment(clickedDate).format('YYYY-MM-DD')
+        );
+
+      });
+
       it('Job form should be reset when new job form opens', () => {
         wrappedApp();
 
