@@ -107,6 +107,55 @@ def get_single_job(job_id):
         return jsonify(response_object), 404
 
 
+@admin_blueprint.route('/jobs/<job_id>', methods=['POST'])
+def update_job(job_id):
+    """Update the details of an existing job"""
+    response_object = {
+        'status': 'fail',
+        'message': 'Invalid payload.'
+    }
+    post_data = request.get_json()
+    if not post_data:
+        return jsonify(response_object), 400
+    response_object = {
+        'status': 'fail',
+        'message': 'Job does not exist'
+    }
+    try:
+        job = Job.query.filter_by(id=job_id).first()
+        if not job:
+            return jsonify(response_object), 404
+        updated_job = Job(
+                   client=post_data.get('client'),
+                   description=post_data.get('description'),
+                   amount_paid=post_data.get('amountPaid'),
+                   paid_to=post_data.get('paidTo'),
+                   worked_by=post_data.get('workedBy'),
+                   confirmation=post_data.get('confirmation'),
+                   has_paid=post_data.get('hasPaid'),
+                   start_date=post_data.get('startDate'),
+                   end_date=post_data.get('endDate'),
+        )
+        job.client = updated_job.client
+        job.description = updated_job.description
+        job.amount_paid = updated_job.amount_paid
+        job.paid_to = updated_job.paid_to
+        job.worked_by = updated_job.worked_by
+        job.confirmation = updated_job.confirmation
+        job.has_paid = updated_job.has_paid
+        job.start_date = updated_job.start_date
+        job.end_date = updated_job.end_date
+        db.session.commit()
+        response_object = {
+                'status': 'success',
+                'data': job.to_json(),
+                'message': 'Job updated successfully',
+                'job': job.to_json()
+        }
+        return jsonify(response_object), 200
+    except (ValueError, exc.DataError):
+        return jsonify(response_object), 404
+
 @admin_blueprint.route('/jobs', methods=['GET'])
 def get_all_jobs():
     """Get all jobs"""

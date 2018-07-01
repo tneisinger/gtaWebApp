@@ -563,6 +563,68 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertIn('Job does not exist', data['message'])
             self.assertIn('fail', data['status'])
 
+    def test_update_job(self):
+        """Ensure that a job can be updated."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add a job to the db
+        job = add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+        with self.client:
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Define a dictionary that represents the updated job data
+            job_data = {
+                'client': 'Updated Test Client',
+                'description': 'Updated Test Description',
+                'amountPaid': 777.01,
+                'paidTo': self.VALID_PAID_TO,
+                'workedBy': self.VALID_WORKED_BY,
+                'confirmation': self.VALID_CONFIRMATION,
+                'hasPaid': True,
+                'startDate': self.today,
+                'endDate': self.today
+            }
+
+            # Attempt to update the job
+            update_response = self.client.post(
+                '/admin/jobs/1',
+                data=json.dumps(job_data),
+                headers={'Authorization': f'Bearer {token}'},
+                content_type='application/json',
+            )
+            data = json.loads(update_response.data.decode())
+            self.assertEqual(update_response.status_code, 200)
+            self.assertIn('Job updated successfully', data['message'])
+            self.assertIn('success', data['status'])
+
+            # Before comparing the returned job to the job we sent in the
+            # request, we need to pop the id off of the returned job.
+            self.assertEqual(1, data['job'].pop('id'))
+
+            # The returned job and the input job should now match.
+            self.assertEqual(data['job'], job_data)
+
     def test_get_all_jobs(self):
         """Ensure get all jobs behaves correctly."""
         add_job(
