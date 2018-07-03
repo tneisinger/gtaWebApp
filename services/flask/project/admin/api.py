@@ -156,6 +156,7 @@ def update_job(job_id):
     except (ValueError, exc.DataError):
         return jsonify(response_object), 404
 
+
 @admin_blueprint.route('/jobs', methods=['GET'])
 def get_all_jobs():
     """Get all jobs"""

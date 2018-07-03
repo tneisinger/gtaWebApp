@@ -569,7 +569,7 @@ class TestAdminApiJobs(BaseTestCase):
         add_user(**self.VALID_USER_DICT1)
 
         # Add a job to the db
-        job = add_job(
+        add_job(
                 client='Test Client',
                 description='Test Description',
                 amount_paid=666.01,

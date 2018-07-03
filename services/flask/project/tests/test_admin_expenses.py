@@ -61,8 +61,7 @@ class TestAdminApiExpenses(BaseTestCase):
             self.assertEqual(1, data['expense'].pop('id'))
 
             # The returned job and the input job should now match.
-            self.assertEqual(data['expense'],
-                    self.VALID_ONE_TIME_EXPENSE_DICT)
+            self.assertEqual(data['expense'], self.VALID_ONE_TIME_EXPENSE_DICT)
 
     def test_add_one_time_expense_empty_json(self):
         """Ensure an error is thrown if the JSON object is empty."""
