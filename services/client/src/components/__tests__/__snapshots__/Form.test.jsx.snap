@@ -153,12 +153,12 @@ exports[`jobForm form renders a snapshot properly 1`] = `
       >
         Has Paid
         <input
+          checked={false}
           className="form-check-input checkbox-lg input-hasPaid"
           id="hasPaid"
           name="hasPaid"
           onChange={[Function]}
           type="checkbox"
-          value={false}
         />
       </label>
     </div>
@@ -241,12 +241,12 @@ exports[`loginForm form renders a snapshot properly 1`] = `
         htmlFor="isPrivateDevice"
       >
         <input
+          checked={false}
           className="form-check-input checkbox-lg"
           id="isPrivateDevice"
           name="isPrivateDevice"
           onChange={[Function]}
           type="checkbox"
-          value={false}
         />
         Keep me logged in. This is a private device.
       </label>
@@ -364,12 +364,12 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
       >
         Tax Deductible
         <input
+          checked={false}
           className="form-check-input checkbox-lg input-taxDeductible"
           id="taxDeductible"
           name="taxDeductible"
           onChange={[Function]}
           type="checkbox"
-          value={false}
         />
       </label>
     </div>

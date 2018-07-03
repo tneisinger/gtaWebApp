@@ -170,7 +170,7 @@ const Form = (props) => {
                 name="hasPaid"
                 className="form-check-input checkbox-lg input-hasPaid"
                 type="checkbox"
-                value={data.hasPaid}
+                checked={data.hasPaid}
                 onChange={props.onFormChange}
               />
             </label>
@@ -292,7 +292,7 @@ const Form = (props) => {
                 name="taxDeductible"
                 className="form-check-input checkbox-lg input-taxDeductible"
                 type="checkbox"
-                value={data.taxDeductible}
+                checked={data.taxDeductible}
                 onChange={props.onFormChange}
               />
             </label>
@@ -355,7 +355,7 @@ const Form = (props) => {
                 name="isPrivateDevice"
                 className="form-check-input checkbox-lg"
                 type="checkbox"
-                value={data.isPrivateDevice}
+                checked={data.isPrivateDevice}
                 onChange={props.onFormChange}
               />
               Keep me logged in. This is a private device.

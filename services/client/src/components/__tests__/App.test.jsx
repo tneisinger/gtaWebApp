@@ -358,7 +358,7 @@ describe('The main App component', () => {
           paidTo: 'Gladtime Audio',
           workedBy: 'Tyler',
           confirmation: 'Confirmed',
-          hasPaid: false,
+          hasPaid: true,
           startDate: clickedDate.yyyymmdd('-'),
           endDate: clickedDate.yyyymmdd('-'),
         };
@@ -402,7 +402,7 @@ describe('The main App component', () => {
         expect(wrappedApp().find('.input-confirmation').props().value).toBe(
           jobData.confirmation
         );
-        expect(wrappedApp().find('.input-hasPaid').props().value).toBe(
+        expect(wrappedApp().find('.input-hasPaid').props().checked).toBe(
           jobData.hasPaid
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
@@ -498,7 +498,7 @@ describe('The main App component', () => {
         expect(wrappedApp().find('.input-confirmation').props().value).toBe(
           jobData.confirmation
         );
-        expect(wrappedApp().find('.input-hasPaid').props().value).toBe(
+        expect(wrappedApp().find('.input-hasPaid').props().checked).toBe(
           jobData.hasPaid
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
@@ -572,7 +572,7 @@ describe('The main App component', () => {
         expect(wrappedApp().find('.input-confirmation').props().value).toBe(
           jobData.confirmation
         );
-        expect(wrappedApp().find('.input-hasPaid').props().value).toBe(
+        expect(wrappedApp().find('.input-hasPaid').props().checked).toBe(
           jobData.hasPaid
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
@@ -669,7 +669,7 @@ describe('The main App component', () => {
         expect(wrappedApp().find('.input-confirmation').props().value).toBe(
           jobData.confirmation
         );
-        expect(wrappedApp().find('.input-hasPaid').props().value).toBe(
+        expect(wrappedApp().find('.input-hasPaid').props().checked).toBe(
           jobData.hasPaid
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
@@ -711,7 +711,9 @@ describe('The main App component', () => {
         expect(wrappedApp().find('.input-confirmation').props().value).toBe(
           'Confirmed'
         );
-        expect(wrappedApp().find('.input-hasPaid').props().value).toBe(false);
+        expect(wrappedApp().find('.input-hasPaid').props().checked).toBe(
+          false
+        );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
           startDate.yyyymmdd('-')
         );
@@ -870,7 +872,7 @@ describe('The main App component', () => {
         expect(wrappedApp().find('.input-paidBy').props().value).toBe(
           expenseData.paidBy
         );
-        expect(wrappedApp().find('.input-taxDeductible').props().value).toBe(
+        expect(wrappedApp().find('.input-taxDeductible').props().checked).toBe(
           expenseData.taxDeductible
         );
         expect(wrappedApp().find('.input-category').props().value).toBe(
