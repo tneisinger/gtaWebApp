@@ -349,9 +349,9 @@ exports[`oneTimeExpenseForm form renders a snapshot properly 1`] = `
             Tyler
           </option>
           <option
-            value="Tyler/Meghan Separately"
+            value="Tyler and Meghan"
           >
-            Tyler/Meghan Separately
+            Tyler and Meghan
           </option>
         </select>
       </label>
