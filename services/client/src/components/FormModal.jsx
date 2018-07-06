@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
+import { formTypes } from './Form';
+
 
 const FormModal = (props) => {
   return (
@@ -14,6 +16,26 @@ const FormModal = (props) => {
         {props.children}
       </Modal.Body>
       <Modal.Footer>
+        {props.formType === formTypes.job &&
+         props.isDeletable &&
+          <Button
+            bsStyle="danger"
+            className="pull-left"
+            onClick={props.onDeleteJobBtnClick}
+          >
+            Delete This Job
+          </Button>
+        }
+        {props.formType === formTypes.oneTimeExpense &&
+         props.isDeletable &&
+          <Button
+            bsStyle="danger"
+            className="pull-left"
+            onClick={props.onDeleteExpenseBtnClick}
+          >
+            Delete This Expense
+          </Button>
+        }
         <Button onClick={props.handleClose}>Close</Button>
         <Button
           bsStyle="primary"

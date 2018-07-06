@@ -45,6 +45,8 @@ class App extends Component {
       'onCalendarEventSelect',
       'showJobFormModal',
       'showOneTimeExpenseFormModal',
+      'onDeleteJobBtnClick',
+      'onDeleteExpenseBtnClick',
       'onFormChange',
       'onFormSubmit',
       'onAuthBtnClick',
@@ -89,6 +91,14 @@ class App extends Component {
         formModalHeading: 'Login',
       });
     }
+  }
+
+  onDeleteJobBtnClick() {
+    console.log('Clicked "Delete This Job" button');
+  }
+
+  onDeleteExpenseBtnClick() {
+    console.log('Clicked "Delete This Expense" button');
   }
 
   onCalendarDatesSelect(slotInfo) {
@@ -411,9 +421,13 @@ class App extends Component {
         formData: this.getResetFormData(),
       });
 
-    // If any other form type, just hide the modal
+    // If any other form type, hide the modal and set
+    // this.state.selectedEvent to null
     } else {
-      this.setState({ showFormModal: false });
+      this.setState({
+        showFormModal: false,
+        selectedEvent: null,
+      });
     }
   }
 
@@ -517,6 +531,10 @@ class App extends Component {
                 heading={this.state.formModalHeading}
                 show={this.state.showFormModal}
                 handleClose={this.closeFormModal}
+                formType={this.state.formType}
+                onDeleteExpenseBtnClick={this.onDeleteExpenseBtnClick}
+                onDeleteJobBtnClick={this.onDeleteJobBtnClick}
+                isDeletable={Boolean(this.state.selectedEvent)}
               >
                 <Form
                   formType={this.state.formType}
