@@ -803,7 +803,9 @@ describe('The main App component', () => {
         deleteBtn = wrappedApp()
           .find('.modal-footer').find('.btn-danger');
         expect(deleteBtn.length).toBe(1);
+
         // TODO: Finish this test
+        expect(true).toBe(false);
 
       });
 
@@ -966,6 +968,90 @@ describe('The main App component', () => {
           moment(clickedDate).format('YYYY-MM-DD')
         );
       });
+
+      it('Clicking deleteBtn for oneTimeExpense should delete it', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        // Fake a calendar click by directly running the Calendar's
+        // onSelectSlot method.
+        let clickedDate = new Date();
+        const currentYear = clickedDate.getFullYear();
+        const currentMonth = clickedDate.getMonth();
+        // Select the 16th of the current month as the clicked date
+        clickedDate = new Date(currentYear, currentMonth, 16);
+        const slotInfo = { start: clickedDate, end: clickedDate };
+        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+        wrappedApp().update();
+
+        // The choiceModal should now be shown.
+        // Click the 'New Expense' button
+        const newExpenseBtn = wrappedApp()
+            .find('.modal-body').find('.btn-danger');
+        newExpenseBtn.simulate('click');
+        wrappedApp().update();
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
+
+        // There should be no delete button in the formModal, because we
+        // are creating a new expense in this case, not editing one.
+        let deleteBtn = wrappedApp()
+          .find('.modal-footer').find('.btn-danger');
+        expect(deleteBtn.length).toBe(0);
+
+        // Create the expense by clicking the submit button
+        const submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        // Use mockAxios to mock the creation of the new expense.
+        let addExpenseRequestInfo = mockAxios.lastReqGet();
+        const expenseData = {
+          merchant: 'Trew Audio',
+          description: 'cables',
+          amountSpent: 300,
+          paidBy: 'Gladtime Audio',
+          taxDeductible: true,
+          category: 'Business Equipment',
+          date: clickedDate.yyyymmdd('-'),
+        }
+        mockAxios.mockResponse({
+          data: {
+            expense: expenseData,
+          }
+        }, addExpenseRequestInfo);
+        wrappedApp().update();
+
+        // There should now be one expense event on the calendar
+        const expenseEvents = wrappedApp().find('.expense-event');
+        expect(expenseEvents.length).toBe(1);
+
+        // Click on the one expense event
+        const expenseEventContent = expenseEvents.find('.rbc-event-content');
+        expenseEventContent.simulate('click');
+
+        // The formModal should now be shown, showing the expense form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
+
+        // Now there should be a delete button in the formModal, because we
+        // are editing an expense that already exists.
+        deleteBtn = wrappedApp()
+          .find('.modal-footer').find('.btn-danger');
+        expect(deleteBtn.length).toBe(1);
+
+        // TODO: finish this test
+        expect(true).toBe(false);
+
+      });
+
 
     });
   });
