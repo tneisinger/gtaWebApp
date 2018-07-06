@@ -94,7 +94,44 @@ class App extends Component {
   }
 
   onDeleteJobBtnClick() {
-    console.log('Clicked "Delete This Job" button');
+    // Store the selectedEvent as the eventToDelete
+    const eventToDelete = this.state.selectedEvent;
+
+    // Close the formModal and deselect the selectedEvent
+    this.setState({
+      selectedEvent: null,
+      showFormModal: false,
+    });
+
+    // Get the authToken of the current user
+    const authToken = window.localStorage.getItem('authToken');
+
+    // If no authToken, redirect to the homepage and, if necessary, change
+    // state to reflect that the user is not logged in.
+    if (!authToken) {
+      this.props.history.push('/');
+      if (this.state.username || this.state.userLoggedIn) {
+        this.setState({ username: '', userLoggedIn: false });
+      }
+    } else {
+      // Request deletion of the selected job
+      axios.delete(`${this.FLASK_URL_ROOT}/admin/jobs/${eventToDelete.id}`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          }
+      })
+        .then(response => {
+          // If the deletion was a success, remove the selected event
+          // from the list of this.state.calendarEvents
+          this.removeCalendarEvent(eventToDelete)
+        })
+        .catch(error => {
+          console.log(error);
+          if (error.response) {
+            console.log(error.response);
+          }
+      });
+    }
   }
 
   onDeleteExpenseBtnClick() {
@@ -243,6 +280,24 @@ class App extends Component {
     });
   }
 
+  removeCalendarEvent(eventToRemove) {
+    // Instantiate a list to store the events we don't want to remove
+    let newCalendarEvents = [];
+
+    // Keep every event except for the one we want to remove
+    this.state.calendarEvents.forEach(event => {
+      if (event.eventType !== eventToRemove.eventType ||
+          event.id !== eventToRemove.id) {
+        newCalendarEvents.push(event);
+      }
+    });
+
+    // Update this.state.calendarEvents with our newCalendarEvents
+    this.setState({
+      calendarEvents: newCalendarEvents,
+    });
+  }
+
   addCalendarExpenseEvent(expense) {
     const expenseEvent = makeBigCalendarExpenseEvent(expense);
     this.setState({
@@ -352,8 +407,7 @@ class App extends Component {
           if (error.response) {
             console.log(error.response);
           }
-        })
-      ;
+      });
     }
   }
 
