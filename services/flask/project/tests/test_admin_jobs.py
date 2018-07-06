@@ -625,6 +625,57 @@ class TestAdminApiJobs(BaseTestCase):
             # The returned job and the input job should now match.
             self.assertEqual(data['job'], job_data)
 
+    def test_delete_job(self):
+        """Ensure that a job can be deleted."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add a job to the db
+        add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+        with self.client:
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Get a response to a request that the job be deleted
+            response = self.client.delete(
+                '/admin/jobs/1',
+                headers={'Authorization': f'Bearer {token}'},
+                content_type='application/json'
+            )
+
+            data = json.loads(response.data.decode())
+
+            # Check that the response is what we expect
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('Job deleted successfully', data['message'])
+            self.assertIn('success', data['status'])
+
+            # Request all jobs to make sure we get no jobs back
+            response = self.client.get('/admin/jobs')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertEqual(len(data['data']['jobs']), 0)
+
     def test_get_all_jobs(self):
         """Ensure get all jobs behaves correctly."""
         add_job(
