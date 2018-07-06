@@ -723,6 +723,90 @@ describe('The main App component', () => {
 
       });
 
+      it('Clicking delete button in job form modal should delete job', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        // Fake a calendar click by directly running the Calendar's
+        // onSelectSlot method.
+        let clickedDate = new Date();
+        const currentYear = clickedDate.getFullYear();
+        const currentMonth = clickedDate.getMonth();
+        // Select the 15th of the current month as the clicked date
+        clickedDate = new Date(currentYear, currentMonth, 15);
+        const slotInfo = { start: clickedDate, end: clickedDate };
+        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+        wrappedApp().update();
+
+        // The choiceModal should now be shown.
+        // Click the 'New Job' button
+        const newJobBtn = wrappedApp()
+            .find('.modal-body').find('.btn-primary');
+        newJobBtn.simulate('click');
+        wrappedApp().update();
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.job);
+
+        // There should be no delete button in the formModal, because we
+        // are creating a new job in this case, not editing an existing job.
+        let deleteBtn = wrappedApp()
+          .find('.modal-footer').find('.btn-danger');
+        expect(deleteBtn.length).toBe(0);
+
+        // Submit the job form
+        const submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        let addJobRequestInfo = mockAxios.lastReqGet();
+
+        const jobData = {
+          client: 'test client value',
+          description: 'test description value',
+          amountPaid: 300,
+          paidTo: 'Gladtime Audio',
+          workedBy: 'Tyler',
+          confirmation: 'Confirmed',
+          hasPaid: false,
+          startDate: clickedDate.yyyymmdd('-'),
+          endDate: clickedDate.yyyymmdd('-'),
+        };
+
+        mockAxios.mockResponse({
+          data: {
+            job: jobData
+          }
+        }, addJobRequestInfo);
+
+        wrappedApp().update();
+
+        // There should be one job event on the calendar
+        const calendarEvents = wrappedApp().find('.rbc-event');
+        expect(calendarEvents.length).toBe(1);
+
+        // Click on the one job event
+        const jobEvent = calendarEvents.find('.rbc-event-content');
+        jobEvent.simulate('click');
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.job);
+
+        // Click on the delete button
+        deleteBtn = wrappedApp()
+          .find('.modal-footer').find('.btn-danger');
+        expect(deleteBtn.length).toBe(1);
+        // TODO: Finish this test
+
+      });
+
       it('Creating a new oneTimeExpense should render of BC event', () => {
         wrappedApp();
 
