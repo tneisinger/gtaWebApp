@@ -792,21 +792,45 @@ describe('The main App component', () => {
         expect(calendarEvents.length).toBe(1);
 
         // Click on the one job event
-        const jobEvent = calendarEvents.find('.rbc-event-content');
+        let jobEvent = calendarEvents.find('.rbc-event-content');
         jobEvent.simulate('click');
 
         // The formModal should now be shown, showing the job form
         expect(appInstance().state.showFormModal).toBe(true);
         expect(appInstance().state.formType).toBe(formTypes.job);
 
-        // Click on the delete button
+        // There should be a delete button in the modal footer
         deleteBtn = wrappedApp()
           .find('.modal-footer').find('.btn-danger');
         expect(deleteBtn.length).toBe(1);
 
-        // TODO: Finish this test
-        expect(true).toBe(false);
+        // Click on the delete button
+        deleteBtn.simulate('click');
 
+        // mock the delete request
+        let delJobRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse({
+          data: {
+            status: 'success',
+            message: 'Job deleted successfully',
+          }
+        }, delJobRequestInfo);
+
+        // The formModal should now be closed
+        expect(appInstance().state.showFormModal).toBe(false);
+
+        // The state.calendarEvents array should be empty
+        expect(appInstance().state.calendarEvents.length).toBe(0);
+
+        // The state.selectedEvent should be null
+        expect(appInstance().state.selectedEvent).toBe(null);
+
+        // Make sure the state of the app is up-to-date
+        wrappedApp().update();
+
+        // Now there shouldn't be any events rendered
+        let events = wrappedApp().find('.rbc-event');
+        expect(events.length).toBe(0);
       });
 
       it('Creating a new oneTimeExpense should render of BC event', () => {
@@ -1047,11 +1071,34 @@ describe('The main App component', () => {
           .find('.modal-footer').find('.btn-danger');
         expect(deleteBtn.length).toBe(1);
 
-        // TODO: finish this test
-        expect(true).toBe(false);
+        // Click on the delete button
+        deleteBtn.simulate('click');
 
+        // mock the delete request
+        let delRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse({
+          data: {
+            status: 'success',
+            message: 'Expense deleted successfully',
+          }
+        }, delRequestInfo);
+
+        // Make sure the state of the app is up-to-date
+        wrappedApp().update();
+
+        // The formModal should now be closed
+        expect(appInstance().state.showFormModal).toBe(false);
+
+        // The state.calendarEvents array should be empty
+        expect(appInstance().state.calendarEvents.length).toBe(0);
+
+        // The state.selectedEvent should be null
+        expect(appInstance().state.selectedEvent).toBe(null);
+
+        // Now there shouldn't be any events rendered
+        let events = wrappedApp().find('.rbc-event');
+        expect(events.length).toBe(0);
       });
-
 
     });
   });
