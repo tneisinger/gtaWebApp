@@ -107,6 +107,36 @@ def get_single_job(job_id):
         return jsonify(response_object), 404
 
 
+@admin_blueprint.route('/jobs/<job_id>', methods=['DELETE'])
+def delete_job(job_id):
+    """Delete an existing job"""
+    response_object = {
+        'status': 'fail',
+        'message': 'Invalid payload.'
+    }
+    response_object = {
+        'status': 'fail',
+        'message': 'Job does not exist'
+    }
+    try:
+        job = Job.query.filter_by(id=job_id).first()
+        if not job:
+            return jsonify(response_object), 404
+
+        # Delete the job
+        db.session.delete(job)
+        db.session.commit()
+
+        # Create a response
+        response_object = {
+                'status': 'success',
+                'message': 'Job deleted successfully',
+        }
+        return jsonify(response_object), 200
+    except (ValueError, exc.DataError):
+        return jsonify(response_object), 404
+
+
 @admin_blueprint.route('/jobs/<job_id>', methods=['POST'])
 def update_job(job_id):
     """Update the details of an existing job"""
