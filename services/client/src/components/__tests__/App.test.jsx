@@ -993,6 +993,106 @@ describe('The main App component', () => {
         );
       });
 
+      it('Submitting an "Edit Expense" form should update the expense', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        // Fake a calendar click by directly running the Calendar's
+        // onSelectSlot method.
+        let clickedDate = new Date();
+        const currentYear = clickedDate.getFullYear();
+        const currentMonth = clickedDate.getMonth();
+        // Select the 16th of the current month as the clicked date
+        clickedDate = new Date(currentYear, currentMonth, 16);
+        const slotInfo = { start: clickedDate, end: clickedDate };
+        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
+        wrappedApp().update();
+
+        // The choiceModal should now be shown.
+        // Click the 'New Expense' button
+        const newExpenseBtn = wrappedApp()
+            .find('.modal-body').find('.btn-danger');
+        newExpenseBtn.simulate('click');
+        wrappedApp().update();
+
+        // Submit the expense form
+        let submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        // Use mockAxios to mock the creation of the new expense.
+        let addExpenseRequestInfo = mockAxios.lastReqGet();
+        let expenseData = {
+          merchant: 'Trew Audio',
+          description: 'cables',
+          amountSpent: 300,
+          paidBy: 'Gladtime Audio',
+          taxDeductible: true,
+          category: 'Business Equipment',
+          date: clickedDate.yyyymmdd('-'),
+        }
+        mockAxios.mockResponse({
+          data: {
+            expense: expenseData,
+          }
+        }, addExpenseRequestInfo);
+        wrappedApp().update();
+
+        // There should now be one expense event on the calendar
+        let expenseEvents = wrappedApp().find('.expense-event');
+        expect(expenseEvents.length).toBe(1);
+
+        // Click on the one expense event
+        let expenseEventContent = expenseEvents.find('.rbc-event-content');
+        expenseEventContent.simulate('click');
+
+        // The formModal should now be shown, showing the expense form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
+
+        // Submit the expense form
+        submitBtn = wrappedApp().find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        // Use mockAxios to mock the request to edit the expense.
+        addExpenseRequestInfo = mockAxios.lastReqGet();
+        expenseData = {
+          merchant: 'New Merchant Name',
+          description: 'new description',
+          amountSpent: 300,
+          paidBy: 'Gladtime Audio',
+          taxDeductible: false,
+          category: 'Business Equipment',
+          date: clickedDate.yyyymmdd('-'),
+        }
+        mockAxios.mockResponse({
+          data: {
+            expense: expenseData,
+          }
+        }, addExpenseRequestInfo);
+        wrappedApp().update();
+
+        // There should still be only one expense event on the calendar
+        expenseEvents = wrappedApp().find('.expense-event');
+        expect(expenseEvents.length).toBe(1);
+
+        // The title of the event should be different
+        expenseEventContent = expenseEvents.find('.rbc-event-content');
+        expect(expenseEventContent.props().title).toBe(expenseData.merchant);
+
+        // Click on the expense event
+        expenseEventContent.simulate('click');
+
+        // The formModal should now be shown, showing the expense form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
+      });
+
       it('Clicking deleteBtn for oneTimeExpense should delete it', () => {
         wrappedApp();
 
