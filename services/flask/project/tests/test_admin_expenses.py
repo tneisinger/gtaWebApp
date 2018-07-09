@@ -222,6 +222,38 @@ class TestAdminApiExpenses(BaseTestCase):
             self.assertIn('Expense does not exist', data['message'])
             self.assertIn('fail', data['status'])
 
+    def test_delete_one_time_expense(self):
+        """Ensure that a one time expense can be deleted."""
+
+        # Add a one-time-expense to the database
+        valid_data = underscore_keys(self.VALID_ONE_TIME_EXPENSE_DICT)
+        expense = add_one_time_expense(**valid_data)
+
+        with self.client:
+            # Make sure that we can get the expense from the database
+            url = f'/admin/one-time-expenses/{expense.id}'
+            response = self.client.get(url)
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertEqual(1, data['data'].pop('id'))
+            self.assertEqual(self.VALID_ONE_TIME_EXPENSE_DICT, data['data'])
+
+            # Attempt to delete the expense from the database
+            response = self.client.delete('/admin/one-time-expenses/1')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+            self.assertIn('Expense deleted successfully', data['message'])
+
+            # Attempt to get the expense from the database, which should fail
+            url = f'/admin/one-time-expenses/{expense.id}'
+            response = self.client.get(url)
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+            self.assertIn('fail', data['status'])
+            self.assertIn('Expense does not exist', data['message'])
+
     def test_get_all_one_time_expenses(self):
         """Ensure get all one time expenses behaves correctly."""
 
