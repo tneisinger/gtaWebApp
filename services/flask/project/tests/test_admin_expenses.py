@@ -6,8 +6,8 @@ from datetime import date, timedelta
 
 from project.tests.base import BaseTestCase
 from project.admin.models import OneTimeExpense, RecurringExpense
-from project.tests.utils import (add_one_time_expense, add_recurring_expense,
-                                 underscore_keys)
+from project.tests.utils import (add_user, add_one_time_expense,
+                                 add_recurring_expense, underscore_keys)
 
 
 class TestAdminApiExpenses(BaseTestCase):
@@ -16,6 +16,13 @@ class TestAdminApiExpenses(BaseTestCase):
     # Get the dates for yesterday and today
     yesterday = (date.today() - timedelta(1)).isoformat()
     today = date.today().isoformat()
+
+    # Create a dictionary for a valid user
+    VALID_USER_DICT1 = {
+        'username': 'testUser1',
+        'email': 'user1@email.com',
+        'password': 'somePassword'
+    }
 
     VALID_ONE_TIME_EXPENSE_DICT = {
         'merchant': 'Test Merchant',
@@ -221,6 +228,59 @@ class TestAdminApiExpenses(BaseTestCase):
             self.assertEqual(response.status_code, 404)
             self.assertIn('Expense does not exist', data['message'])
             self.assertIn('fail', data['status'])
+
+    def test_update_one_time_expense(self):
+        """Ensure that a one time expense can be updated."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add a one-time-expense to the database
+        valid_data = underscore_keys(self.VALID_ONE_TIME_EXPENSE_DICT)
+        add_one_time_expense(**valid_data)
+
+        with self.client:
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Define a dictionary that represents the updated job data
+            expense_data = {
+                'merchant': 'New Merchant',
+                'description': 'New Description',
+                'amountSpent': 333.02,
+                'date': self.today,
+                'paidBy': next(e.value for e in OneTimeExpense.PaidBy),
+                'taxDeductible': False,
+                'category': next(e.value for e in OneTimeExpense.Category),
+            }
+
+            # Attempt to update the expense
+            update_response = self.client.post(
+                '/admin/one-time-expenses/1',
+                data=json.dumps(expense_data),
+                headers={'Authorization': f'Bearer {token}'},
+                content_type='application/json',
+            )
+            data = json.loads(update_response.data.decode())
+            self.assertEqual(update_response.status_code, 200)
+            self.assertIn('Expense updated successfully', data['message'])
+            self.assertIn('success', data['status'])
+
+            # Before comparing the returned expense to the expense we sent in
+            # the request, we need to pop the id off of the returned expense.
+            self.assertEqual(1, data['expense'].pop('id'))
+
+            # The returned expense and the input expense should now match.
+            self.assertEqual(data['expense'], expense_data)
 
     def test_delete_one_time_expense(self):
         """Ensure that a one time expense can be deleted."""
