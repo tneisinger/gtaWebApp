@@ -274,6 +274,53 @@ def get_single_one_time_expense(expense_id):
         return jsonify(response_object), 404
 
 
+@admin_blueprint.route('/one-time-expenses/<expense_id>', methods=['POST'])
+def update_one_time_expense(expense_id):
+    """Update the details of an existing expense"""
+    response_object = {
+        'status': 'fail',
+        'message': 'Invalid payload.'
+    }
+    post_data = request.get_json()
+    if not post_data:
+        return jsonify(response_object), 400
+    response_object = {
+        'status': 'fail',
+        'message': 'Expense does not exist'
+    }
+    try:
+        expense = OneTimeExpense.query.filter_by(id=expense_id).first()
+        if not expense:
+            return jsonify(response_object), 404
+        updated_expense = OneTimeExpense(
+                              merchant=post_data.get('merchant'),
+                              description=post_data.get('description'),
+                              amount_spent=post_data.get('amountSpent'),
+                              date=post_data.get('date'),
+                              paid_by=post_data.get('paidBy'),
+                              tax_deductible=post_data.get('taxDeductible'),
+                              category=post_data.get('category')
+        )
+        expense.merchant = updated_expense.merchant
+        expense.description = updated_expense.description
+        expense.amount_spent = updated_expense.amount_spent
+        expense.date = updated_expense.date
+        expense.paid_by = updated_expense.paid_by
+        expense.tax_deductible = updated_expense.tax_deductible
+        expense.category = updated_expense.category
+
+        db.session.commit()
+        response_object = {
+                'status': 'success',
+                'data': expense.to_json(),
+                'message': 'Expense updated successfully',
+                'expense': expense.to_json()
+        }
+        return jsonify(response_object), 200
+    except (ValueError, exc.DataError):
+        return jsonify(response_object), 404
+
+
 @admin_blueprint.route('/one-time-expenses/<expense_id>', methods=['DELETE'])
 def delete_one_time_expense(expense_id):
     """Delete an existing one time expense"""
