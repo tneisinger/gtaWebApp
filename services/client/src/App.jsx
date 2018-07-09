@@ -264,7 +264,11 @@ class App extends Component {
         }
         break;
       case formTypes.oneTimeExpense:
-        this.requestCreateOneTimeExpense();
+        if (this.state.selectedEvent) {
+          this.requestUpdateOneTimeExpense();
+        } else {
+          this.requestCreateOneTimeExpense();
+        }
         break;
       default:
         throw new UnknownFormTypeException('Unknown form type in App state');
@@ -340,6 +344,25 @@ class App extends Component {
     const expenseEvent = makeBigCalendarExpenseEvent(expense);
     this.setState({
       calendarEvents: this.state.calendarEvents.concat([expenseEvent]),
+    });
+  }
+
+  updateCalendarExpenseEvent(expense) {
+    const newExpenseEvent = makeBigCalendarExpenseEvent(expense);
+    const oldCalendarEvents = this.state.calendarEvents;
+    const newCalendarEvents = [];
+
+    oldCalendarEvents.forEach(event => {
+      if (event.eventType === 'oneTimeExpense' &&
+          event.id === newExpenseEvent.id) {
+        newCalendarEvents.push(newExpenseEvent)
+      } else {
+        newCalendarEvents.push(event)
+      }
+    });
+
+    this.setState({
+      calendarEvents: newCalendarEvents,
     });
   }
 
@@ -481,6 +504,44 @@ class App extends Component {
           }
         })
       ;
+    }
+  }
+
+  requestUpdateOneTimeExpense() {
+    // Get the form data from the expense form
+    const data = this.state.formData[formTypes.oneTimeExpense];
+
+    // Try to get the current authToken
+    const authToken = window.localStorage.getItem('authToken');
+
+    // If no authToken, redirect to the homepage and, if necessary, change
+    // state to reflect that the user is not logged in.
+    if (!authToken) {
+      this.props.history.push('/');
+      if (this.state.username || this.state.userLoggedIn) {
+        this.setState({ username: '', userLoggedIn: false });
+      }
+    } else {
+      // Get the id of the selected expense
+      const expenseId = this.state.selectedEvent.id
+      // Attempt to update the expense's database entry
+      axios.post(
+        `${this.FLASK_URL_ROOT}/admin/one-time-expenses/${expenseId}`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${authToken}` }
+        }
+      )
+        .then(response => {
+          const newExpense = response.data.expense;
+          this.updateCalendarExpenseEvent(newExpense);
+        })
+        .catch(error => {
+          console.log(error);
+          if (error.response) {
+            console.log(error.response);
+          }
+      });
     }
   }
 
