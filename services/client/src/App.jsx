@@ -135,7 +135,45 @@ class App extends Component {
   }
 
   onDeleteExpenseBtnClick() {
-    console.log('Clicked "Delete This Expense" button');
+    // Store the selectedEvent as the eventToDelete
+    const eventToDelete = this.state.selectedEvent;
+
+    // Close the formModal and deselect the selectedEvent
+    this.setState({
+      selectedEvent: null,
+      showFormModal: false,
+    });
+
+    // Get the authToken of the current user
+    const authToken = window.localStorage.getItem('authToken');
+
+    // If no authToken, redirect to the homepage and, if necessary, change
+    // state to reflect that the user is not logged in.
+    if (!authToken) {
+      this.props.history.push('/');
+      if (this.state.username || this.state.userLoggedIn) {
+        this.setState({ username: '', userLoggedIn: false });
+      }
+    } else {
+      // Request deletion of the selected event
+      axios.delete(
+        `${this.FLASK_URL_ROOT}/admin/one-time-expenses/${eventToDelete.id}`,
+        {
+          headers: { Authorization: `Bearer ${authToken}` }
+        }
+      )
+        .then(response => {
+          // If the deletion was a success, remove the selected event
+          // from the list of this.state.calendarEvents
+          this.removeCalendarEvent(eventToDelete)
+        })
+        .catch(error => {
+          console.log(error);
+          if (error.response) {
+            console.log(error.response);
+          }
+      });
+    }
   }
 
   onCalendarDatesSelect(slotInfo) {
