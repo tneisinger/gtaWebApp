@@ -112,10 +112,6 @@ def delete_job(job_id):
     """Delete an existing job"""
     response_object = {
         'status': 'fail',
-        'message': 'Invalid payload.'
-    }
-    response_object = {
-        'status': 'fail',
         'message': 'Job does not exist'
     }
     try:
@@ -272,6 +268,32 @@ def get_single_one_time_expense(expense_id):
         response_object = {
                             'status': 'success',
                             'data': expense.to_json()
+        }
+        return jsonify(response_object), 200
+    except (ValueError, exc.DataError):
+        return jsonify(response_object), 404
+
+
+@admin_blueprint.route('/one-time-expenses/<expense_id>', methods=['DELETE'])
+def delete_one_time_expense(expense_id):
+    """Delete an existing one time expense"""
+    response_object = {
+        'status': 'fail',
+        'message': 'Expense does not exist'
+    }
+    try:
+        expense = OneTimeExpense.query.filter_by(id=expense_id).first()
+        if not expense:
+            return jsonify(response_object), 404
+
+        # Delete the job
+        db.session.delete(expense)
+        db.session.commit()
+
+        # Create a response
+        response_object = {
+                'status': 'success',
+                'message': 'Expense deleted successfully',
         }
         return jsonify(response_object), 200
     except (ValueError, exc.DataError):
