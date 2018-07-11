@@ -13,7 +13,7 @@ import PrivateRoute from '../PrivateRoute';
 import CheckingUserStatus from '../CheckingUserStatus';
 import FormModal from '../FormModal';
 import { defaultFormData, formTypes } from '../Form';
-import { LocalStorageMock } from '../../testUtils';
+import { LocalStorageMock, clickCalendarDays } from '../../testUtils';
 import { copy, deepcopy} from '../../utils';
 
 
@@ -199,16 +199,10 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        clickedDate.setDate(15);  // The 15th of the current month
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 15th day of the current month
+        clickCalendarDays(wrappedApp(), Calendar, 15);
 
         // The choiceModal should now be shown.
-        // Click the 'New Job' button
         expect(appInstance().state.showChoiceModal).toBe(true);
       });
 
@@ -220,16 +214,10 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        clickedDate.setDate(15);  // The 15th of the current month
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 15th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 15);
 
-        // The choiceModal should now be shown.
-        // Click the 'New Job' button
+        // The choiceModal should now be shown. Click the 'New Job' button
         const newJobBtn = wrappedApp()
             .find('.modal-body').find('.btn-primary');
         newJobBtn.simulate('click');
@@ -240,12 +228,12 @@ describe('The main App component', () => {
         expect(appInstance().state.formType).toBe(formTypes.job);
 
         // The start and end date inputs should be populated with
-        // a date that matches the clickedDate we defined above.
+        // a date that matches the date we clicked on.
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.start.yyyymmdd('-')
         );
         expect(wrappedApp().find('.input-endDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.end.yyyymmdd('-')
         );
       });
 
@@ -258,40 +246,28 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        clickedDate.setDate(15);  // The 15th of the current month
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // There should be no events on the calendar.
+        let calendarEvents = wrappedApp().find('.rbc-event');
+        expect(calendarEvents.length).toBe(0);
 
-        // The choiceModal should now be shown.
-        // Click the 'New Job' button
+        // Click on the 15th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 15);
+
+        // The choiceModal should now be shown. Click the 'New Job' button
         const newJobBtn = wrappedApp()
             .find('.modal-body').find('.btn-primary');
         newJobBtn.simulate('click');
         wrappedApp().update();
 
-        // The formModal should now be shown, showing the job form
-        expect(appInstance().state.showFormModal).toBe(true);
-        expect(appInstance().state.formType).toBe(formTypes.job);
-
-        // The start and end date inputs should be populated with
-        // a date that matches the clickedDate we defined above.
-        expect(wrappedApp().find('#startDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
-        );
-        expect(wrappedApp().find('#endDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
-        );
-
+        // Click on the submit button of the "Create Job" form
         const submitBtn = wrappedApp()
             .find('.modal-footer').find('.btn-primary');
         submitBtn.simulate('click');
 
+        // Get a reference to the axios request so we can mock it
         let addJobRequestInfo = mockAxios.lastReqGet();
 
+        // Mock the axios request.
         mockAxios.mockResponse({
           data: {
             job: {
@@ -302,17 +278,19 @@ describe('The main App component', () => {
               workedBy: 'Tyler',
               confirmation: 'Confirmed',
               hasPaid: false,
-              startDate: (new Date()).yyyymmdd('-'),
-              endDate: (new Date()).yyyymmdd('-'),
+              startDate: clickedDates.start.yyyymmdd('-'),
+              endDate: clickedDates.end.yyyymmdd('-'),
             }
           }
         }, addJobRequestInfo);
 
         wrappedApp().update();
 
-        const calendarEvents = wrappedApp().find('.rbc-event');
+        // Now there should be exactly one event on the calendar.
+        calendarEvents = wrappedApp().find('.rbc-event');
         expect(calendarEvents.length).toBe(1);
 
+        // Check that the title text on the event is what we expect
         const eventTitle = calendarEvents.find('.rbc-event-content').text();
         expect(eventTitle).toBe('test client value');
       });
@@ -326,16 +304,8 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        const currentYear = clickedDate.getFullYear();
-        const currentMonth = clickedDate.getMonth();
-        // Select the 15th of the current month as the clicked date
-        clickedDate = new Date(currentYear, currentMonth, 15);
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 15th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 15);
 
         // The choiceModal should now be shown.
         // Click the 'New Job' button
@@ -359,8 +329,8 @@ describe('The main App component', () => {
           workedBy: 'Tyler',
           confirmation: 'Confirmed',
           hasPaid: true,
-          startDate: clickedDate.yyyymmdd('-'),
-          endDate: clickedDate.yyyymmdd('-'),
+          startDate: clickedDates.start.yyyymmdd('-'),
+          endDate: clickedDates.end.yyyymmdd('-'),
         };
 
         mockAxios.mockResponse({
@@ -406,10 +376,10 @@ describe('The main App component', () => {
           jobData.hasPaid
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.start.yyyymmdd('-')
         );
         expect(wrappedApp().find('.input-endDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.end.yyyymmdd('-')
         );
       });
 
@@ -422,19 +392,10 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        const currentYear = clickedDate.getFullYear();
-        const currentMonth = clickedDate.getMonth();
-        // Select the 15th of the current month as the clicked date
-        clickedDate = new Date(currentYear, currentMonth, 15);
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 15th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 15);
 
-        // The choiceModal should now be shown.
-        // Click the 'New Job' button
+        // The choiceModal should now be shown. Click the 'New Job' button
         const newJobBtn = wrappedApp()
             .find('.modal-body').find('.btn-primary');
         newJobBtn.simulate('click');
@@ -455,8 +416,8 @@ describe('The main App component', () => {
           workedBy: 'Tyler',
           confirmation: 'Confirmed',
           hasPaid: false,
-          startDate: clickedDate.yyyymmdd('-'),
-          endDate: clickedDate.yyyymmdd('-'),
+          startDate: clickedDates.start.yyyymmdd('-'),
+          endDate: clickedDates.end.yyyymmdd('-'),
         };
 
         mockAxios.mockResponse({
@@ -502,10 +463,10 @@ describe('The main App component', () => {
           jobData.hasPaid
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.start.yyyymmdd('-')
         );
         expect(wrappedApp().find('.input-endDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.end.yyyymmdd('-')
         );
 
         // Submit the job form
@@ -523,8 +484,8 @@ describe('The main App component', () => {
           workedBy: 'Tyler',
           confirmation: 'Confirmed',
           hasPaid: false,
-          startDate: clickedDate.yyyymmdd('-'),
-          endDate: clickedDate.yyyymmdd('-'),
+          startDate: clickedDates.start.yyyymmdd('-'),
+          endDate: clickedDates.end.yyyymmdd('-'),
         };
 
         mockAxios.mockResponse({
@@ -576,12 +537,11 @@ describe('The main App component', () => {
           jobData.hasPaid
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.start.yyyymmdd('-')
         );
         expect(wrappedApp().find('.input-endDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.end.yyyymmdd('-')
         );
-
       });
 
       it('Job form should be reset when new job form opens', () => {
@@ -593,16 +553,8 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        const currentYear = clickedDate.getFullYear();
-        const currentMonth = clickedDate.getMonth();
-        // Select the 15th of the current month as the clicked date
-        clickedDate = new Date(currentYear, currentMonth, 15);
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 15th day of the current month
+        let clickedDates = clickCalendarDays(wrappedApp(), Calendar, 15);
 
         // The choiceModal should now be shown.
         // Click the 'New Job' button
@@ -626,8 +578,8 @@ describe('The main App component', () => {
           workedBy: 'Tyler',
           confirmation: 'Confirmed',
           hasPaid: false,
-          startDate: clickedDate.yyyymmdd('-'),
-          endDate: clickedDate.yyyymmdd('-'),
+          startDate: clickedDates.start.yyyymmdd('-'),
+          endDate: clickedDates.end.yyyymmdd('-'),
         };
 
         mockAxios.mockResponse({
@@ -673,10 +625,10 @@ describe('The main App component', () => {
           jobData.hasPaid
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.start.yyyymmdd('-')
         );
         expect(wrappedApp().find('.input-endDate').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.end.yyyymmdd('-')
         );
 
         // Close the job form
@@ -686,13 +638,8 @@ describe('The main App component', () => {
         // Make sure that the form modal is closed
         expect(appInstance().state.showFormModal).toBe(false);
 
-        // Fake a calendar click by directly running the Calendar's
-        // Select the 20th and 21st of the current month
-        const startDate = new Date(currentYear, currentMonth, 20);
-        const endDate = new Date(currentYear, currentMonth, 21);
-        const slot = { start: startDate, end: endDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slot);
-        wrappedApp().update();
+        // Select the 20th through the 21st of the current month
+        clickedDates = clickCalendarDays(wrappedApp(), Calendar, 20, 21);
 
         // Make sure that the job form modal is open
         expect(appInstance().state.showFormModal).toBe(true);
@@ -715,10 +662,10 @@ describe('The main App component', () => {
           false
         );
         expect(wrappedApp().find('.input-startDate').props().value).toBe(
-          startDate.yyyymmdd('-')
+          clickedDates.start.yyyymmdd('-')
         );
         expect(wrappedApp().find('.input-endDate').props().value).toBe(
-          endDate.yyyymmdd('-')
+          clickedDates.end.yyyymmdd('-')
         );
 
       });
@@ -732,16 +679,8 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        const currentYear = clickedDate.getFullYear();
-        const currentMonth = clickedDate.getMonth();
-        // Select the 15th of the current month as the clicked date
-        clickedDate = new Date(currentYear, currentMonth, 15);
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 15th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 15);
 
         // The choiceModal should now be shown.
         // Click the 'New Job' button
@@ -775,8 +714,8 @@ describe('The main App component', () => {
           workedBy: 'Tyler',
           confirmation: 'Confirmed',
           hasPaid: false,
-          startDate: clickedDate.yyyymmdd('-'),
-          endDate: clickedDate.yyyymmdd('-'),
+          startDate: clickedDates.start.yyyymmdd('-'),
+          endDate: clickedDates.end.yyyymmdd('-'),
         };
 
         mockAxios.mockResponse({
@@ -842,13 +781,8 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        clickedDate.setDate(16);  // The 16th of the current month
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 16th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 16);
 
         // The choiceModal should now be shown.
         // Click the 'New Expense' button
@@ -861,10 +795,11 @@ describe('The main App component', () => {
         expect(appInstance().state.showFormModal).toBe(true);
         expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
 
+
         // The date input should be populated with a date that matches the
-        // clickedDate we defined above.
+        // date we clicked on above.
         expect(wrappedApp().find('#date').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.start.yyyymmdd('-')
         );
 
         const submitBtn = wrappedApp()
@@ -882,7 +817,7 @@ describe('The main App component', () => {
               paidBy: 'Gladtime Audio',
               taxDeductible: true,
               category: 'Business Equipment',
-              date: clickedDate.yyyymmdd('-'),
+              date: clickedDates.start.yyyymmdd('-'),
             }
           }
         }, addExpenseRequestInfo);
@@ -905,16 +840,8 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        const currentYear = clickedDate.getFullYear();
-        const currentMonth = clickedDate.getMonth();
-        // Select the 16th of the current month as the clicked date
-        clickedDate = new Date(currentYear, currentMonth, 16);
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 16th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 16);
 
         // The choiceModal should now be shown.
         // Click the 'New Expense' button
@@ -928,9 +855,9 @@ describe('The main App component', () => {
         expect(appInstance().state.formType).toBe(formTypes.oneTimeExpense);
 
         // The date input should be populated with a date that matches the
-        // clickedDate we defined above.
+        // date we clicked on above.
         expect(wrappedApp().find('#date').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.start.yyyymmdd('-')
         );
 
         const submitBtn = wrappedApp()
@@ -946,7 +873,7 @@ describe('The main App component', () => {
           paidBy: 'Gladtime Audio',
           taxDeductible: true,
           category: 'Business Equipment',
-          date: clickedDate.yyyymmdd('-'),
+          date: clickedDates.start.yyyymmdd('-'),
         }
 
         mockAxios.mockResponse({
@@ -989,7 +916,7 @@ describe('The main App component', () => {
           expenseData.category
         );
         expect(wrappedApp().find('.input-date').props().value).toBe(
-          moment(clickedDate).format('YYYY-MM-DD')
+          clickedDates.start.yyyymmdd('-')
         );
       });
 
@@ -1002,16 +929,8 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        const currentYear = clickedDate.getFullYear();
-        const currentMonth = clickedDate.getMonth();
-        // Select the 16th of the current month as the clicked date
-        clickedDate = new Date(currentYear, currentMonth, 16);
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 16th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 16);
 
         // The choiceModal should now be shown.
         // Click the 'New Expense' button
@@ -1034,7 +953,7 @@ describe('The main App component', () => {
           paidBy: 'Gladtime Audio',
           taxDeductible: true,
           category: 'Business Equipment',
-          date: clickedDate.yyyymmdd('-'),
+          date: clickedDates.start.yyyymmdd('-'),
         }
         mockAxios.mockResponse({
           data: {
@@ -1068,7 +987,7 @@ describe('The main App component', () => {
           paidBy: 'Gladtime Audio',
           taxDeductible: false,
           category: 'Business Equipment',
-          date: clickedDate.yyyymmdd('-'),
+          date: clickedDates.start.yyyymmdd('-'),
         }
         mockAxios.mockResponse({
           data: {
@@ -1102,16 +1021,8 @@ describe('The main App component', () => {
         // Make sure the Calendar gets rendered with update()
         wrappedApp().update();
 
-        // Fake a calendar click by directly running the Calendar's
-        // onSelectSlot method.
-        let clickedDate = new Date();
-        const currentYear = clickedDate.getFullYear();
-        const currentMonth = clickedDate.getMonth();
-        // Select the 16th of the current month as the clicked date
-        clickedDate = new Date(currentYear, currentMonth, 16);
-        const slotInfo = { start: clickedDate, end: clickedDate };
-        wrappedApp().find(Calendar).prop('onSelectSlot')(slotInfo);
-        wrappedApp().update();
+        // Click on the 16th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 16);
 
         // The choiceModal should now be shown.
         // Click the 'New Expense' button
@@ -1144,7 +1055,7 @@ describe('The main App component', () => {
           paidBy: 'Gladtime Audio',
           taxDeductible: true,
           category: 'Business Equipment',
-          date: clickedDate.yyyymmdd('-'),
+          date: clickedDates.start.yyyymmdd('-'),
         }
         mockAxios.mockResponse({
           data: {
