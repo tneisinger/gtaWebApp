@@ -187,6 +187,7 @@ def update_job(job_id):
 
 
 @admin_blueprint.route('/jobs', methods=['GET'])
+@users_only()
 def get_all_jobs():
     """Get all jobs"""
     response_object = {

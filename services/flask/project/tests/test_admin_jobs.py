@@ -906,9 +906,13 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertIn('success', data['status'])
 
             # Request all jobs to make sure we get no jobs back
-            response = self.client.get('/admin/jobs')
+            response = self.client.get(
+                '/admin/jobs',
+                headers={'Authorization': f'Bearer {token}'},
+                content_type='application/json'
+            )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 401)
+            self.assertEqual(response.status_code, 200)
             self.assertIn('success', data['status'])
             self.assertEqual(len(data['data']['jobs']), 0)
 
@@ -975,18 +979,22 @@ class TestAdminApiJobs(BaseTestCase):
             reversed_token = token[::-1]
 
             # Attempt to delete the job with an invalid auth token
-            update_response = self.client.post(
+            response = self.client.delete(
                 '/admin/jobs/1',
                 headers={'Authorization': f'Bearer {reversed_token}'},
                 content_type='application/json',
             )
-            data = json.loads(update_response.data.decode())
-            self.assertEqual(update_response.status_code, 401)
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
             self.assertIn('Auth token invalid', data['message'])
             self.assertIn('fail', data['status'])
 
     def test_get_all_jobs(self):
         """Ensure get all jobs behaves correctly."""
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add two jobs to the db
         add_job(
                 client='Client 1',
                 description='Description 1',
@@ -1009,12 +1017,33 @@ class TestAdminApiJobs(BaseTestCase):
                 end_date=self.today
         )
         with self.client:
-            response = self.client.get('/admin/jobs')
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Request the list of all jobs from the server
+            response = self.client.get(
+                '/admin/jobs',
+                headers={'Authorization': f'Bearer {token}'},
+                content_type='application/json'
+            )
+
+            # parse the data
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('success', data['status'])
             self.assertEqual(len(data['data']['jobs']), 2)
             jobs = data['data']['jobs']
+
             # Assertions for job 1
             self.assertIn('Client 1', jobs[0]['client'])
             self.assertIn('Description 1', jobs[0]['description'])
@@ -1025,6 +1054,7 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertFalse(jobs[0]['hasPaid'])
             self.assertEqual(self.yesterday, jobs[0]['startDate'])
             self.assertEqual(self.yesterday, jobs[0]['endDate'])
+
             # Assertions for job 2
             self.assertIn('Client 2', jobs[1]['client'])
             self.assertIn('Description 2', jobs[1]['description'])
@@ -1035,6 +1065,104 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertTrue(jobs[1]['hasPaid'])
             self.assertEqual(self.yesterday, jobs[1]['startDate'])
             self.assertEqual(self.today, jobs[1]['endDate'])
+
+    def test_get_all_jobs_no_auth_token(self):
+        """
+        Ensure that all jobs are not given unless the user provides a valid
+        auth token.
+        """
+        # Add two jobs to the db
+        add_job(
+                client='Client 1',
+                description='Description 1',
+                amount_paid=111.11,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.yesterday
+        )
+        add_job(
+                client='Client 2',
+                description='Description 2',
+                amount_paid=222.22,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=True,
+                start_date=self.yesterday,
+                end_date=self.today
+        )
+        with self.client:
+            # Request the list of all jobs from the server
+            response = self.client.get('/admin/jobs')
+
+            # parse the data
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertIn('fail', data['status'])
+            self.assertTrue('data' not in data)
+
+    def test_get_all_jobs_invalid_auth_token(self):
+        """
+        Ensure that no jobs will be returned if the provided auth token is
+        invalid.
+        """
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add two jobs to the db
+        add_job(
+                client='Client 1',
+                description='Description 1',
+                amount_paid=111.11,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.yesterday
+        )
+        add_job(
+                client='Client 2',
+                description='Description 2',
+                amount_paid=222.22,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=True,
+                start_date=self.yesterday,
+                end_date=self.today
+        )
+        with self.client:
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Reverse the token to make an invalid token
+            reversed_token = token[::-1]
+
+            # Attempt to get the list of all jobs from the database, using
+            # an invalid auth token.
+            response = self.client.get(
+                '/admin/jobs',
+                headers={'Authorization': f'Bearer {reversed_token}'},
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertIn('Auth token invalid', data['message'])
+            self.assertIn('fail', data['status'])
+            self.assertTrue('data' not in data)
+
 
 
 if __name__ == '__main__':
