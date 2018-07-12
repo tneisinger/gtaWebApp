@@ -109,6 +109,7 @@ def get_single_job(job_id):
 
 
 @admin_blueprint.route('/jobs/<job_id>', methods=['DELETE'])
+@users_only()
 def delete_job(job_id):
     """Delete an existing job"""
     response_object = {

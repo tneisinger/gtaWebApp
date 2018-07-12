@@ -908,9 +908,82 @@ class TestAdminApiJobs(BaseTestCase):
             # Request all jobs to make sure we get no jobs back
             response = self.client.get('/admin/jobs')
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, 401)
             self.assertIn('success', data['status'])
             self.assertEqual(len(data['data']['jobs']), 0)
+
+    def test_delete_job_no_auth_token(self):
+        """Ensure that a job cannot be deleted if no auth token is provided."""
+        # Add a job to the db
+        add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+        with self.client:
+            # Attempt to delete the job without providing an auth token
+            response = self.client.delete('/admin/jobs/1')
+
+            # parse the response
+            data = json.loads(response.data.decode())
+
+            # Since we didn't provide an auth token, the response should be
+            # 401 rejection.
+            self.assertEqual(response.status_code, 401)
+            self.assertIn('Provide a valid auth token', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_delete_job_invalid_auth_token(self):
+        """
+        Ensure that a job cannot be updated if the provided auth token is
+        invalid.
+        """
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add a job to the db
+        add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+        with self.client:
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Reverse the token to make an invalid token
+            reversed_token = token[::-1]
+
+            # Attempt to delete the job with an invalid auth token
+            update_response = self.client.post(
+                '/admin/jobs/1',
+                headers={'Authorization': f'Bearer {reversed_token}'},
+                content_type='application/json',
+            )
+            data = json.loads(update_response.data.decode())
+            self.assertEqual(update_response.status_code, 401)
+            self.assertIn('Auth token invalid', data['message'])
+            self.assertIn('fail', data['status'])
 
     def test_get_all_jobs(self):
         """Ensure get all jobs behaves correctly."""
