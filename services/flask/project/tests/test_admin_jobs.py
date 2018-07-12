@@ -518,7 +518,14 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertIn('fail', data['status'])
 
     def test_get_single_job(self):
-        """Ensure get single job behaves correctly."""
+        """
+        Ensure get_single_job route returns a job, given that the user is
+        signed in and the requested job exists.
+        """
+        # Add a user to the database
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add a job to the database
         job = add_job(
                 client='Test Client',
                 description='Test Description',
@@ -529,9 +536,32 @@ class TestAdminApiJobs(BaseTestCase):
                 has_paid=False,
                 start_date=self.today
         )
+
         with self.client:
-            response = self.client.get(f'/admin/jobs/{job.id}')
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Make a request of the get_single_job route
+            response = self.client.get(
+                f'/admin/jobs/{job.id}',
+                headers={'Authorization': f'Bearer {token}'},
+                content_type='application/json',
+            )
+
+            # Parse the response
             data = json.loads(response.data.decode())
+
+            # Test assertions
             self.assertEqual(response.status_code, 200)
             self.assertIn('Test Client', data['data']['client'])
             self.assertIn('Test Description', data['data']['description'])
@@ -545,20 +575,123 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertIn(self.today, data['data']['endDate'])
             self.assertIn('success', data['status'])
 
-    def test_get_single_job_no_id(self):
-        """Ensure error is thrown if an id is not provided."""
+    def test_get_single_job_no_auth_token(self):
+        """
+        Ensure that a job is not returned by the get_single_job route if no
+        auth token is provided.
+        """
+        # Add a job to the database
+        job = add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+
         with self.client:
-            response = self.client.get('/admin/jobs/blurp')
+            # Request the job without providing an auth token
+            response = self.client.get(f'/admin/jobs/{job.id}')
+
+            # parse the response
             data = json.loads(response.data.decode())
+
+            # We should be denied, since we did not provide a valid auth token
+            self.assertEqual(response.status_code, 401)
+
+    def test_get_single_job_non_intenger_id(self):
+        """Ensure error is thrown if a non-integer id value is provided."""
+
+        # Add a user to the database
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add a job to the database
+        job = add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+
+        with self.client:
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Make a request of the get_single_job route WITH A BAD ID VALUE
+            response = self.client.get(
+                f'/admin/jobs/bad_id_value',
+                headers={'Authorization': f'Bearer {token}'},
+                content_type='application/json',
+            )
+
+            # Parse the response
+            data = json.loads(response.data.decode())
+
+            # Test that we get the expected response
             self.assertEqual(response.status_code, 404)
             self.assertIn('Job does not exist', data['message'])
             self.assertIn('fail', data['status'])
 
     def test_get_single_job_incorrect_id(self):
         """Ensure error is thrown if the id does not exist."""
+        # Add a user to the database
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add a job to the database
+        job = add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+
         with self.client:
-            response = self.client.get('/admin/jobs/9999')
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Make a request of the get_single_job route using a non-existant
+            # id value
+            response = self.client.get(
+                f'/admin/jobs/9999',
+                headers={'Authorization': f'Bearer {token}'},
+                content_type='application/json',
+            )
+
+            # Parse the response
             data = json.loads(response.data.decode())
+
+            # Test that we get the expected response
             self.assertEqual(response.status_code, 404)
             self.assertIn('Job does not exist', data['message'])
             self.assertIn('fail', data['status'])

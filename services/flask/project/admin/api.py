@@ -88,6 +88,7 @@ def add_job():
 
 
 @admin_blueprint.route('/jobs/<job_id>', methods=['GET'])
+@users_only()
 def get_single_job(job_id):
     """Get single job details"""
     response_object = {
