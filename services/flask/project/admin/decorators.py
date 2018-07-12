@@ -15,10 +15,10 @@ class users_only(object):
     def __init__(self, pass_user=False):
         self.pass_user = pass_user
 
-    def __call__(self, route_function):
+    def __call__(self, route_function, **kwargs):
 
         @wraps(route_function)
-        def wrapper():
+        def wrapper(**kwargs):
             response_object = {
                 'status': 'fail',
                 'message': 'Provide a valid auth token.'
@@ -36,9 +36,9 @@ class users_only(object):
                 # If the token is valid, allow access
                 user = User.query.filter_by(id=decode_response).first()
                 if self.pass_user:
-                    return route_function(user)
+                    return route_function(user, **kwargs)
                 else:
-                    return route_function()
+                    return route_function(**kwargs)
 
             # If no auth_header was provided, return an error
             return jsonify(response_object), 401
