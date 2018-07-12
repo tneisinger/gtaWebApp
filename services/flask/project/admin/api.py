@@ -135,6 +135,7 @@ def delete_job(job_id):
 
 
 @admin_blueprint.route('/jobs/<job_id>', methods=['POST'])
+@users_only()
 def update_job(job_id):
     """Update the details of an existing job"""
     response_object = {

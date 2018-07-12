@@ -604,7 +604,6 @@ class TestAdminApiJobs(BaseTestCase):
 
     def test_get_single_job_non_intenger_id(self):
         """Ensure error is thrown if a non-integer id value is provided."""
-
         # Add a user to the database
         add_user(**self.VALID_USER_DICT1)
 
@@ -757,6 +756,110 @@ class TestAdminApiJobs(BaseTestCase):
 
             # The returned job and the input job should now match.
             self.assertEqual(data['job'], job_data)
+
+    def test_update_job_no_auth_token(self):
+        """Ensure that a job cannot be updated if no auth token is provided."""
+        # Add a job to the db
+        add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+        with self.client:
+            # Define a dictionary that represents the updated job data
+            job_data = {
+                'client': 'Updated Test Client',
+                'description': 'Updated Test Description',
+                'amountPaid': 777.01,
+                'paidTo': self.VALID_PAID_TO,
+                'workedBy': self.VALID_WORKED_BY,
+                'confirmation': self.VALID_CONFIRMATION,
+                'hasPaid': True,
+                'startDate': self.today,
+                'endDate': self.today
+            }
+
+            # Attempt to update the job
+            update_response = self.client.post(
+                '/admin/jobs/1',
+                data=json.dumps(job_data),
+                content_type='application/json',
+            )
+
+            # parse the response
+            data = json.loads(update_response.data.decode())
+
+            # Since we didn't provide an auth token, the response should be
+            # 401 rejection.
+            self.assertEqual(update_response.status_code, 401)
+            self.assertIn('Provide a valid auth token', data['message'])
+            self.assertIn('fail', data['status'])
+
+    def test_update_job_invalid_auth_token(self):
+        """
+        Ensure that a job cannot be updated if the provided auth token is
+        invalid.
+        """
+        # Add a user to the db
+        add_user(**self.VALID_USER_DICT1)
+
+        # Add a job to the db
+        add_job(
+                client='Test Client',
+                description='Test Description',
+                amount_paid=666.01,
+                paid_to=self.VALID_PAID_TO,
+                worked_by=self.VALID_WORKED_BY,
+                confirmation=self.VALID_CONFIRMATION,
+                has_paid=False,
+                start_date=self.today
+        )
+        with self.client:
+            # login as user
+            login_response = self.client.post(
+                '/admin/login',
+                data=json.dumps({
+                    'username': self.VALID_USER_DICT1['username'],
+                    'password': self.VALID_USER_DICT1['password']
+                }),
+                content_type='application/json'
+            )
+
+            # get the user's auth token
+            token = json.loads(login_response.data.decode())['auth_token']
+
+            # Reverse the token to make an invalid token
+            reversed_token = token[::-1]
+
+            # Define a dictionary that represents the updated job data
+            job_data = {
+                'client': 'Updated Test Client',
+                'description': 'Updated Test Description',
+                'amountPaid': 777.01,
+                'paidTo': self.VALID_PAID_TO,
+                'workedBy': self.VALID_WORKED_BY,
+                'confirmation': self.VALID_CONFIRMATION,
+                'hasPaid': True,
+                'startDate': self.today,
+                'endDate': self.today
+            }
+
+            # Attempt to update the job
+            update_response = self.client.post(
+                '/admin/jobs/1',
+                data=json.dumps(job_data),
+                headers={'Authorization': f'Bearer {reversed_token}'},
+                content_type='application/json',
+            )
+            data = json.loads(update_response.data.decode())
+            self.assertEqual(update_response.status_code, 401)
+            self.assertIn('Auth token invalid', data['message'])
+            self.assertIn('fail', data['status'])
 
     def test_delete_job(self):
         """Ensure that a job can be deleted."""
