@@ -20,39 +20,9 @@ label {
 /***********  FROM CHROMEBOX CSS FILE   ***********/
 /**************************************************/
 
-.fc-title {
-    color: white;
-    float: left;
-}
-
-.fc-event {
+.rbc-event {
     border-width: 2px;
     border-style: solid;
-}
-
-/* Fixes a bug with fullcalendar. Event elements that aren't the end of the
- * event do not contain a resizer div.  This causes them to be narrower than
- * all other event divs.  Adding a little padding to the bottom of all
- * .fc-not-end elements fixes this problem */
-.fc-not-end {
-    padding-bottom: 5px;
-}
-
-.fc-event-x-btn {
-    color: white;
-	display: inline-block;
-	float: right;
-	padding-right: 7px;
-	padding-left: 10px;
-	font-size: 1.3em;
-	font-weight: bold;
-	padding-bottom: 1px;
-	border-radius: 10px;
-	z-index: 5;
-}
-
-.fc-event-x-btn:hover {
-	color: red;
 }
 
 /* variables for the colors of the various kinds of calendar events */
@@ -81,33 +51,33 @@ label {
 
 /**** JOB EVENTS ****/
 
-.job-event.workedby-tyler, .job-event.workedby-tyler.rbc-selected {
+.workedby-tyler, .workedby-tyler.rbc-selected {
     background-color: var(--job-color-tyler);
     border-color: var(--job-color-tyler);
 }
 
-.job-event.workedby-meghan, .job-event.workedby-meghan.rbc-selected {
+.workedby-meghan, .workedby-meghan.rbc-selected {
     background-color: var(--job-color-meghan);
     border-color: var(--job-color-meghan);
 }
 
-.job-event.workedby-tyler-and-meghan,
-.job-event.workedby-tyler-and-meghan.rbc-selected {
+.workedby-tyler-and-meghan,
+.workedby-tyler-and-meghan.rbc-selected {
     background-color: var(--job-color-tyler-and-meghan);
     border-color: var(--job-color-tyler-and-meghan);
 }
 
-.job-event.workedby-tyler:hover {
+.workedby-tyler:hover {
   background-color: var(--job-highlight-color-tyler);
   border-color: var(--job-highlight-color-tyler);
 }
 
-.job-event.workedby-meghan:hover {
+.workedby-meghan:hover {
   background-color: var(--job-highlight-color-meghan);
   border-color: var(--job-highlight-color-meghan);
 }
 
-.job-event.workedby-tyler-and-meghan:hover {
+.workedby-tyler-and-meghan:hover {
   background-color: var(--job-highlight-color-tyler-and-meghan);
   border-color: var(--job-highlight-color-tyler-and-meghan);
 }
@@ -138,10 +108,11 @@ label {
     border-color: var(--job-pencilledin-color);
 }
 
-.has-not-paid,
-.has-not-paid.fc-event-hovered,
-.has-not-paid.pencilled-in.fc-event-hovered {
+.job-event.has-not-paid,
+.job-event.has-not-paid.pencilled-in {
     border-color: var(--job-notpaid-border-color);
+    border-style: solid;
+    border-width: 2px;
 }
 
 
