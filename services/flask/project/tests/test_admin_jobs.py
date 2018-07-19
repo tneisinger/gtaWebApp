@@ -597,7 +597,7 @@ class TestAdminApiJobs(BaseTestCase):
             response = self.client.get(f'/admin/jobs/{job.id}')
 
             # parse the response
-            data = json.loads(response.data.decode())
+            json.loads(response.data.decode())
 
             # We should be denied, since we did not provide a valid auth token
             self.assertEqual(response.status_code, 401)
@@ -608,7 +608,7 @@ class TestAdminApiJobs(BaseTestCase):
         add_user(**self.VALID_USER_DICT1)
 
         # Add a job to the database
-        job = add_job(
+        add_job(
                 client='Test Client',
                 description='Test Description',
                 amount_paid=666.01,
@@ -654,7 +654,7 @@ class TestAdminApiJobs(BaseTestCase):
         add_user(**self.VALID_USER_DICT1)
 
         # Add a job to the database
-        job = add_job(
+        add_job(
                 client='Test Client',
                 description='Test Description',
                 amount_paid=666.01,
@@ -1162,7 +1162,6 @@ class TestAdminApiJobs(BaseTestCase):
             self.assertIn('Auth token invalid', data['message'])
             self.assertIn('fail', data['status'])
             self.assertTrue('data' not in data)
-
 
 
 if __name__ == '__main__':
