@@ -33,6 +33,7 @@ class App extends Component {
       showFormModal: false,
       formType: formTypes.login,
       formModalHeading: '',
+      calendarDate: new Date(),
     };
 
     // Bind `this` to all the methods named below.  This must be done because
@@ -174,6 +175,12 @@ class App extends Component {
           }
       });
     }
+  }
+
+  changeCalendarDefaultDate(newDate) {
+    this.setState({
+      calendarDate: newDate,
+    });
   }
 
   onCalendarDatesSelect(slotInfo) {
@@ -641,7 +648,7 @@ class App extends Component {
                   exact
                   component={Calendar}
                   componentProps={{
-                    defaultDate: new Date(),
+                    defaultDate: this.state.calendarDate,
                     events: this.state.calendarEvents,
                     setCalendarEvents: this.setCalendarEvents,
                     onSelectSlot: this.onCalendarDatesSelect,
