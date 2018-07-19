@@ -772,6 +772,217 @@ describe('The main App component', () => {
         expect(events.length).toBe(0);
       });
 
+      it('Past unpaid job event should have has-not-paid class', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        const today = new Date();
+        const thisYear = today.getFullYear();
+        const thisMonth = today.getMonth();
+        const newTodayDate = new Date(thisYear, thisMonth, 28);
+
+        appInstance().changeCalendarDefaultDate(newTodayDate);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        const dayOfCurrentMonth = (new Date).getDate();
+
+        // The current default date of the calendar app should now be the 28th
+        expect(wrappedApp().find(Calendar).props().defaultDate.getDate())
+          .toBe(28);
+
+        // Click on the 1st day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 1);
+
+        // The choiceModal should now be shown.
+        // Click the 'New Job' button
+        const newJobBtn = wrappedApp()
+            .find('.modal-body').find('.btn-primary');
+        newJobBtn.simulate('click');
+        wrappedApp().update();
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.job);
+
+        // Submit the job form
+        const submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        let addJobRequestInfo = mockAxios.lastReqGet();
+
+        const jobData = {
+          client: 'test client value',
+          description: 'test description value',
+          amountPaid: 300,
+          paidTo: 'Gladtime Audio',
+          workedBy: 'Tyler',
+          confirmation: 'Confirmed',
+          hasPaid: false,
+          startDate: clickedDates.start.yyyymmdd('-'),
+          endDate: clickedDates.end.yyyymmdd('-'),
+        };
+
+        mockAxios.mockResponse({
+          data: {
+            job: jobData
+          }
+        }, addJobRequestInfo);
+
+        wrappedApp().update();
+
+        // There should be one job event on the calendar
+        const calendarEvents = wrappedApp().find('.rbc-event');
+        expect(calendarEvents.length).toBe(1);
+
+        expect(calendarEvents.first().hasClass('has-not-paid')).toBe(true);
+
+      });
+
+      it('Past paid job event should not have has-not-paid class', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        const today = new Date();
+        const thisYear = today.getFullYear();
+        const thisMonth = today.getMonth();
+        const newTodayDate = new Date(thisYear, thisMonth, 28);
+
+        appInstance().changeCalendarDefaultDate(newTodayDate);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        const dayOfCurrentMonth = (new Date).getDate();
+
+        // The current default date of the calendar app should now be the 28th
+        expect(wrappedApp().find(Calendar).props().defaultDate.getDate())
+          .toBe(28);
+
+        // Click on the 1st day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 1);
+
+        // The choiceModal should now be shown.
+        // Click the 'New Job' button
+        const newJobBtn = wrappedApp()
+            .find('.modal-body').find('.btn-primary');
+        newJobBtn.simulate('click');
+        wrappedApp().update();
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.job);
+
+        // Submit the job form
+        const submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        let addJobRequestInfo = mockAxios.lastReqGet();
+
+        const jobData = {
+          client: 'test client value',
+          description: 'test description value',
+          amountPaid: 300,
+          paidTo: 'Gladtime Audio',
+          workedBy: 'Tyler',
+          confirmation: 'Confirmed',
+          hasPaid: true,
+          startDate: clickedDates.start.yyyymmdd('-'),
+          endDate: clickedDates.end.yyyymmdd('-'),
+        };
+
+        mockAxios.mockResponse({
+          data: {
+            job: jobData
+          }
+        }, addJobRequestInfo);
+
+        wrappedApp().update();
+
+        // There should be one job event on the calendar
+        const calendarEvents = wrappedApp().find('.rbc-event');
+        expect(calendarEvents.length).toBe(1);
+
+        expect(calendarEvents.first().hasClass('has-not-paid')).toBe(false);
+      });
+
+      it('Future unpaid job event should not have has-not-paid class', () => {
+        wrappedApp();
+
+        let userStatusRequestInfo = mockAxios.lastReqGet();
+        mockAxios.mockResponse(goodUserStatusResponse, userStatusRequestInfo);
+
+        const today = new Date();
+        const thisYear = today.getFullYear();
+        const thisMonth = today.getMonth();
+        const newTodayDate = new Date(thisYear, thisMonth, 15);
+
+        appInstance().changeCalendarDefaultDate(newTodayDate);
+
+        // Make sure the Calendar gets rendered with update()
+        wrappedApp().update();
+
+        const dayOfCurrentMonth = (new Date).getDate();
+
+        // The current default date of the calendar app should now be the 28th
+        expect(wrappedApp().find(Calendar).props().defaultDate.getDate())
+          .toBe(15);
+
+        // Click on the 20th day of the current month
+        const clickedDates = clickCalendarDays(wrappedApp(), Calendar, 20);
+
+        // The choiceModal should now be shown.
+        // Click the 'New Job' button
+        const newJobBtn = wrappedApp()
+            .find('.modal-body').find('.btn-primary');
+        newJobBtn.simulate('click');
+        wrappedApp().update();
+
+        // The formModal should now be shown, showing the job form
+        expect(appInstance().state.showFormModal).toBe(true);
+        expect(appInstance().state.formType).toBe(formTypes.job);
+
+        // Submit the job form
+        const submitBtn = wrappedApp()
+            .find('.modal-footer').find('.btn-primary');
+        submitBtn.simulate('click');
+
+        let addJobRequestInfo = mockAxios.lastReqGet();
+
+        const jobData = {
+          client: 'test client value',
+          description: 'test description value',
+          amountPaid: 300,
+          paidTo: 'Gladtime Audio',
+          workedBy: 'Tyler',
+          confirmation: 'Confirmed',
+          hasPaid: false,
+          startDate: clickedDates.start.yyyymmdd('-'),
+          endDate: clickedDates.end.yyyymmdd('-'),
+        };
+
+        mockAxios.mockResponse({
+          data: {
+            job: jobData
+          }
+        }, addJobRequestInfo);
+
+        wrappedApp().update();
+
+        // There should be one job event on the calendar
+        const calendarEvents = wrappedApp().find('.rbc-event');
+        expect(calendarEvents.length).toBe(1);
+
+        expect(calendarEvents.first().hasClass('has-not-paid')).toBe(false);
+      });
+
       it('Creating a new oneTimeExpense should render of BC event', () => {
         wrappedApp();
 
