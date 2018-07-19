@@ -150,7 +150,7 @@ function getClassNamesForEvent(event) {
     classNames.push('workedby-' +
       event.workedBy.toLowerCase().replace(/ /g,'-'));
     classNames.push('job-' + event.id);
-    if (!event.has_paid && event.end < new Date()) {
+    if (!event.hasPaid && event.end < new Date()) {
       classNames.push('has-not-paid');
     }
   }
